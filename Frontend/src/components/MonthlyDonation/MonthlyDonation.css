@@ -1,0 +1,343 @@
+.monthly-donation {
+  width: 100%;
+  height: 540px;
+
+
+
+  background-size: cover;
+  background-position: center;
+
+  position: relative;
+
+  overflow: hidden;
+}
+
+.monthly-overlay {
+  position: absolute;
+  inset: 0;
+
+ background:
+  linear-gradient(
+    180deg,
+    rgba(15, 40, 12, 0.88),
+    rgba(38, 74, 18, 0.74)
+  );
+}
+
+.monthly-container {
+  width: 100%;
+  max-width: 1300px;
+
+  height: 100%;
+
+  margin: 0 auto;
+
+  padding: 0 80px;
+
+  position: relative;
+  z-index: 2;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 80px;
+}
+
+/* ========================================= */
+/* LEFT */
+/* ========================================= */
+
+.monthly-left {
+  max-width: 580px;
+}
+
+.monthly-badge {
+  display: inline-flex;
+
+  padding: 8px 16px;
+
+  border-radius: 999px;
+
+  background: rgba(126, 211, 33, 0.18);
+
+  border: 1px solid rgba(126, 211, 33, 0.28);
+
+  color: #c7ff8d;
+
+  font-size: 14px;
+  font-weight: 700;
+
+  margin-bottom: 24px;
+
+  backdrop-filter: blur(8px);
+}
+
+.monthly-left h2 {
+  font-size: 60px;
+  line-height: 1.12;
+
+  letter-spacing: -3px;
+
+  color: var(--white);
+}
+
+.monthly-left h2 span {
+  color: var(--primary);
+
+  text-shadow:
+    0 0 18px rgba(126, 211, 33, 0.22);
+}
+
+/* ========================================= */
+/* RIGHT */
+/* ========================================= */
+
+.monthly-right {
+  width: 100%;
+  max-width: 680px;
+}
+
+.monthly-right p {
+  font-size: 20px;
+  line-height: 1.6;
+
+  color: rgba(255, 255, 255, 0.92);
+
+  margin-bottom: 32px;
+}
+
+.monthly-right button {
+  height: 48px;
+
+  padding: 0 34px;
+
+  border: none;
+  border-radius: 16px;
+
+  background: var(--primary);
+
+   color: var(--white);
+
+  font-size: 18px;
+  font-weight: 800;
+
+  cursor: pointer;
+
+  transition: 0.25s ease;
+
+  margin-bottom: 52px;
+}
+
+.monthly-right button:hover {
+  opacity: 0.92;
+}
+
+/* ========================================= */
+/* BENEFITS */
+/* ========================================= */
+
+.monthly-benefits {
+  display: flex;
+  align-items: flex-start;
+
+  gap: 25px;
+}
+
+.monthly-benefit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  text-align: center;
+
+  gap: 14px;
+
+  min-width: 140px;
+
+  color: var(--white);
+}
+
+.monthly-benefit svg {
+  color: var(--primary);
+}
+
+.monthly-benefit strong {
+  font-size: 17px;
+  line-height: 1.3;
+
+  font-weight: 700;
+}
+
+
+@media (max-width: 980px) {
+
+  .monthly-donation {
+    height: auto;
+
+    min-height: unset;
+  }
+
+  .monthly-overlay {
+    background: linear-gradient(
+      180deg,
+      rgba(16, 23, 38, 0.72),
+      rgba(16, 23, 38, 0.84)
+    );
+  }
+
+  .monthly-container {
+    width: 100%;
+
+    padding: 58px 28px 42px;
+
+    display: flex;
+    flex-direction: column;
+
+    align-items: flex-start;
+    justify-content: flex-start;
+
+    gap: 0;
+
+    text-align: left;
+  }
+
+  /* ========================================= */
+  /* LEFT */
+  /* ========================================= */
+
+  .monthly-left {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .monthly-badge {
+    display: inline-flex;
+
+    padding: 8px 16px;
+
+    border-radius: 999px;
+
+    background: rgba(126, 211, 33, 0.16);
+
+    border: 1px solid rgba(126, 211, 33, 0.26);
+
+    color: #d7ffab;
+
+    font-size: 12px;
+    font-weight: 700;
+
+    margin-bottom: 22px;
+
+    backdrop-filter: blur(8px);
+  }
+
+  .monthly-left h2 {
+    font-size: 34px;
+
+    line-height: 1.2;
+
+    letter-spacing: -1.5px;
+
+    color: var(--white);
+
+    margin-bottom: 24px;
+  }
+
+  .monthly-left h2 span {
+    color: var(--primary);
+
+    text-shadow:
+      0 0 18px rgba(126, 211, 33, 0.28);
+  }
+
+  /* ========================================= */
+  /* RIGHT */
+  /* ========================================= */
+
+  .monthly-right {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .monthly-right p {
+    font-size: 16px;
+
+    line-height: 1.5;
+
+    margin-bottom: 28px;
+
+    color: rgba(255,255,255,0.94);
+  }
+
+  .monthly-right button {
+    width: 200px;
+
+    height: 58px;
+
+    border: none;
+    border-radius: 16px;
+
+    background: var(--primary);
+
+    color: var(--white);
+
+    font-size: 17px;
+    font-weight: 800;
+
+    cursor: pointer;
+
+    transition: 0.25s ease;
+
+    margin-bottom: 38px;
+  }
+
+  .monthly-right button:hover {
+    opacity: 0.92;
+  }
+
+  /* ========================================= */
+  /* BENEFITS */
+  /* ========================================= */
+
+  .monthly-benefits {
+    width: 100%;
+
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    gap: 18px;
+  }
+
+  .monthly-benefit {
+    min-width: unset;
+
+    flex: 1;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    text-align: center;
+
+    gap: 10px;
+
+    color: var(--white);
+  }
+
+  .monthly-benefit svg {
+    width: 42px;
+    height: 42px;
+
+    color: var(--primary);
+  }
+
+  .monthly-benefit strong {
+    font-size: 12px;
+
+    line-height: 1.35;
+
+    font-weight: 700;
+  }
+}

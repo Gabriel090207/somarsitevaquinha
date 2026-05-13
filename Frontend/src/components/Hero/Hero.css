@@ -1,0 +1,344 @@
+.hero {
+  width: 100%;
+  height: 500px;
+
+  background-size: cover;
+  background-position: center;
+
+  position: relative;
+
+  overflow: hidden;
+}
+
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+
+  background: rgba(0, 0, 0, 0.55);
+
+  backdrop-filter: blur(2px);
+}
+
+.hero-container {
+  width: 100%;
+  max-width: 1600px;
+
+  height: 100%;
+
+  margin: 0 auto;
+
+  position: relative;
+  z-index: 2;
+
+  display: flex;
+  align-items: center;
+
+  padding: 0 0px;
+}
+
+/* ========================================= */
+/* MASCOTE */
+/* ========================================= */
+
+.hero-left {
+  width: 700px;
+
+  height: 100%;
+
+  display: flex;
+  align-items: flex-end;
+
+  flex-shrink: 0;
+
+  position: relative;
+}
+
+.hero-left img {
+  width: 700px;
+
+  
+
+  object-fit: contain;
+}
+
+/* ========================================= */
+/* CONTEÚDO */
+/* ========================================= */
+
+.hero-content {
+  max-width: 560px;
+
+  margin-left: 20px;
+
+  margin-top: -50px;
+}
+
+.hero-badge {
+  display: inline-flex;
+
+  padding: 8px 16px;
+
+  border-radius: 999px;
+
+  background: rgba(126, 211, 33, 0.16);
+
+  border: 1px solid rgba(126, 211, 33, 0.35);
+
+  color: #b7ff6a;
+
+  font-size: 13px;
+  font-weight: 700;
+
+  margin-bottom: 18px;
+
+  backdrop-filter: blur(10px);
+}
+
+.hero-content h1 {
+  font-size: 40px;
+  line-height: 0.95;
+
+  letter-spacing: -3px;
+
+  color: var(--white);
+
+  margin-bottom: 20px;
+}
+
+.hero-content h1 span {
+  color: var(--primary);
+}
+
+.hero-content p {
+  font-size: 15px;
+  line-height: 1.4;
+
+  color: rgba(255, 255, 255, 0.92);
+
+  margin-bottom: 10px;
+}
+
+.hero-content small {
+  display: block;
+
+  color: rgba(255, 255, 255, 0.65);
+
+  font-size: 15px;
+
+  margin-bottom: 28px;
+}
+
+.hero-content button {
+  width: 636px;
+
+  height: 54px;
+
+  border: none;
+  border-radius: 12px;
+
+  background: var(--primary);
+
+  color: var(--white);
+
+  font-size: 18px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: 0.25s ease;
+} 
+
+.hero-content button:hover {
+  opacity: 0.9;
+}
+
+/* ========================================= */
+/* CARDS */
+/* ========================================= */
+
+.hero-cards {
+  position: absolute;
+
+  left: 720px;
+
+  bottom: 50px;
+
+  z-index: 4;
+
+  display: flex;
+  align-items: center;
+
+  gap: 18px;
+}
+
+.hero-card {
+  width: 200px;
+  height: 55px;
+
+  padding: 15px;
+
+  border-radius: 22px;
+
+  background: rgba(0, 0, 0, 0.58);
+
+  border: 1px solid rgba(255, 255, 255, 0.06);
+
+  backdrop-filter: blur(14px);
+
+  display: flex;
+  align-items: flex-start;
+
+  gap: 14px;
+
+  color: var(--white);
+}
+
+.hero-card svg {
+  color: var(--primary);
+
+  min-width: 12px;
+
+  margin-top: 2px;
+}
+
+.hero-card strong {
+  display: block;
+
+  font-size: 8px;
+  line-height: 1.2;
+
+  margin-bottom: -5px;
+}
+
+.hero-card span {
+  font-size: 6px;
+
+  color: rgba(255, 255, 255, 0.65);
+}
+
+
+/* ========================================= */
+/* RESPONSIVO HERO */
+/* ========================================= */
+
+@media (max-width: 980px) {
+
+  .hero {
+  height: 420px;
+
+  overflow: hidden;
+}
+
+  .hero-overlay {
+    backdrop-filter: blur(1px);
+  }
+
+  .hero-container {
+    width: 100%;
+
+    height: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 40px 24px 90px;
+
+    position: relative;
+  }
+
+  /* ========================================= */
+  /* MASCOTE */
+  /* ========================================= */
+
+  .hero-left {
+    position: absolute;
+
+    left: -25px;
+    bottom: -4px;
+
+    width: auto;
+    height: auto;
+
+    z-index: 3;
+  }
+
+  .hero-left img {
+    width: 130px;
+
+    opacity: 0.96;
+  }
+
+  /* ========================================= */
+  /* CONTENT */
+  /* ========================================= */
+
+  .hero-content {
+    width: 100%;
+    max-width: 100%;
+
+    margin: 0;
+
+    text-align: center;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    z-index: 5;
+  }
+
+  .hero-badge {
+    margin-bottom: 18px;
+
+    font-size: 12px;
+
+    padding: 8px 14px;
+  }
+
+  .hero-content h1 {
+    font-size: 34px;
+
+    line-height: 1;
+
+    letter-spacing: -2px;
+
+    margin-bottom: 18px;
+  }
+
+  .hero-content p {
+    max-width: 320px;
+
+    margin: 0 auto 10px;
+
+    font-size: 15px;
+
+    line-height: 1.45;
+  }
+
+  .hero-content small {
+    font-size: 14px;
+
+    margin-bottom: 24px;
+  }
+
+  .hero-content button {
+    width: 100%;
+
+    max-width: 310px;
+
+    height: 54px;
+
+    border-radius: 14px;
+
+    font-size: 16px;
+  }
+
+  /* ========================================= */
+  /* CARDS */
+  /* ========================================= */
+
+  .hero-cards {
+    display: none;
+  }
+}
