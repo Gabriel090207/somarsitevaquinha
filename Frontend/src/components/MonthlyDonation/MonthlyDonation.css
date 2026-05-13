@@ -178,13 +178,7 @@
     min-height: unset;
   }
 
-  .monthly-overlay {
-    background: linear-gradient(
-      180deg,
-      rgba(16, 23, 38, 0.72),
-      rgba(16, 23, 38, 0.84)
-    );
-  }
+
 
   .monthly-container {
     width: 100%;
