@@ -13,14 +13,89 @@ import {
   HeartHandshake,
   Info,
   CircleHelp,
+  ChevronDown,
+  LogOut,
+  Wallet,
+  Heart,
+  Settings,
+  
+  
 } from "lucide-react";
 
 
 import { NavLink } from "react-router-dom";
 
+import {
+  useAuth,
+} from "../../contexts/AuthContext";
+
+import {
+  signOut,
+} from "firebase/auth";
+
+import {
+  auth,
+} from "../../services/firebase";
+
+
+import {
+  useToast,
+} from "../../contexts/ToastContext";
+
 export function Header() {
 
-  const [menuOpen, setMenuOpen] = useState(false);
+const {
+  user,
+  userData,
+} = useAuth();
+
+const { showToast } =
+  useToast();
+
+const [menuOpen, setMenuOpen] = useState(false);
+
+const [accountMenuOpen,
+  setAccountMenuOpen] =
+    useState(false);
+
+
+const [closingMenu,
+  setClosingMenu] =
+    useState(false);
+
+
+function toggleAccountMenu() {
+
+  if (accountMenuOpen) {
+
+    setClosingMenu(true);
+
+    setTimeout(() => {
+
+      setAccountMenuOpen(false);
+
+      setClosingMenu(false);
+
+    }, 220);
+
+  } else {
+
+    setAccountMenuOpen(true);
+  }
+}
+
+async function handleLogout() {
+
+  await signOut(auth);
+
+  showToast(
+    "Sessão encerrada com sucesso."
+  );
+
+  setAccountMenuOpen(false);
+}
+
+  
   return (
     <>
       <div className="top-header">
@@ -92,10 +167,113 @@ export function Header() {
             </button>
 
 
-            <button className="login-button">
-              Entrar
-              <User size={20} />
-            </button>
+          {
+
+  user ? (
+
+   <div className="account-wrapper">
+
+  <button
+    className="account-button"
+    onClick={toggleAccountMenu}
+  >
+
+    <ChevronDown
+      size={18}
+      className={
+        accountMenuOpen
+          ? "rotate"
+          : ""
+      }
+    />
+
+    Minha conta
+
+    <User size={20} />
+
+  </button>
+
+  {
+
+    accountMenuOpen && (
+
+      <div
+  className={`account-dropdown ${
+    closingMenu
+      ? "closing"
+      : ""
+  }`}
+>
+
+        <button>
+
+          <User size={20} />
+
+          Perfil
+
+        </button>
+
+        <button>
+
+          <Heart size={20} />
+
+          Minhas doações
+
+        </button>
+
+        <button>
+
+          <Wallet size={20} />
+
+          Minha carteira
+
+        </button>
+
+        <button>
+
+          <Settings size={20} />
+
+          Configurações
+
+        </button>
+
+        <div className="dropdown-divider" />
+
+        <button
+          onClick={handleLogout}
+          className="logout-button"
+        >
+
+          <LogOut size={20} />
+
+          Sair
+
+        </button>
+
+      </div>
+
+    )
+
+  }
+
+</div>
+
+  ) : (
+
+    <NavLink
+      to="/login"
+      className="login-button"
+    >
+
+      Entrar
+
+      <User size={20} />
+
+    </NavLink>
+
+  )
+
+}
 
           </div>
         </div>
@@ -119,15 +297,36 @@ export function Header() {
 
     <div className="mobile-user-text">
 
-      <span>
-        Olá, Visitante
-      </span>
+  <span>
 
-      <small>
-        Bem-vindo à Somar
-      </small>
+    {
 
-    </div>
+      
+
+  user
+    ? `Olá, ${
+        user.displayName ||
+        userData?.name.split(" ")[0]
+      }`
+    : "Olá, Visitante"
+
+}
+
+  </span>
+
+  <small>
+
+    {
+
+      user
+        ? "Sua conta está conectada"
+        : "Bem-vindo à Somar"
+
+    }
+
+  </small>
+
+</div>
 
   </div>
 
@@ -162,18 +361,94 @@ export function Header() {
   </NavLink>
 </nav>
 
+{
+
+  user && (
+
+    <>
+
+      <div className="mobile-divider" />
+
+      <div className="mobile-account-section">
+
+        <button>
+
+          <User size={22} />
+
+          Meu perfil
+
+        </button>
+
+        <button>
+
+          <HeartHandshake size={22} />
+
+          Minhas vaquinhas
+
+        </button>
+
+        <button>
+
+    <Wallet size={22} />
+
+    Minha carteira
+
+  </button>
+
+        <button>
+
+          <Settings size={22} />
+
+          Configurações
+
+        </button>
+
+      </div>
+
+    </>
+
+  )
+
+}
 
   <div className="mobile-sidebar-footer">
 
-  <button className="mobile-login-button">
+{
 
-  Entrar
+  user ? (
 
-  <User size={25} />
+    <button
+      className="mobile-logout-button"
+      onClick={handleLogout}
+    >
 
-</button>
+      <LogOut size={24} />
 
-  </div>
+      Sair da conta
+
+    </button>
+
+  ) : (
+
+    <NavLink
+      to="/login"
+      className="mobile-login-button"
+      onClick={() =>
+        setMenuOpen(false)
+      }
+    >
+
+      Entrar
+
+      <User size={25} />
+
+    </NavLink>
+
+  )
+
+}
+
+</div>
 
 </div>
 

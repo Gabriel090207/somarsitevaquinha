@@ -55,3 +55,28 @@ body,
 #root {
   overflow-x: hidden;
 }
+
+
+.toast-container {
+  position: fixed;
+
+  top: 24px;
+  right: 24px;
+
+  z-index: 99999;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 14px;
+}
+
+@media (max-width: 768px) {
+
+  .toast-container {
+    top: 18px;
+    right: 18px;
+    left: 18px;
+  }
+
+}

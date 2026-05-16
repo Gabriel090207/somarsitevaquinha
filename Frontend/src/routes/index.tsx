@@ -2,10 +2,14 @@ import {
   BrowserRouter,
   Routes,
   Route,
+  useLocation,
 } from "react-router-dom";
 
 import { Header } from "../components/Header/Header";
+
 import { Footer } from "../components/Footer/Footer";
+
+import { Login } from "../pages/Login/Login";
 
 import { Home } from "../pages/Home";
 
@@ -15,13 +19,25 @@ import { Questions } from "../pages/Questions/Questions";
 
 import { About } from "../pages/About/About";
 
-export function AppRoutes() {
-  return (
-    <BrowserRouter>
+function Layout() {
 
-      <Header />
+  const location = useLocation();
+
+const hideLayout =
+  location.pathname === "/login";
+
+  return (
+
+    <>
+
+    {!hideLayout && <Header />}
 
       <Routes>
+
+        <Route
+          path="/login"
+          element={<Login />}
+        />
 
         <Route
           path="/"
@@ -45,8 +61,22 @@ export function AppRoutes() {
 
       </Routes>
 
-      <Footer />
+     {!hideLayout && <Footer />}
+
+    </>
+
+  );
+}
+
+export function AppRoutes() {
+
+  return (
+
+    <BrowserRouter>
+
+      <Layout />
 
     </BrowserRouter>
+
   );
 }
