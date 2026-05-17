@@ -35,9 +35,15 @@ export type UserData = {
 
   email: string;
 
+  phone: string;
+
   role: string;
 
   type: string;
+
+  cpf?: string;
+
+  cnpj?: string;
 };
 
 type AuthContextData = {
@@ -74,7 +80,7 @@ export function AuthProvider({
   );
 
   const [loading, setLoading] =
-    useState(true);
+    useState<boolean>(true);
 
   useEffect(() => {
 
@@ -83,7 +89,9 @@ export function AuthProvider({
 
         auth,
 
-        async (currentUser) => {
+        async (
+          currentUser: User | null
+        ) => {
 
           setUser(currentUser);
 
@@ -104,15 +112,27 @@ export function AuthProvider({
             ) {
 
               const data =
-  userSnap.data();
+                userSnap.data();
 
-setUserData({
-  uid: data.uid,
-  name: data.name,
-  email: data.email,
-  role: data.role,
-  type: data.type,
-});
+              setUserData({
+
+                uid: data.uid,
+
+                name: data.name,
+
+                email: data.email,
+
+                phone: data.phone,
+
+                role: data.role,
+
+                type: data.type,
+
+                cpf: data.cpf,
+
+                cnpj: data.cnpj,
+              });
+
             }
 
           } else {

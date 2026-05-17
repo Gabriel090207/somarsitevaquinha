@@ -205,21 +205,32 @@ async function handleLogout() {
   }`}
 >
 
-        <button>
+       <NavLink
+  to="/perfil"
+  onClick={() =>
+    setAccountMenuOpen(false)
+  }
+>
 
-          <User size={20} />
+  <User size={20} />
 
-          Perfil
+  Meu perfil
 
-        </button>
+</NavLink>
 
-        <button>
+<NavLink
+  to="/minhas-doacoes"
+  onClick={() =>
+    setAccountMenuOpen(false)
+  }
+>
 
-          <Heart size={20} />
+  <Heart size={20} />
 
-          Minhas doações
+  Minhas doações
 
-        </button>
+</NavLink>
+
 
         <button>
 
@@ -371,21 +382,31 @@ async function handleLogout() {
 
       <div className="mobile-account-section">
 
-        <button>
+       <NavLink
+  to="/perfil"
+  onClick={() =>
+    setMenuOpen(false)
+  }
+>
 
-          <User size={22} />
+  <User size={20} />
 
-          Meu perfil
+  Meu perfil
 
-        </button>
+</NavLink>
 
-        <button>
+<NavLink
+  to="/minhas-doacoes"
+  onClick={() =>
+    setMenuOpen(false)
+  }
+>
 
-          <HeartHandshake size={22} />
+  <HeartHandshake size={20} />
 
-          Minhas vaquinhas
+  Minhas doações
 
-        </button>
+</NavLink>
 
         <button>
 

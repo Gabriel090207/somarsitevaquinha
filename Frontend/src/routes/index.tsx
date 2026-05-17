@@ -19,6 +19,10 @@ import { Questions } from "../pages/Questions/Questions";
 
 import { About } from "../pages/About/About";
 
+import { Profile } from "../pages/Profile/Profile";
+
+import { Donations } from "../pages/Donations/Donations";
+
 function Layout() {
 
   const location = useLocation();
@@ -58,6 +62,16 @@ const hideLayout =
           path="/sobre"
           element={<About />}
         />
+
+        <Route
+  path="/perfil"
+  element={<Profile />}
+/>
+
+<Route
+  path="/minhas-doacoes"
+  element={<Donations />}
+/>
 
       </Routes>
 
