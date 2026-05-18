@@ -19,8 +19,11 @@ import {
   Repeat,
 } from "lucide-react";
 
+import { useNavigate } from "react-router-dom";
+
 const campaigns = [
   {
+    id:1,
     category: "SAÚDE",
     title:
       "Vaquinha para Ana, que pode perder os dedos e os pulmões aos...",
@@ -52,9 +55,14 @@ const campaigns = [
 ];
 
 export function Campaigns() {
-  const [slide, setSlide] = useState(0);
 
-  const maxSlide =
+
+const navigate = useNavigate();
+
+
+const [slide, setSlide] = useState(0);
+
+const maxSlide =
   window.innerWidth <= 980 ? 4 : 1;
 
 const handleNext = () => {
@@ -176,7 +184,12 @@ const handlePrev = () => {
         <div className="campaigns-grid">
 
           {campaigns.map((campaign) => (
-            <div className="campaign-card">
+           <div
+  className="campaign-card"
+  onClick={() =>
+    navigate(`/vaquinha/${campaign.id}`)
+  }
+>
 
               <div className="campaign-image">
 

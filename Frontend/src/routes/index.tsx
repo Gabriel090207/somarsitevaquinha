@@ -23,6 +23,10 @@ import { Profile } from "../pages/Profile/Profile";
 
 import { Donations } from "../pages/Donations/Donations";
 
+import { Wallet } from "../pages/Wallet/Wallet";
+
+import { Campaign } from "../pages/Campaign/Campaign";
+
 function Layout() {
 
   const location = useLocation();
@@ -54,6 +58,11 @@ const hideLayout =
         />
 
         <Route
+  path="/vaquinha/:id"
+  element={<Campaign />}
+/>
+
+        <Route
           path="/duvidas"
           element={<Questions />}
         />
@@ -73,6 +82,11 @@ const hideLayout =
   element={<Donations />}
 />
 
+
+<Route
+  path="/minha-carteira"
+  element={<Wallet />}
+/>
       </Routes>
 
      {!hideLayout && <Footer />}

@@ -205,8 +205,11 @@ async function handleLogout() {
   }`}
 >
 
-       <NavLink
+      <NavLink
   to="/perfil"
+  className={({ isActive }) =>
+    isActive ? "active" : ""
+  }
   onClick={() =>
     setAccountMenuOpen(false)
   }
@@ -232,13 +235,21 @@ async function handleLogout() {
 </NavLink>
 
 
-        <button>
+        <NavLink
+  to="/minha-carteira"
+  className={({ isActive }) =>
+    isActive ? "active" : ""
+  }
+  onClick={() =>
+    setAccountMenuOpen(false)
+  }
+>
 
-          <Wallet size={20} />
+  <Wallet size={20} />
 
-          Minha carteira
+  Minha carteira
 
-        </button>
+</NavLink>
 
         <button>
 
@@ -408,13 +419,21 @@ async function handleLogout() {
 
 </NavLink>
 
-        <button>
+       <NavLink
+  to="/minha-carteira"
+  className={({ isActive }) =>
+    isActive ? "active" : ""
+  }
+  onClick={() =>
+    setMenuOpen(false)
+  }
+>
 
-    <Wallet size={22} />
+  <Wallet size={20} />
 
-    Minha carteira
+  Minha carteira
 
-  </button>
+</NavLink>
 
         <button>
 
