@@ -40,9 +40,7 @@ type Campaign = {
   raisedAmount?: string | number;
 };
 
-type User = {
-  role: string;
-};
+
 
 export function Dashboard() {
 
