@@ -306,9 +306,7 @@
 
   border-radius: 24px;
 
-  background: var(--white);
-
-  border: 1px solid var(--border);
+ 
 
   text-align: center;
 }
