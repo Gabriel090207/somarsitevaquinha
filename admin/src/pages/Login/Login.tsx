@@ -27,7 +27,17 @@ import {
 import { useToast }
  from "../../contexts/ToastContext";
 
+
+import {
+  Eye,
+  EyeOff,
+} from "lucide-react";
+
 export function Login() {
+
+
+const [showPassword, setShowPassword] =
+  useState(false);
 
   const navigate = useNavigate();
 
@@ -191,21 +201,48 @@ export function Login() {
 
               <div className="login-field">
 
-                <label>
-                  Senha
-                </label>
+  <label>
+    Senha
+  </label>
 
-                <input
-                  type="password"
-                  placeholder="Digite sua senha"
-                  value={password}
-                  onChange={(event) =>
-                    setPassword(event.target.value)
-                  }
-                />
+  <div className="login-password">
 
-              </div>
+    <input
+      type={
+        showPassword
+          ? "text"
+          : "password"
+      }
+      placeholder="Digite sua senha"
+      value={password}
+      onChange={(event) =>
+        setPassword(
+          event.target.value
+        )
+      }
+    />
 
+    <button
+      type="button"
+      className="password-toggle"
+      onClick={() =>
+        setShowPassword(
+          !showPassword
+        )
+      }
+    >
+
+      {showPassword ? (
+        <EyeOff size={18} />
+      ) : (
+        <Eye size={18} />
+      )}
+
+    </button>
+
+  </div>
+
+</div>
               <button
                 type="submit"
                 disabled={loading}

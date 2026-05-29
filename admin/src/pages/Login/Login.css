@@ -315,3 +315,44 @@
   }
 
 }
+
+.login-password {
+  position: relative;
+}
+
+.login-password input {
+  padding-right: 52px;
+}
+
+.password-toggle {
+  width: 40px !important;
+  height: 40px !important;
+
+  position: absolute;
+
+  right: 10px;
+  top: 50%;
+
+  transform: translateY(-50%);
+
+  border: none !important;
+
+  background: transparent !important;
+
+  margin: 0 !important;
+  padding: 0 !important;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+}
+
+.password-toggle svg {
+  color: var(--text-light);
+}
+
+.password-toggle:hover svg {
+  color: var(--primary);
+}
