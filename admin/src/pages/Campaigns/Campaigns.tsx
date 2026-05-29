@@ -84,6 +84,22 @@ export function Campaigns() {
 
   }, []);
 
+function formatCurrency(
+  value: number | string
+) {
+
+  const amount =
+    Number(value || 0);
+
+  return amount.toLocaleString(
+    "pt-BR",
+    {
+      style: "currency",
+      currency: "BRL",
+    }
+  );
+}
+
   return (
 
     <main className="campaigns-page">
@@ -166,8 +182,10 @@ export function Campaigns() {
                 <div className="campaign-money">
 
                   <strong>
-                    {campaign.raisedAmount || "R$ 0,00"}
-                  </strong>
+  {formatCurrency(
+    campaign.raisedAmount
+  )}
+</strong>
 
                   <span>
                     arrecadados
