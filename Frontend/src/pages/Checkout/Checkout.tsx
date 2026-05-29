@@ -155,11 +155,13 @@ const [showSaveCardModal,
   setShowSaveCardModal] =
     useState(false);
 
+/*
 const mp =
   new window.MercadoPago(
     import.meta.env
       .VITE_MP_PUBLIC_KEY
   );
+*/
 
 const formatCurrency = (
   value: number
@@ -458,6 +460,7 @@ const handleCreatePix = async () => {
   }
 };
 
+/*
 const handleCardPayment =
 
 
@@ -571,7 +574,17 @@ const handleCardPayment =
 
   // segue pagamento aqui
 }
+*/
 
+async function continueCardPayment(
+  saveCard: boolean
+) {
+
+  console.log(saveCard);
+
+  setShowSaveCardModal(false);
+
+}
 
   return (
     <section className="checkout-page">
