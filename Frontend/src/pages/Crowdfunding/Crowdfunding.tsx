@@ -24,7 +24,6 @@ import {
   ChevronDown,
   ChevronUp,
   Bookmark,
-  SlidersHorizontal,
   HeartHandshake,
   GraduationCap,
   TriangleAlert,
@@ -92,6 +91,18 @@ const navigate =
   useNavigate();
 
 const [sidebarOpen, setSidebarOpen] = useState(false);
+
+const [searchTerm, setSearchTerm] =
+  useState("");
+
+const [campaignFilter, setCampaignFilter] =
+  useState("Todas");
+
+const [periodFilter, setPeriodFilter] =
+  useState("all");
+
+const [selectedCategory, setSelectedCategory] =
+  useState("Todos");
 
 const [savedCampaigns, setSavedCampaigns] =
   useState<string[]>([]);
@@ -376,6 +387,219 @@ async function handleSaveCampaign(
   }
 }
 
+const filteredCampaigns =
+  [...campaigns]
+    .filter((campaign) => {
+
+      const matchesSearch =
+        campaign.title
+          ?.toLowerCase()
+          .includes(
+            searchTerm.toLowerCase()
+          );
+
+      const matchesCategory =
+        selectedCategory ===
+        "Todos"
+          ? true
+          : campaign.category ===
+            selectedCategory;
+
+      let matchesCampaignFilter =
+        true;
+
+      let matchesPeriod =
+        true;
+
+      const progress =
+        calculateProgress(
+          campaign.raisedAmount,
+          campaign.goalAmount
+        );
+
+      const remainingText =
+        calculateRemainingDays(
+          campaign.duration,
+          campaign.createdAt
+        );
+
+      if (
+        campaignFilter ===
+        "Abertas"
+      ) {
+
+        matchesCampaignFilter =
+          remainingText !==
+          "Encerrada";
+      }
+
+      if (
+        campaignFilter ===
+        "Encerradas"
+      ) {
+
+        matchesCampaignFilter =
+          remainingText ===
+          "Encerrada";
+      }
+
+      if (
+        campaignFilter ===
+        "Metas batidas"
+      ) {
+
+        matchesCampaignFilter =
+          progress >= 100;
+      }
+
+      if (
+        campaignFilter ===
+        "Perto de encerrar"
+      ) {
+
+        const days =
+          Number(
+            remainingText.replace(
+              /\D/g,
+              ""
+            )
+          );
+
+        matchesCampaignFilter =
+          days > 0 &&
+          days <= 7;
+      }
+
+
+      const createdDate =
+  campaign.createdAt?.toDate
+    ? campaign.createdAt.toDate()
+    : null;
+
+if (
+  createdDate &&
+  periodFilter !== "all"
+) {
+
+  const now =
+    new Date();
+
+  const diffDays =
+    Math.floor(
+      (
+        now.getTime() -
+        createdDate.getTime()
+      ) /
+      (1000 * 60 * 60 * 24)
+    );
+
+  if (
+    periodFilter === "7"
+  ) {
+
+    matchesPeriod =
+      diffDays <= 7;
+
+  }
+
+  if (
+    periodFilter === "14"
+  ) {
+
+    matchesPeriod =
+      diffDays <= 14;
+
+  }
+
+  if (
+    periodFilter === "month"
+  ) {
+
+    matchesPeriod =
+      createdDate.getMonth() ===
+        now.getMonth() &&
+      createdDate.getFullYear() ===
+        now.getFullYear();
+
+  }
+
+  if (
+    periodFilter === "lastMonth"
+  ) {
+
+    const lastMonth =
+      new Date();
+
+    lastMonth.setMonth(
+      now.getMonth() - 1
+    );
+
+    matchesPeriod =
+      createdDate.getMonth() ===
+        lastMonth.getMonth() &&
+      createdDate.getFullYear() ===
+        lastMonth.getFullYear();
+
+  }
+
+  if (
+    periodFilter === "3months"
+  ) {
+
+    matchesPeriod =
+      diffDays <= 90;
+
+  }
+
+  if (
+    periodFilter === "year"
+  ) {
+
+    matchesPeriod =
+      createdDate.getFullYear() ===
+      now.getFullYear();
+
+  }
+
+}
+
+      return (
+  matchesSearch &&
+  matchesCategory &&
+  matchesCampaignFilter &&
+  matchesPeriod
+);
+
+    })
+    .sort((a, b) => {
+
+      if (
+        campaignFilter ===
+        "Maiores arrecadações"
+      ) {
+
+        return (
+          parseMoney(
+            b.raisedAmount
+          ) -
+          parseMoney(
+            a.raisedAmount
+          )
+        );
+      }
+
+      const dateA =
+        a.createdAt?.seconds || 0;
+
+      const dateB =
+        b.createdAt?.seconds || 0;
+
+      return dateB - dateA;
+
+    });
+
+
+    
   return (
     <section className="crowdfunding-page">
 
@@ -404,30 +628,101 @@ async function handleSaveCampaign(
             <Search size={20} />
 
             <input
-              type="text"
-              placeholder="Busque campanhas, causas ou pessoas..."
-            />
+  type="text"
+  placeholder="Busque campanhas, causas ou pessoas..."
+  value={searchTerm}
+  onChange={(event) =>
+    setSearchTerm(
+      event.target.value
+    )
+  }
+/>
 
           </div>
 
-          <div className="crowdfunding-actions">
+         <div className="crowdfunding-actions">
 
-            <button className="filter-button">
-              <SlidersHorizontal size={18} />
-              Filtros
-            </button>
+  <select
+    className="crowdfunding-select"
+    value={campaignFilter}
+    onChange={(event) =>
+      setCampaignFilter(
+        event.target.value
+      )
+    }
+  >
 
-            <button className="dropdown-button">
-              Categorias
-              <ChevronDown size={18} />
-            </button>
+    <option>
+      Todas
+    </option>
 
-            <button className="dropdown-button">
-              Mais recentes
-              <ChevronDown size={18} />
-            </button>
+    <option>
+      Abertas
+    </option>
 
-          </div>
+    <option>
+      Recentes
+    </option>
+
+    <option>
+      Perto de encerrar
+    </option>
+
+    <option>
+      Encerradas
+    </option>
+
+    <option>
+      Metas batidas
+    </option>
+
+    <option>
+      Maiores arrecadações
+    </option>
+
+  </select>
+
+  <select
+    className="crowdfunding-select"
+    value={periodFilter}
+    onChange={(event) =>
+      setPeriodFilter(
+        event.target.value
+      )
+    }
+  >
+
+    <option value="all">
+      Desde o início
+    </option>
+
+    <option value="7">
+      Últimos 7 dias
+    </option>
+
+    <option value="14">
+      Últimos 14 dias
+    </option>
+
+    <option value="lastMonth">
+      Mês passado
+    </option>
+
+    <option value="month">
+      Este mês
+    </option>
+
+    <option value="3months">
+      Últimos 3 meses
+    </option>
+
+    <option value="year">
+      Este ano
+    </option>
+
+  </select>
+
+</div>
 
         </div>
 
@@ -462,52 +757,162 @@ async function handleSaveCampaign(
     }`}
   >
 
-    <button className="active">
+   <button
+  className={
+    selectedCategory === "Todos"
+      ? "active"
+      : ""
+  }
+  onClick={() =>
+    setSelectedCategory(
+      "Todos"
+    )
+  }
+>
       <HeartHandshake size={16} />
       Todos
     </button>
 
-    <button>
+   <button
+  className={
+    selectedCategory === "Educação"
+      ? "active"
+      : ""
+  }
+  onClick={() =>
+    setSelectedCategory(
+      "Educação"
+    )
+  }
+>
       <GraduationCap size={16} />
       Educação
     </button>
 
-    <button>
+   <button
+  className={
+    selectedCategory === "Emergenciais"
+      ? "active"
+      : ""
+  }
+  onClick={() =>
+    setSelectedCategory(
+      "Emergenciais"
+    )
+  }
+>
       <TriangleAlert size={16} />
       Emergenciais
     </button>
 
-    <button>
+   <button
+  className={
+    selectedCategory === "Empatia"
+      ? "active"
+      : ""
+  }
+  onClick={() =>
+    setSelectedCategory(
+      "Empatia"
+    )
+  }
+>
       <HandHeart size={16} />
       Empatia
     </button>
 
-    <button>
+    <button
+  className={
+    selectedCategory === "Esporte"
+      ? "active"
+      : ""
+  }
+  onClick={() =>
+    setSelectedCategory(
+      "Esporte"
+    )
+  }
+>
       <Trophy size={16} />
       Esporte
     </button>
 
-    <button>
+    <button
+  className={
+    selectedCategory === "Geração de renda"
+      ? "active"
+      : ""
+  }
+  onClick={() =>
+    setSelectedCategory(
+      "Geração de renda"
+    )
+  }
+>
       <BriefcaseBusiness size={16} />
       Geração de renda
     </button>
 
-    <button>
+    <button
+  className={
+    selectedCategory === "Moradia"
+      ? "active"
+      : ""
+  }
+  onClick={() =>
+    setSelectedCategory(
+      "Moradia"
+    )
+  }
+>
       <House size={16} />
       Moradia
     </button>
 
-    <button>
+  <button
+  className={
+    selectedCategory === "Projetos sociais"
+      ? "active"
+      : ""
+  }
+  onClick={() =>
+    setSelectedCategory(
+      "Projetos sociais"
+    )
+  }
+>
       <HeartHandshake size={16} />
       Projetos sociais
     </button>
 
-    <button>
+    <button
+  className={
+    selectedCategory === "Recorrente"
+      ? "active"
+      : ""
+  }
+  onClick={() =>
+    setSelectedCategory(
+      "Recorrente"
+    )
+  }
+>
       <Repeat size={16} />
       Recorrente
     </button>
 
-    <button>
+   <button
+  className={
+    selectedCategory === "Saúde"
+      ? "active"
+      : ""
+  }
+  onClick={() =>
+    setSelectedCategory(
+      "Saúde"
+    )
+  }
+>
       <HeartPulse size={16} />
       Saúde
     </button>
@@ -526,9 +931,23 @@ async function handleSaveCampaign(
     Carregando campanhas...
   </p>
 
+) : filteredCampaigns.length === 0 ? (
+
+  <div className="campaigns-empty">
+
+    <strong>
+      Nenhuma vaquinha encontrada
+    </strong>
+
+    <p>
+      Não encontramos campanhas para os filtros selecionados.
+    </p>
+
+  </div>
+
 ) : (
 
-  campaigns.map((campaign) => (
+  filteredCampaigns.map((campaign) => (
               <div
   key={campaign.id}
   className="campaign-card"
