@@ -107,7 +107,7 @@
   margin-bottom: 32px;
 }
 
-.monthly-right button {
+.monthly-button2 {
   height: 48px;
 
   padding: 0 34px;
@@ -127,9 +127,15 @@
   transition: 0.25s ease;
 
   margin-bottom: 52px;
+
+  text-decoration: none;
+
+display: inline-flex;
+align-items: center;
+justify-content: center;
 }
 
-.monthly-right button:hover {
+.monthly-button2:hover {
   opacity: 0.92;
 }
 
@@ -264,7 +270,7 @@
     color: rgba(255,255,255,0.94);
   }
 
-  .monthly-right button {
+.monthly-button2 {
     width: 200px;
 
     height: 58px;
@@ -284,9 +290,16 @@
     transition: 0.25s ease;
 
     margin-bottom: 38px;
+
+    text-decoration: none;
+
+display: inline-flex;
+align-items: center;
+justify-content: center;
+
   }
 
-  .monthly-right button:hover {
+  .monthly-button2:hover {
     opacity: 0.92;
   }
 

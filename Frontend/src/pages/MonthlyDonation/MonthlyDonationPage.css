@@ -1,0 +1,784 @@
+.monthly-page {
+  width: 100%;
+
+  background: var(--white);
+
+}
+
+/* HERO */
+
+.monthly-hero {
+  width: 100%;
+  height: 560px;
+
+  position: relative;
+
+  overflow: hidden;
+}
+
+.monthly-hero img {
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+}
+
+/* OVERLAY */
+
+.monthly-overlay {
+  position: absolute;
+  inset: 0;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(15, 40, 12, 0.88),
+      rgba(38, 74, 18, 0.74)
+    );
+}
+
+/* CONTEÚDO */
+
+.monthly-hero-content {
+  width: 100%;
+  max-width: 1300px;
+
+  height: 100%;
+
+  margin: 0 auto;
+
+  padding: 0 80px;
+
+  position: absolute;
+  inset: 0;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* BADGE */
+
+.hero-badge {
+  display: inline-flex;
+
+  width: fit-content;
+
+  padding: 8px 16px;
+
+  border-radius: 999px;
+
+  background: rgba(126, 211, 33, 0.16);
+
+  border: 1px solid rgba(126, 211, 33, 0.35);
+
+  color: #b7ff6a;
+
+  font-size: 13px;
+  font-weight: 700;
+
+  margin-bottom: 20px;
+
+  backdrop-filter: blur(10px);
+}
+
+/* TEXTO */
+
+.monthly-hero-content h1 {
+  font-size: 58px;
+
+  line-height: 0.95;
+
+  letter-spacing: -3px;
+
+  color: white;
+
+  margin-bottom: 24px;
+
+  max-width: 980px;
+}
+
+.monthly-hero-content h1 span {
+  color: var(--primary);
+}
+
+.monthly-hero-content p {
+  max-width: 760px;
+
+  font-size: 20px;
+
+  line-height: 1.7;
+
+  color: rgba(255,255,255,0.92);
+
+  margin-bottom: 14px;
+}
+
+.monthly-hero-content small {
+  display: block;
+
+  color: rgba(255,255,255,0.72);
+
+  font-size: 16px;
+
+  margin-top: 20px;
+}
+/* BOTÃO */
+
+.monthly-hero-content button {
+  width: fit-content;
+
+  height: 56px;
+
+  padding: 0 30px;
+
+  border: none;
+  border-radius: 16px;
+
+  background: var(--primary);
+
+  color: white;
+
+  font-size: 16px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: 0.25s ease;
+}
+
+.monthly-hero-content button:hover {
+  opacity: 0.92;
+}
+/* ========================================= */
+/* RESPONSIVO MOBILE */
+/* ========================================= */
+
+@media (max-width: 980px) {
+
+  .monthly-hero {
+    height: 520px;
+  }
+
+  .monthly-hero-content {
+    width: 100%;
+
+    padding:
+      120px 26px 60px;
+
+    align-items: flex-start;
+
+    justify-content: center;
+
+    text-align: left;
+  }
+
+  .hero-badge {
+    font-size: 12px;
+
+    padding: 8px 14px;
+
+    margin-bottom: 18px;
+  }
+
+  .monthly-hero-content h1 {
+    font-size: 40px;
+
+    line-height: 0.95;
+
+    letter-spacing: -2px;
+
+    margin-bottom: 18px;
+
+    max-width: 100%;
+  }
+
+  .monthly-hero-content p {
+    max-width: 100%;
+
+    font-size: 15px;
+
+    line-height: 1.6;
+
+    margin-bottom: 12px;
+  }
+
+  .monthly-hero-content small {
+    font-size: 14px;
+
+    margin-bottom: 26px;
+  }
+
+ .monthly-hero-content button {
+    width: auto;
+
+    min-width: 240px;
+
+    max-width: none;
+
+    flex: none;
+
+    align-self: flex-start;
+  }
+
+}
+
+/* ========================================= */
+/* MOBILE PEQUENO */
+/* ========================================= */
+
+@media (max-width: 520px) {
+
+  .monthly-hero {
+    height: 500px;
+  }
+
+  .monthly-hero-content {
+    padding:
+      110px 22px 50px;
+  }
+
+  .monthly-hero-content h1 {
+    font-size: 34px;
+
+    line-height: 0.98;
+
+    letter-spacing: -1.5px;
+  }
+
+  .monthly-hero-content p {
+    font-size: 14px;
+
+    line-height: 1.55;
+  }
+
+  .monthly-hero-content small {
+    font-size: 13px;
+  }
+
+ 
+
+}
+
+
+
+.monthly-values {
+  width: 100%;
+
+  padding: 80px 0;
+
+  
+}
+
+.monthly-values-container {
+  width: 100%;
+  max-width: 1300px;
+
+  margin: 0 auto;
+
+  padding: 0 80px;
+}
+
+.monthly-values-title {
+  text-align: center;
+
+  margin-bottom: 44px;
+}
+
+.monthly-values-title span {
+  display: inline-flex;
+
+  padding: 8px 16px;
+
+  border-radius: 999px;
+
+  background: rgba(126, 211, 33, 0.1);
+
+  color: var(--primary);
+
+  font-size: 13px;
+  font-weight: 700;
+
+  margin-bottom: 16px;
+}
+
+.monthly-values-title h2 {
+  max-width: 680px;
+
+  margin: 0 auto;
+
+  font-size: 42px;
+  font-weight: 900;
+
+  line-height: 1.1;
+
+  color: var(--secondary);
+}
+
+.monthly-values-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+
+  gap: 20px;
+}
+
+.monthly-value-card {
+  position: relative;
+
+  min-height: 240px;
+
+  padding: 32px 22px;
+
+  border-radius: 28px;
+
+  background: white;
+
+  border: 1px solid #edf0f3;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  text-align: center;
+}
+
+.monthly-value-card h3 {
+  font-size: 32px;
+  font-weight: 900;
+
+  color: var(--secondary);
+
+  margin-bottom: 8px;
+  margin-top: 20px;
+}
+
+.monthly-value-card p {
+  min-height: 44px;
+
+  font-size: 16px;
+  line-height: 1.4;
+
+  color: var(--text-light);
+
+  margin-bottom: 14px;
+}
+
+.monthly-value-card button {
+  width: 100%;
+  height: 52px;
+
+  border: none;
+  border-radius: 16px;
+
+  background: var(--primary);
+
+  color: white;
+
+  font-size: 16px;
+  font-weight: 800;
+
+  cursor: pointer;
+}
+
+.monthly-value-card small {
+  position: absolute;
+
+  top: 10px;
+
+
+  padding: 7px 14px;
+
+  border-radius: 999px;
+
+  background: white;
+
+  color: var(--primary);
+
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.monthly-value-card.active {
+  background: var(--primary);
+
+  border-color: var(--primary);
+}
+
+.monthly-value-card.active h3,
+.monthly-value-card.active p {
+  color: white;
+}
+
+.monthly-value-card.active button {
+  background: white;
+
+  color: var(--primary);
+}
+
+.custom-value {
+  font-size: 26px !important;
+}
+
+/* RESPONSIVO */
+
+@media (max-width: 980px) {
+
+  .monthly-values {
+    padding: 64px 0;
+  }
+
+  .monthly-values-container {
+    padding: 0 22px;
+  }
+
+  .monthly-values-title {
+    margin-bottom: 34px;
+  }
+
+  .monthly-values-title h2 {
+    font-size: 32px;
+  }
+
+  .monthly-values-grid {
+    grid-template-columns: 1fr;
+
+    gap: 16px;
+  }
+
+  .monthly-value-card {
+    min-height: auto;
+
+    padding: 28px 22px;
+  }
+
+  .monthly-value-card h3 {
+    font-size: 28px;
+  }
+
+  .monthly-value-card p {
+    min-height: auto;
+
+    font-size: 15px;
+
+    margin-bottom: 22px;
+  }
+
+  .monthly-value-card button {
+    height: 50px;
+
+    font-size: 15px;
+  }
+
+}
+
+
+
+.monthly-story {
+  width: 100%;
+
+  padding: 160px 0;
+
+background: #f7f8fa;
+}
+
+.monthly-story-container {
+  width: 100%;
+  max-width: 1300px;
+
+  margin: 0 auto;
+
+  padding: 0 80px;
+
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+
+  gap: 70px;
+
+  align-items: center;
+}
+
+/* IMAGEM */
+
+.monthly-story-image img {
+  width: 100%;
+
+  height: 420px;
+
+  object-fit: cover;
+
+  border-radius: 34px;
+}
+
+/* TEXTO */
+
+.monthly-story-content span {
+  display: inline-flex;
+
+  padding: 8px 16px;
+
+  border-radius: 999px;
+
+  background: rgba(126, 211, 33, 0.1);
+
+  color: var(--primary);
+
+  font-size: 13px;
+  font-weight: 700;
+
+  margin-bottom: 18px;
+}
+
+.monthly-story-content h2 {
+  max-width: 520px;
+
+  font-size: 52px;
+  font-weight: 900;
+
+  line-height: 1.05;
+
+  color: var(--secondary);
+
+  margin-bottom: 24px;
+}
+
+.monthly-story-content p {
+  max-width: 560px;
+
+  font-size: 18px;
+  line-height: 1.8;
+
+  color: var(--text-light);
+
+  margin-bottom: 34px;
+}
+
+/* LISTA */
+
+.monthly-story-list {
+  display: flex;
+  flex-direction: column;
+
+  gap: 18px;
+}
+
+.monthly-story-list div {
+  display: flex;
+  align-items: center;
+
+  gap: 12px;
+}
+
+.monthly-story-list svg {
+  color: var(--primary);
+
+  min-width: 20px;
+}
+
+.monthly-story-list p {
+  margin: 0;
+
+  font-size: 16px;
+  font-weight: 600;
+
+  color: var(--secondary);
+}
+
+/* RESPONSIVO */
+
+@media (max-width: 980px) {
+
+  .monthly-story {
+    padding: 64px 0;
+  }
+
+  .monthly-story-container {
+    grid-template-columns: 1fr;
+
+    gap: 42px;
+
+    padding: 0 22px;
+  }
+
+  .monthly-story-image img {
+    height: 360px;
+
+    border-radius: 28px;
+  }
+
+  .monthly-story-content h2 {
+    font-size: 36px;
+  }
+
+  .monthly-story-content p {
+    font-size: 16px;
+
+    line-height: 1.7;
+  }
+
+}
+
+@media (max-width: 520px) {
+
+  .monthly-story-image img {
+    height: 280px;
+  }
+
+  .monthly-story-content h2 {
+    font-size: 32px;
+  }
+
+}
+
+.monthly-steps {
+  width: 100%;
+
+  padding: 90px 0;
+
+ 
+}
+
+.monthly-steps-container {
+  width: 100%;
+  max-width: 1300px;
+
+  margin: 0 auto;
+
+  padding: 0 80px;
+}
+
+/* TÍTULO */
+
+.monthly-steps-title {
+  text-align: center;
+
+  margin-bottom: 54px;
+}
+
+.monthly-steps-title span {
+  display: inline-flex;
+
+  padding: 8px 16px;
+
+  border-radius: 999px;
+
+  background: rgba(126, 211, 33, 0.1);
+
+  color: var(--primary);
+
+  font-size: 13px;
+  font-weight: 700;
+
+  margin-bottom: 18px;
+}
+
+.monthly-steps-title h2 {
+  max-width: 700px;
+
+  margin: 0 auto;
+
+  font-size: 46px;
+  font-weight: 900;
+
+  line-height: 1.08;
+
+  color: var(--secondary);
+}
+
+/* GRID */
+
+.monthly-steps-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+
+  gap: 30px;
+}
+
+/* CARD */
+
+.monthly-step-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  text-align: center;
+}
+
+.monthly-step-icon {
+  width: 88px;
+  height: 88px;
+
+  border-radius: 28px;
+
+  background: rgba(126, 211, 33, 0.1);
+
+  border: 1px solid rgba(126, 211, 33, 0.16);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: 24px;
+}
+
+.monthly-step-icon svg {
+  color: var(--primary);
+
+  stroke-width: 1.8;
+}
+
+.monthly-step-card h3 {
+  font-size: 26px;
+  font-weight: 800;
+
+  line-height: 1.2;
+
+  color: var(--secondary);
+
+  margin-bottom: 16px;
+}
+
+.monthly-step-card p {
+  max-width: 260px;
+
+  font-size: 17px;
+  line-height: 1.7;
+
+  color: var(--text-light);
+}
+
+/* RESPONSIVO */
+
+@media (max-width: 980px) {
+
+  .monthly-steps {
+    padding: 64px 0;
+  }
+
+  .monthly-steps-container {
+    padding: 0 22px;
+  }
+
+  .monthly-steps-title {
+    margin-bottom: 42px;
+  }
+
+  .monthly-steps-title h2 {
+    font-size: 34px;
+  }
+
+  .monthly-steps-grid {
+    grid-template-columns: 1fr;
+
+    gap: 42px;
+  }
+
+  .monthly-step-card h3 {
+    font-size: 24px;
+  }
+
+  .monthly-step-card p {
+    font-size: 15px;
+  }
+
+}

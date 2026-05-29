@@ -264,6 +264,8 @@
   grid-template-columns: repeat(3, 1fr);
 
   gap: 22px;
+
+  align-items: start;
 }
 
 /* ========================================= */
@@ -282,6 +284,9 @@
   transition: 0.25s ease;
 
   cursor: pointer;
+  height: fit-content;
+
+  
 }
 
 .campaign-card:hover {
@@ -354,6 +359,26 @@
   color: var(--secondary);
 
   margin-bottom: 20px;
+}
+
+.campaign-description {
+  font-size: 14px;
+
+  line-height: 1.6;
+
+  color: #7c8898;
+
+  margin-top: -8px;
+
+  margin-bottom: 18px;
+
+  display: -webkit-box;
+
+  -webkit-line-clamp: 3;
+
+  -webkit-box-orient: vertical;
+
+  overflow: hidden;
 }
 
 .campaign-progress-info {
@@ -659,6 +684,26 @@
     overflow: hidden;
   }
 
+  .campaign-description {
+  font-size: 14px;
+
+  line-height: 1.6;
+
+  color: #7c8898;
+
+  margin-top: -8px;
+
+  margin-bottom: 18px;
+
+  display: -webkit-box;
+
+  -webkit-line-clamp: 3;
+
+  -webkit-box-orient: vertical;
+
+  overflow: hidden;
+}
+
   .campaign-progress-info small {
     font-size: 10px;
   }
@@ -678,4 +723,19 @@
   .campaign-goal {
     font-size: 10px;
   }
+}
+
+
+.save-button {
+  transition: 0.25s ease;
+}
+
+.save-button.active {
+  background: var(--primary);
+ 
+  color: white;
+}
+
+.save-button.active svg {
+  color: white;
 }

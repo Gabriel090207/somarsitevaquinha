@@ -8,6 +8,9 @@ import {
   BadgeDollarSign,
 } from "lucide-react";
 
+import { Link }
+  from "react-router-dom";
+
 export function MonthlyDonation() {
   return (
     <section
@@ -42,9 +45,15 @@ export function MonthlyDonation() {
             da plataforma Somar.
           </p>
 
-          <button>
-            Saiba mais
-          </button>
+
+           <Link
+  to="/doador-mensal"
+  className="monthly-button2"
+>
+
+  Saiba mais
+
+</Link>
 
           <div className="monthly-benefits">
 

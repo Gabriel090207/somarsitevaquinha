@@ -230,15 +230,13 @@
   top: 12px;
   left: 12px;
 
-  width: 28px;
-  height: 28px;
+  width: 30px;
+  height: 30px;
 
   border: none;
   border-radius: 50%;
 
   background: rgba(126, 211, 33, 0.18);
-
-  backdrop-filter: blur(8px);
 
   display: flex;
   align-items: center;
@@ -248,9 +246,7 @@
 
   cursor: pointer;
 
-  transition: 0.25s ease;
-
-  z-index: 3;
+  backdrop-filter: blur(8px);
 }
 
 
@@ -309,18 +305,39 @@
   margin-bottom: 22px;
 }
 
+.campaign-description {
+  font-size: 14px;
+
+  line-height: 1.6;
+
+  color: #7c8898;
+
+  margin-top: -10px;
+
+  margin-bottom: 18px;
+
+  display: -webkit-box;
+
+  -webkit-line-clamp: 3;
+
+  -webkit-box-orient: vertical;
+
+  overflow: hidden;
+}
+
 .campaign-progress-info {
   display: flex;
   align-items: center;
   justify-content: space-between;
 
-  margin-bottom: 8px;
+
 }
 
 .campaign-progress-info small {
   font-size: 13px;
 
   color: #9aa1ab;
+    margin-bottom: -7px;
 }
 
 .campaign-progress {
@@ -627,6 +644,18 @@
     overflow: hidden;
   }
 
+  .campaign-description {
+  font-size: 11px;
+
+  line-height: 1.5;
+
+  margin-top: -4px;
+
+  margin-bottom: 12px;
+
+  -webkit-line-clamp: 3;
+}
+
   .campaign-progress-info {
     margin-bottom: 6px;
   }
@@ -652,4 +681,24 @@
 
     line-height: 1.4;
   }
+}
+
+
+.empty-campaigns {
+  width: 100%;
+
+  padding: 60px 20px;
+
+  border-radius: 24px;
+
+ 
+
+ 
+
+  text-align: center;
+
+  color: #7c8898;
+
+  font-size: 18px;
+  font-weight: 600;
 }

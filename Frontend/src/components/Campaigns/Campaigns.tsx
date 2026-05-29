@@ -1,8 +1,21 @@
 import "./Campaigns.css";
 
-import { useState } from "react";
+import {
+  useState,
+  useEffect,
+} from "react";
 
-import campaignImage from "../../assets/images/campanha.png";
+import {
+  collection,
+  onSnapshot,
+  query,
+  where,
+  limit,
+} from "firebase/firestore";
+
+import { db }
+  from "../../services/firebase";
+
 
 import {
   HeartHandshake,
@@ -21,40 +34,52 @@ import {
 
 import { useNavigate } from "react-router-dom";
 
-const campaigns = [
-  {
-    id:1,
-    category: "SAÚDE",
-    title:
-      "Vaquinha para Ana, que pode perder os dedos e os pulmões aos...",
-    value: "R$ 722,00",
-    goal: "Meta de R$ 38.000,00",
-    progress: 8,
-    remaining: "33 dias restantes",
-  },
+import {
+  doc,
+  setDoc,
+  deleteDoc,
+} from "firebase/firestore";
 
-  {
-    category: "MORADIA",
-    title:
-      "Mulher tem a casa incendiada pelo ex e dorme num barraco sem banheiro...",
-    value: "R$ 8.439,81",
-    goal: "Meta de R$ 120.000,00",
-    progress: 5,
-    remaining: "33 dias restantes",
-  },
+import {
+  auth,
+} from "../../services/firebase";
 
-  {
-    category: "EMERGENCIAIS",
-    title:
-      "Vaquinha para mulher que sobreviveu a mais de 10 martelad...",
-    value: "R$ 48.914,22",
-    goal: "Meta de R$ 70.000,00",
-    progress: 70,
-    remaining: "26 dias restantes",
-  },
-];
+import {
+  onAuthStateChanged,
+} from "firebase/auth";
+
+import { useToast }
+  from "../../contexts/ToastContext";
+
+
+type Campaign = {
+  id: string;
+
+  slug: string;
+
+  title: string;
+
+  story: string;
+
+  category: string;
+
+  imageUrl: string;
+
+  raisedAmount: string;
+
+  goalAmount: string;
+
+  duration: string;
+
+  status: string;
+
+  createdAt?: any;
+};
 
 export function Campaigns() {
+
+const [campaigns, setCampaigns] =
+  useState<Campaign[]>([]);
 
 
 const navigate = useNavigate();
@@ -62,8 +87,95 @@ const navigate = useNavigate();
 
 const [slide, setSlide] = useState(0);
 
+const [activeFilter, setActiveFilter] =
+  useState("Todos");
+
+
 const maxSlide =
   window.innerWidth <= 980 ? 4 : 1;
+
+const [savedCampaigns, setSavedCampaigns] =
+  useState<string[]>([]);
+
+const { showToast } =
+  useToast();
+
+useEffect(() => {
+
+  const campaignsRef =
+    collection(db, "campaigns");
+
+  const q =
+    query(
+      campaignsRef,
+      where(
+        "status",
+        "==",
+        "Publicada"
+      ),
+      limit(6)
+    );
+
+  const unsubscribe =
+    onSnapshot(
+      q,
+      (snapshot) => {
+
+        const campaignsData =
+          snapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          })) as Campaign[];
+
+        setCampaigns(campaignsData);
+      }
+    );
+
+  return () => unsubscribe();
+
+}, []);
+
+
+useEffect(() => {
+
+  const unsubscribeAuth =
+    onAuthStateChanged(
+      auth,
+      (user) => {
+
+        if (!user) return;
+
+        const savedRef =
+          collection(
+            db,
+            "users",
+            user.uid,
+            "savedCampaigns"
+          );
+
+        const unsubscribeSaved =
+          onSnapshot(
+            savedRef,
+            (snapshot) => {
+
+              setSavedCampaigns(
+                snapshot.docs.map(
+                  (doc) => doc.id
+                )
+              );
+
+            }
+          );
+
+        return () =>
+          unsubscribeSaved();
+      }
+    );
+
+  return () =>
+    unsubscribeAuth();
+
+}, []);
 
 const handleNext = () => {
   if (slide < maxSlide) {
@@ -76,6 +188,260 @@ const handlePrev = () => {
     setSlide((prev) => prev - 1);
   }
 };
+
+
+
+function parseMoney(
+  value?: string | number
+) {
+
+  if (!value) {
+    return 0;
+  }
+
+  if (typeof value === "number") {
+    return value;
+  }
+
+  return (
+    Number(
+      value.replace(/[^\d]/g, "")
+    ) / 100
+  );
+}
+
+function formatMoney(
+  value?: string | number
+) {
+
+  const amount =
+    parseMoney(value);
+
+  return amount.toLocaleString(
+    "pt-BR",
+    {
+      style: "currency",
+      currency: "BRL",
+    }
+  );
+}
+
+function calculateProgress(
+  raised: string,
+  goal: string
+) {
+
+  const raisedValue =
+    parseMoney(raised);
+
+  const goalValue =
+    parseMoney(goal);
+
+  if (!goalValue) return 0;
+
+  return Math.min(
+    Math.round(
+      (raisedValue / goalValue) * 100
+    ),
+    100
+  );
+}
+
+
+function calculateRemainingDays(
+  duration: string,
+  createdAt: any
+) {
+
+  if (!duration) {
+    return "Sem prazo";
+  }
+
+  const totalDays =
+    Number(
+      duration.replace(/\D/g, "")
+    );
+
+  if (!totalDays) {
+    return "Sem prazo";
+  }
+
+  if (!createdAt?.toDate) {
+    return `${totalDays} dias restantes`;
+  }
+
+  const createdDate =
+    createdAt.toDate();
+
+  const now =
+    new Date();
+
+ const startDate =
+  new Date(
+    createdDate.getFullYear(),
+    createdDate.getMonth(),
+    createdDate.getDate()
+  );
+
+const currentDate =
+  new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    now.getDate()
+  );
+
+const diffTime =
+  currentDate.getTime() -
+  startDate.getTime();
+
+const passedDays =
+  Math.floor(
+    diffTime /
+    (1000 * 60 * 60 * 24)
+  );
+
+  const remainingDays =
+    totalDays - passedDays;
+
+  if (remainingDays <= 0) {
+    return "Encerrada";
+  }
+
+  return `${remainingDays} dias restantes`;
+}
+
+function truncateStory(
+  text: string
+) {
+
+  if (!text) return "";
+
+  const words =
+    text.split(" ");
+
+  if (words.length <= 25) {
+    return text;
+  }
+
+  return (
+    words
+      .slice(0, 25)
+      .join(" ") + "..."
+  );
+}
+
+
+const filters = [
+  {
+    label: "Todos",
+    icon: HeartHandshake,
+  },
+  {
+    label: "Educação",
+    icon: GraduationCap,
+  },
+  {
+    label: "Emergenciais",
+    icon: TriangleAlert,
+  },
+  {
+    label: "Empatia",
+    icon: HandHeart,
+  },
+  {
+    label: "Esporte",
+    icon: Trophy,
+  },
+  {
+    label: "Geração de renda",
+    icon: BriefcaseBusiness,
+  },
+  {
+    label: "Moradia",
+    icon: House,
+  },
+  {
+    label: "Projetos sociais",
+    icon: HeartHandshake,
+  },
+  {
+    label: "Recorrente",
+    icon: Repeat,
+  },
+  {
+    label: "Saúde",
+    icon: HeartPulse,
+  },
+];
+
+const filteredCampaigns =
+  activeFilter === "Todos"
+    ? campaigns
+    : campaigns.filter(
+        (campaign) =>
+          campaign.category ===
+          activeFilter
+      );
+
+
+async function handleSaveCampaign(
+  campaignId: string
+) {
+
+  const user =
+    auth.currentUser;
+
+  if (!user) {
+
+    showToast(
+      "Faça login para salvar campanhas.",
+      "error"
+    );
+
+    return;
+  }
+
+  const saveRef =
+    doc(
+      db,
+      "users",
+      user.uid,
+      "savedCampaigns",
+      campaignId
+    );
+
+  const isSaved =
+    savedCampaigns.includes(
+      campaignId
+    );
+
+  if (isSaved) {
+
+    await deleteDoc(saveRef);
+
+    showToast(
+      "Campanha removida dos salvos.",
+      "info"
+    );
+
+  } else {
+
+    await setDoc(saveRef, {
+
+      campaignId,
+
+      createdAt:
+        new Date(),
+
+    });
+
+    showToast(
+      "Campanha salva com sucesso!",
+      "success"
+    );
+
+  }
+}
 
   return (
     <section className="campaigns">
@@ -112,55 +478,34 @@ const handlePrev = () => {
 }}
 >
 
-              <button className="active">
-                <HeartHandshake size={16} />
-                Todos
-              </button>
+            {filters.map((filter) => {
 
-              <button>
-                <GraduationCap size={16} />
-                Educação
-              </button>
+  const Icon = filter.icon;
 
-              <button>
-                <TriangleAlert size={16} />
-                Emergenciais
-              </button>
+  return (
 
-              <button>
-                <HandHeart size={16} />
-                Empatia
-              </button>
+    <button
+      key={filter.label}
+      className={
+        activeFilter === filter.label
+          ? "active"
+          : ""
+      }
+      onClick={() =>
+        setActiveFilter(
+          filter.label
+        )
+      }
+    >
 
-              <button>
-                <Trophy size={16} />
-                Esporte
-              </button>
+      <Icon size={16} />
 
-              <button>
-                <BriefcaseBusiness size={16} />
-                Geração de renda
-              </button>
+      {filter.label}
 
-              <button>
-                <House size={16} />
-                Moradia
-              </button>
+    </button>
 
-              <button>
-                <HeartHandshake size={16} />
-                Projetos sociais
-              </button>
-
-              <button>
-                <Repeat size={16} />
-                Recorrente
-              </button>
-
-              <button>
-                <HeartPulse size={16} />
-                Saúde
-              </button>
+  );
+})}
 
             </div>
 
@@ -183,24 +528,45 @@ const handlePrev = () => {
 
         <div className="campaigns-grid">
 
-          {campaigns.map((campaign) => (
-           <div
+          {filteredCampaigns.map(
+  (campaign) => (
+          <div
+  key={campaign.id}
   className="campaign-card"
   onClick={() =>
-    navigate(`/vaquinha/${campaign.id}`)
+    navigate(`/vaquinha/${campaign.slug}`)
   }
 >
 
               <div className="campaign-image">
 
                 <img
-                  src={campaignImage}
+                  src={campaign.imageUrl}
                   alt=""
                 />
 
-                <button className="save-button">
-                  <Bookmark size={14} />
-                </button>
+                <button
+  className={`save-button ${
+    savedCampaigns.includes(
+      campaign.id
+    )
+      ? "active"
+      : ""
+  }`}
+  onClick={(event) => {
+
+    event.stopPropagation();
+
+    handleSaveCampaign(
+      campaign.id
+    );
+
+  }}
+>
+
+  <Bookmark size={14} />
+
+</button>
 
               
 
@@ -209,21 +575,35 @@ const handlePrev = () => {
               <div className="campaign-content">
 
                 <span className="campaign-category">
-                  {campaign.category}
+                  {campaign.category.toUpperCase()}
                 </span>
 
                 <h3>
                   {campaign.title}
                 </h3>
 
+                <p className="campaign-description">
+
+  {truncateStory(
+    campaign.story
+  )}
+
+</p>
+
                 <div className="campaign-progress-info">
 
                   <small>
-                    {campaign.remaining}
+                    {calculateRemainingDays(
+  campaign.duration,
+  campaign.createdAt
+)}
                   </small>
 
                   <small>
-                    {campaign.progress}%
+                    {calculateProgress(
+  campaign.raisedAmount,
+  campaign.goalAmount
+)}%
                   </small>
 
                 </div>
@@ -231,25 +611,52 @@ const handlePrev = () => {
                 <div className="campaign-progress">
                   <div
                     style={{
-                      width: `${campaign.progress}%`,
+                      width: `${calculateProgress(
+  campaign.raisedAmount,
+  campaign.goalAmount
+)}%`,
                     }}
                   />
                 </div>
 
                 <strong>
-                  {campaign.value}
-                </strong>
+ {formatMoney(
+   campaign.raisedAmount
+ )}
+</strong>
 
                 <span className="campaign-goal">
-                  {campaign.goal}
+                Meta de {
+  formatMoney(
+    campaign.goalAmount
+  )
+}
                 </span>
 
               </div>
 
+              
+
             </div>
+
+            
           ))}
 
+          
+
+        
+
         </div>
+
+          {filteredCampaigns.length === 0 && (
+
+  <div className="empty-campaigns">
+
+    Nenhuma vaquinha encontrada
+
+  </div>
+
+)}
 
       </div>
 

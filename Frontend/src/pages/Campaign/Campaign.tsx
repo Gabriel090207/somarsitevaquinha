@@ -18,28 +18,262 @@ import {
   Users,
 } from "lucide-react";
 
-import campaignImage from "../../assets/images/campanha.png";
+import {
+  Link,
+  useParams,
+} from "react-router-dom";
+
+import {
+  collection,
+  onSnapshot,
+  query,
+  where,
+} from "firebase/firestore";
+
+import { db }
+  from "../../services/firebase";
+
+import {
+  doc,
+  setDoc,
+  deleteDoc,
+} from "firebase/firestore";
+
+import {
+  auth,
+} from "../../services/firebase";
+
+import {
+  onAuthStateChanged,
+} from "firebase/auth";
+
+import { useToast }
+  from "../../contexts/ToastContext";
+
+
+type CampaignData = {
+  id: string;
+
+  slug: string;
+
+  title: string;
+
+  story: string;
+
+  category: string;
+
+  imageUrl: string;
+
+  raisedAmount: string | number;
+
+goalAmount: string | number;
+
+  duration: string;
+
+  topics?: string[];
+
+  createdAt?: any;
+
+  beneficiaryName?: string;
+};
 
 export function Campaign() {
 
-  const [
-    activeTab,
-    setActiveTab,
-  ] = useState("history");
+const { slug } =
+  useParams();
 
-  const collected = 9275.8;
+const [
+  activeTab,
+  setActiveTab,
+] = useState("history");
 
-  const goal = 120000;
+const [campaign, setCampaign] =
+  useState<CampaignData | null>(
+    null
+  );
 
-  const percentage =
-    Math.round(
-      (collected / goal) * 100
-    );
+const [loading, setLoading] =
+  useState(true);
+
+
+const [isSaved, setIsSaved] =
+  useState(false);
+
+const { showToast } =
+  useToast();
+ 
 
 const [
   sidebarStopped,
   setSidebarStopped,
 ] = useState(false);
+
+
+function parseMoney(
+  value?: string | number
+) {
+
+  if (!value) {
+    return 0;
+  }
+
+  if (typeof value === "number") {
+    return value;
+  }
+
+  return (
+    Number(
+      value.replace(/[^\d]/g, "")
+    ) / 100
+  );
+}
+
+function formatMoney(
+  value?: string | number
+) {
+
+  const amount =
+    parseMoney(value);
+
+  return amount.toLocaleString(
+    "pt-BR",
+    {
+      style: "currency",
+      currency: "BRL",
+    }
+  );
+}
+
+const collected =
+  parseMoney(
+    campaign?.raisedAmount
+  );
+
+const goal =
+  parseMoney(
+    campaign?.goalAmount
+  );
+
+const percentage =
+  goal
+    ? Math.round(
+        (collected / goal) * 100
+      )
+    : 0;
+
+function calculateRemainingDays() {
+
+  if (
+    !campaign?.duration
+  ) {
+
+    return "Sem prazo";
+  }
+
+  const totalDays =
+    Number(
+      campaign.duration.replace(
+        /\D/g,
+        ""
+      )
+    );
+
+  if (
+    !campaign.createdAt?.toDate
+  ) {
+
+    return `${totalDays} dias restantes`;
+  }
+
+  const createdDate =
+    campaign.createdAt.toDate();
+
+  const now =
+    new Date();
+
+  const startDate =
+    new Date(
+      createdDate.getFullYear(),
+      createdDate.getMonth(),
+      createdDate.getDate()
+    );
+
+  const currentDate =
+    new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate()
+    );
+
+  const diffTime =
+    currentDate.getTime() -
+    startDate.getTime();
+
+  const passedDays =
+    Math.floor(
+      diffTime /
+      (1000 * 60 * 60 * 24)
+    );
+
+  const remainingDays =
+    totalDays - passedDays;
+
+  if (remainingDays <= 0) {
+    return "Encerrada";
+  }
+
+  return `${remainingDays} dias restantes`;
+}
+
+useEffect(() => {
+
+  if (!slug) return;
+
+  const campaignsRef =
+    collection(db, "campaigns");
+
+  const q =
+    query(
+      campaignsRef,
+      where(
+        "slug",
+        "==",
+        slug
+      )
+    );
+
+  const unsubscribe =
+    onSnapshot(
+      q,
+      (snapshot) => {
+
+        console.log(slug);
+
+        console.log(
+  snapshot.docs.map((doc) => doc.data())
+);
+
+        if (
+          !snapshot.empty
+        ) {
+
+          const data = {
+            id:
+              snapshot.docs[0].id,
+
+            ...snapshot.docs[0].data(),
+          } as CampaignData;
+
+          setCampaign(data);
+        }
+
+        setLoading(false);
+      }
+    );
+
+  return () => unsubscribe();
+
+}, [slug]);
 
 useEffect(() => {
 
@@ -91,6 +325,142 @@ useEffect(() => {
 
 }, []);
 
+
+useEffect(() => {
+
+  const unsubscribeAuth =
+    onAuthStateChanged(
+      auth,
+      (user) => {
+
+        if (!user || !campaign) return;
+
+        const savedRef =
+          doc(
+            db,
+            "users",
+            user.uid,
+            "savedCampaigns",
+            campaign.id
+          );
+
+        const unsubscribeSaved =
+          onSnapshot(
+            savedRef,
+            (snapshot) => {
+
+              setIsSaved(
+                snapshot.exists()
+              );
+
+            }
+          );
+
+        return () =>
+          unsubscribeSaved();
+      }
+    );
+
+  return () =>
+    unsubscribeAuth();
+
+}, [campaign]);
+
+if (loading) {
+
+  return (
+    <main className="campaign-page">
+      Carregando campanha...
+    </main>
+  );
+}
+
+if (!campaign) {
+
+  return (
+    <main className="campaign-page">
+      Campanha não encontrada.
+    </main>
+  );
+}
+
+function formatCreatedDate() {
+
+  if (
+    !campaign?.createdAt?.toDate
+  ) {
+
+    return "";
+  }
+
+  return campaign.createdAt
+    .toDate()
+    .toLocaleDateString(
+      "pt-BR",
+      {
+        day: "2-digit",
+        month: "long",
+        year: "numeric",
+      }
+    );
+}
+
+
+async function handleSaveCampaign() {
+
+  const user =
+    auth.currentUser;
+
+  if (!user) {
+
+    showToast(
+      "Faça login para salvar campanhas.",
+      "error"
+    );
+
+    return;
+  }
+
+  if (!campaign) return;
+
+  const saveRef =
+    doc(
+      db,
+      "users",
+      user.uid,
+      "savedCampaigns",
+      campaign.id
+    );
+
+  if (isSaved) {
+
+    await deleteDoc(saveRef);
+
+    showToast(
+      "Campanha removida dos salvos.",
+      "info"
+    );
+
+  } else {
+
+    await setDoc(saveRef, {
+
+      campaignId:
+        campaign.id,
+
+      createdAt:
+        new Date(),
+
+    });
+
+    showToast(
+      "Campanha salva com sucesso!",
+      "success"
+    );
+
+  }
+}
+
   return (
 
     <main className="campaign-page">
@@ -104,32 +474,42 @@ useEffect(() => {
             <div className="campaign-title-area">
 
               <span>
-                Saúde
+                {campaign.category}
               </span>
 
               <h1>
-                Pais pedem ajuda para filho que precisa de tratamento urgente
+                {campaign.title}
               </h1>
 
               <p>
-                Ajude essa família a garantir mais dignidade,
-                cuidado e esperança.
+                Ajude essa campanha com qualquer valor.
               </p>
 
             </div>
 
             <div className="campaign-gallery">
 
-              <button className="campaign-follow-floating">
+              <button
+  className={`campaign-follow-floating ${
+    isSaved
+      ? "active"
+      : ""
+  }`}
+  onClick={(event) => {
 
-                <Bookmark size={18} />
+    event.preventDefault();
 
-                Seguir
+    handleSaveCampaign();
 
-              </button>
+  }}
+>
+
+  <Bookmark size={18} />
+
+</button>
 
               <img
-                src={campaignImage}
+                src={campaign.imageUrl}
                 alt="Campanha"
               />
 
@@ -257,15 +637,8 @@ useEffect(() => {
                   </h3>
 
                   <p>
-                    Desde o início do tratamento, a rotina da família
-                    mudou completamente. O que antes parecia simples,
-                    hoje exige força, dedicação e muitos recursos.
-                  </p>
-
-                  <p>
-                    Com a sua ajuda, será possível garantir mais meses
-                    de acompanhamento, conforto e esperança.
-                  </p>
+  {campaign.story}
+</p>
 
                 </div>
 
@@ -405,30 +778,28 @@ useEffect(() => {
 
               <div className="campaign-tags">
 
-                <span>
-                  Doença rara
-                </span>
+  {campaign.topics?.map(
+    (topic) => (
 
-                <span>
-                  Tratamento
-                </span>
+      <span key={topic}>
+        {topic}
+      </span>
 
-                <span>
-                  Saúde
-                </span>
+    )
+  )}
 
-              </div>
+</div>
 
               <div className="campaign-meta">
 
                 <span>
                   <Calendar size={18} />
-                  Criado em 14 de maio de 2026
+                  Criado em {formatCreatedDate()}
                 </span>
 
                 <span>
                   <Tag size={18} />
-                  Saúde
+                  {campaign.category}
                 </span>
 
               </div>
@@ -449,13 +820,20 @@ useEffect(() => {
                 Arrecadado
               </span>
 
-              <h2>
-                R$ 9.275,80
-              </h2>
-
+             <h2>
+  {
+    formatMoney(
+      campaign.raisedAmount
+    )
+  }
+</h2>
               <p>
-                De R$ 120.000,00
-              </p>
+  De {
+    formatMoney(
+      campaign.goalAmount
+    )
+  }
+</p>
 
               <div className="campaign-progress">
 
@@ -470,7 +848,7 @@ useEffect(() => {
               <div className="campaign-progress-info">
 
                 <span>
-                  27 dias restantes
+                 {calculateRemainingDays()}
                 </span>
 
                 <span>
@@ -479,9 +857,14 @@ useEffect(() => {
 
               </div>
 
-              <button>
-                Quero Doar
-              </button>
+              <Link
+  to={`/checkout/${campaign.slug}`}
+  className="campaign-donate-button"
+>
+
+  Quero Doar
+
+</Link>
 
             </div>
 
@@ -493,13 +876,7 @@ useEffect(() => {
 
             </button>
 
-            <button className="campaign-follow-button">
-
-              <Bookmark size={18} />
-
-              Seguir vaquinha para saber das novidades
-
-            </button>
+           
 
           </aside>
 

@@ -112,10 +112,12 @@ async function handleLogout() {
             Transforme vidas o ano todo.
           </p>
 
-          <button>
-            Seja um doador mensal
-          </button>
-
+        <NavLink
+  to="/doador-mensal"
+  className="monthly-button"
+>
+  Seja um doador mensal
+</NavLink>
         </div>
 
       </div>

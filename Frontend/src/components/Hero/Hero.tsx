@@ -9,6 +9,9 @@ import {
   Lock,
 } from "lucide-react";
 
+import { Link }
+  from "react-router-dom";
+
 export function Hero() {
   return (
     <section
@@ -46,9 +49,14 @@ export function Hero() {
             Aqui não tem história fake!
           </small>
 
-          <button>
-            Conheça nossa história
-          </button>
+          <Link
+  to="/sobre"
+  className="hero-button"
+>
+
+  Conheça nossa história
+
+</Link>
 
         </div>
 

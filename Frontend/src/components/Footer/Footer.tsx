@@ -5,9 +5,11 @@ import logo from "../../assets/logo/logo.png";
 import {
   FiInstagram,
   FiFacebook,
-  FiTwitter,
-  FiLinkedin,
 } from "react-icons/fi";
+import { FaWhatsapp } from "react-icons/fa";
+
+import { Link }
+  from "react-router-dom";
 
 export function Footer() {
   return (
@@ -30,6 +32,12 @@ export function Footer() {
               Plataforma solidária brasileira
             </strong>
 
+            <small className="footer-cnpj">
+  CNPJ: 65.703.333/0001-22
+</small>
+
+        
+
           </div>
 
           <div className="footer-column">
@@ -39,15 +47,15 @@ export function Footer() {
             </h4>
 
             <p>
-              Avenida Solidária, 123
+              Avenida Prefeito João Nunes de Menezes, Número 119
             </p>
 
             <p>
-              Centro • São Paulo/SP
+              Bairro Centro • Município Tiangua - CE
             </p>
 
             <p>
-              CEP 00000-000
+              CEP: 62.327-390
             </p>
 
           </div>
@@ -60,20 +68,21 @@ export function Footer() {
 
             <div className="footer-socials">
 
-              <a href="#">
+              <a href="https://www.instagram.com/p/DYN7NWGOYGK/?igsh=a2Rpc29tMGdzZTd1"
+              target="_blank"
+              rel="noopener noreferrer">
+              
                 <FiInstagram size={22} />
               </a>
 
-              <a href="#">
+              <a href="https://www.facebook.com/people/Vaquinha-Somar/61590016323603/?ref=PROFILE_EDIT_xav_ig_profile_page_web#"
+                target="_blank"
+              rel="noopener noreferrer">
                 <FiFacebook size={22} />
               </a>
 
               <a href="#">
-                <FiTwitter size={22} />
-              </a>
-
-              <a href="#">
-                <FiLinkedin size={22} />
+                <FaWhatsapp size={22} />
               </a>
 
             </div>
@@ -98,13 +107,13 @@ export function Footer() {
               Taxas
             </a>
 
-            <a href="#">
-              Termos de uso
-            </a>
+            <Link to="/termos-de-uso">
+  Termos de uso
+</Link>
 
-            <a href="#">
-              Política de Privacidade
-            </a>
+            <Link to="/politica-de-privacidade">
+  Política de Privacidade
+</Link>
 
             <a href="#">
               Cookies

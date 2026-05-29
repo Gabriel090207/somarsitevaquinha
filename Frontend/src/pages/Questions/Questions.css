@@ -1,7 +1,8 @@
 .questions-page {
   width: 100%;
 
-  background: #fafafa;
+    background: var(--white);
+
 }
 
 /* ========================================= */

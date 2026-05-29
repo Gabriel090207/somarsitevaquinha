@@ -3,7 +3,8 @@
 
   min-height: 100vh;
 
-  background: #f7f8fa;
+   background: var(--white);
+
 
   padding: 48px 24px;
 }

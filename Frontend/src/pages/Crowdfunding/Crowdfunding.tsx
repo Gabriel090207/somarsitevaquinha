@@ -1,8 +1,23 @@
 import "./Crowdfunding.css";
-import { useState } from "react";
+import {
+  useState,
+  useEffect,
+} from "react";
 
+import { useToast }
+  from "../../contexts/ToastContext";
 
-import campaignImage from "../../assets/images/campanha.png";
+import {
+  query,
+  where,
+} from "firebase/firestore";
+
+import { db }
+  from "../../services/firebase";
+
+import {
+  useNavigate,
+} from "react-router-dom";
 
 import {
   Search,
@@ -21,71 +36,345 @@ import {
   Repeat,
 } from "lucide-react";
 
-const campaigns = [
-  {
-    category: "SAÚDE",
-    title:
-      "Vaquinha para Ana, que pode perder os dedos e os pulmões aos...",
-    value: "R$ 722,00",
-    goal: "Meta de R$ 38.000,00",
-    progress: 8,
-    remaining: "33 dias restantes",
-  },
+import {
+  doc,
+  setDoc,
+  deleteDoc,
+  collection,
+  onSnapshot,
+} from "firebase/firestore";
 
-  {
-    category: "MORADIA",
-    title:
-      "Mulher tem a casa incendiada pelo ex e dorme num barraco sem banheiro...",
-    value: "R$ 8.439,81",
-    goal: "Meta de R$ 120.000,00",
-    progress: 5,
-    remaining: "33 dias restantes",
-  },
+import {
+  auth,
+} from "../../services/firebase";
 
-  {
-    category: "EMERGENCIAIS",
-    title:
-      "Vaquinha para mulher que sobreviveu a mais de 10 marteladas...",
-    value: "R$ 48.914,22",
-    goal: "Meta de R$ 70.000,00",
-    progress: 70,
-    remaining: "26 dias restantes",
-  },
 
-  {
-    category: "EDUCAÇÃO",
-    title:
-      "Ajude jovens estudantes a continuarem seus estudos em segurança...",
-    value: "R$ 12.440,00",
-    goal: "Meta de R$ 22.000,00",
-    progress: 52,
-    remaining: "18 dias restantes",
-  },
+import {
+  onAuthStateChanged,
+} from "firebase/auth";
 
-  {
-    category: "PROJETOS",
-    title:
-      "Projeto social para alimentação de famílias em vulnerabilidade...",
-    value: "R$ 4.220,00",
-    goal: "Meta de R$ 10.000,00",
-    progress: 42,
-    remaining: "41 dias restantes",
-  },
+type Campaign = {
+  id: string;
 
-  {
-    category: "SAÚDE",
-    title:
-      "Ajude no tratamento urgente de uma criança em estado delicado...",
-    value: "R$ 18.540,00",
-    goal: "Meta de R$ 30.000,00",
-    progress: 61,
-    remaining: "12 dias restantes",
-  },
-];
+  slug: string;
+
+  title: string;
+
+  category: string;
+
+  imageUrl: string;
+
+  raisedAmount: string | number;
+
+goalAmount: string | number;
+
+  duration: string;
+
+  story: string;
+
+  createdAt: any;
+
+  status: string;
+};
 
 export function Crowdfunding() {
 
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+const { showToast } =
+  useToast();
+
+const [campaigns, setCampaigns] =
+  useState<Campaign[]>([]);
+
+const [loading, setLoading] =
+  useState(true);
+
+const navigate =
+  useNavigate();
+
+const [sidebarOpen, setSidebarOpen] = useState(false);
+
+const [savedCampaigns, setSavedCampaigns] =
+  useState<string[]>([]);
+
+function parseMoney(
+  value?: string | number
+) {
+
+  if (!value) {
+    return 0;
+  }
+
+  if (typeof value === "number") {
+    return value;
+  }
+
+  return (
+    Number(
+      value.replace(/[^\d]/g, "")
+    ) / 100
+  );
+}
+
+function formatMoney(
+  value?: string | number
+) {
+
+  const amount =
+    parseMoney(value);
+
+  return amount.toLocaleString(
+    "pt-BR",
+    {
+      style: "currency",
+      currency: "BRL",
+    }
+  );
+}
+
+function calculateProgress(
+  raised: string | number,
+  goal: string | number
+) {
+
+  const raisedValue =
+    parseMoney(raised);
+
+  const goalValue =
+    parseMoney(goal);
+
+  if (!goalValue) return 0;
+
+  return Math.min(
+    Math.round(
+      (raisedValue / goalValue) * 100
+    ),
+    100
+  );
+}
+
+function truncateStory(
+  text: string
+) {
+
+  if (!text) return "";
+
+  const words =
+    text.split(" ");
+
+  if (words.length <= 25) {
+    return text;
+  }
+
+  return (
+    words
+      .slice(0, 25)
+      .join(" ") + "..."
+  );
+}
+
+function calculateRemainingDays(
+  duration: string,
+  createdAt: any
+) {
+
+  if (!duration) {
+    return "Sem prazo";
+  }
+
+  const totalDays =
+    Number(
+      duration.replace(/\D/g, "")
+    );
+
+  if (!createdAt?.toDate) {
+    return `${totalDays} dias restantes`;
+  }
+
+  const createdDate =
+    createdAt.toDate();
+
+  const now =
+    new Date();
+
+  const startDate =
+    new Date(
+      createdDate.getFullYear(),
+      createdDate.getMonth(),
+      createdDate.getDate()
+    );
+
+  const currentDate =
+    new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate()
+    );
+
+  const diffTime =
+    currentDate.getTime() -
+    startDate.getTime();
+
+  const passedDays =
+    Math.floor(
+      diffTime /
+      (1000 * 60 * 60 * 24)
+    );
+
+  const remainingDays =
+    totalDays - passedDays;
+
+  if (remainingDays <= 0) {
+    return "Encerrada";
+  }
+
+  return `${remainingDays} dias restantes`;
+}
+
+
+useEffect(() => {
+
+  const campaignsRef =
+    collection(db, "campaigns");
+
+  const q =
+    query(
+      campaignsRef,
+      where(
+        "status",
+        "==",
+        "Publicada"
+      )
+    );
+
+  const unsubscribe =
+    onSnapshot(
+      q,
+      (snapshot) => {
+
+        const campaignsData =
+          snapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          })) as Campaign[];
+
+        setCampaigns(campaignsData);
+
+        setLoading(false);
+      }
+    );
+
+  return () => unsubscribe();
+
+}, []);
+
+useEffect(() => {
+
+  const unsubscribeAuth =
+    onAuthStateChanged(
+      auth,
+      (user) => {
+
+        if (!user) return;
+
+        const savedRef =
+          collection(
+            db,
+            "users",
+            user.uid,
+            "savedCampaigns"
+          );
+
+        const unsubscribeSaved =
+          onSnapshot(
+            savedRef,
+            (snapshot) => {
+
+              const savedIds =
+                snapshot.docs.map(
+                  (doc) => doc.id
+                );
+
+              console.log(
+                "SALVOS:",
+                savedIds
+              );
+
+              setSavedCampaigns(
+                savedIds
+              );
+
+            }
+          );
+
+        return () =>
+          unsubscribeSaved();
+      }
+    );
+
+  return () =>
+    unsubscribeAuth();
+
+}, []);
+
+
+async function handleSaveCampaign(
+  campaignId: string
+) {
+
+  const user =
+    auth.currentUser;
+
+  if (!user) {
+
+    showToast(
+      "Faça login para salvar campanhas.",
+      "error"
+    );
+
+    return;
+  }
+
+  const saveRef =
+    doc(
+      db,
+      "users",
+      user.uid,
+      "savedCampaigns",
+      campaignId
+    );
+
+  const isSaved =
+    savedCampaigns.includes(
+      campaignId
+    );
+
+  if (isSaved) {
+
+    await deleteDoc(saveRef);
+
+    showToast(
+      "Campanha removida dos salvos.",
+      "info"
+    );
+
+  } else {
+
+    await setDoc(saveRef, {
+
+      campaignId,
+
+      createdAt:
+        new Date(),
+
+    });
+
+    showToast(
+      "Campanha salva com sucesso!",
+      "success"
+    );
+
+  }
+}
 
   return (
     <section className="crowdfunding-page">
@@ -231,19 +520,52 @@ export function Crowdfunding() {
 
           <div className="crowdfunding-grid">
 
-            {campaigns.map((campaign) => (
-              <div className="campaign-card">
+           {loading ? (
+
+  <p>
+    Carregando campanhas...
+  </p>
+
+) : (
+
+  campaigns.map((campaign) => (
+              <div
+  key={campaign.id}
+  className="campaign-card"
+  onClick={() =>
+    navigate(
+      `/vaquinha/${campaign.slug}`
+    )
+  }
+>
 
                 <div className="campaign-image">
 
                   <img
-                    src={campaignImage}
+                    src={campaign.imageUrl}
                     alt=""
                   />
 
-                  <button className="save-button">
-                    <Bookmark size={14} />
-                  </button>
+                  <button
+  className={`save-button ${
+    savedCampaigns.includes(
+      campaign.id
+    )
+      ? "active"
+      : ""
+  }`}
+  onClick={(event) => {
+
+    event.stopPropagation();
+
+    handleSaveCampaign(
+      campaign.id
+    );
+
+  }}
+>
+  <Bookmark size={14} />
+</button>
 
                 </div>
 
@@ -257,14 +579,28 @@ export function Crowdfunding() {
                     {campaign.title}
                   </h3>
 
+                  <p className="campaign-description">
+
+  {truncateStory(
+    campaign.story
+  )}
+
+</p>
+
                   <div className="campaign-progress-info">
 
                     <small>
-                      {campaign.remaining}
+                     {calculateRemainingDays(
+  campaign.duration,
+  campaign.createdAt
+)}
                     </small>
 
                     <small>
-                      {campaign.progress}%
+                     {calculateProgress(
+  campaign.raisedAmount,
+  campaign.goalAmount
+)}%
                     </small>
 
                   </div>
@@ -272,23 +608,41 @@ export function Crowdfunding() {
                   <div className="campaign-progress">
                     <div
                       style={{
-                        width: `${campaign.progress}%`,
+                       width: `${calculateProgress(
+  campaign.raisedAmount,
+  campaign.goalAmount
+)}%`,
                       }}
                     />
                   </div>
 
-                  <strong>
-                    {campaign.value}
-                  </strong>
+                 <strong>
+  {
+    formatMoney(
+      campaign.raisedAmount
+    )
+  }
+</strong>
 
                   <span className="campaign-goal">
-                    {campaign.goal}
+               Meta de {
+  formatMoney(
+    campaign.goalAmount
+  )
+}
                   </span>
 
                 </div>
 
               </div>
-            ))}
+            )) )}
+
+            
+
+         
+
+
+            
 
           </div>
 

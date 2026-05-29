@@ -1,8 +1,44 @@
 import "./Donations.css";
 
 import {
+  useEffect,
   useState,
 } from "react";
+
+
+import {
+  collection,
+  onSnapshot,
+  query,
+  where,
+} from "firebase/firestore";
+
+import {
+  onAuthStateChanged,
+} from "firebase/auth";
+
+import {
+  auth,
+  db,
+} from "../../services/firebase";
+
+type DonationType = {
+  id: string;
+
+  amount: number;
+
+  campaignTitle: string;
+
+  donorEmail: string;
+
+  donorName: string;
+
+  paymentMethod: string;
+
+  status: string;
+
+  createdAt: any;
+};
 
 export function Donations() {
 
@@ -16,6 +52,97 @@ export function Donations() {
     setActiveTab,
   ] = useState("single");
 
+
+const [donations, setDonations] =
+  useState<DonationType[]>([]);
+
+const [loading, setLoading] =
+  useState(true);
+
+useEffect(() => {
+
+  const unsubscribeAuth =
+    onAuthStateChanged(
+      auth,
+      (user) => {
+
+        if (!user) {
+          setDonations([]);
+          setLoading(false);
+          return;
+        }
+
+        const donationsRef =
+          collection(db, "donations");
+
+        const q =
+          query(
+            donationsRef,
+            where(
+              "donorEmail",
+              "==",
+              user.email
+            ),
+            
+          );
+
+        const unsubscribeDonations =
+          onSnapshot(
+            q,
+            (snapshot) => {
+
+              const donationsData =
+                snapshot.docs.map((doc) => ({
+                  id: doc.id,
+                  ...doc.data(),
+                })) as DonationType[];
+
+              setDonations(donationsData);
+
+              setLoading(false);
+            }
+          );
+
+        return () =>
+          unsubscribeDonations();
+      }
+    );
+
+  return () =>
+    unsubscribeAuth();
+
+}, []);
+
+const filteredDonations =
+  donations.filter((donation) => {
+
+    if (activeFilter === "all") {
+      return true;
+    }
+
+    if (activeFilter === "following") {
+      return false;
+    }
+
+    if (activeFilter === "finished") {
+      return false;
+    }
+
+    return donation.status === activeFilter;
+  });
+
+function formatMoney(
+  value: number
+) {
+
+  return value.toLocaleString(
+    "pt-BR",
+    {
+      style: "currency",
+      currency: "BRL",
+    }
+  );
+}
   return (
 
     <section className="donations">
@@ -137,24 +264,7 @@ export function Donations() {
 
               </button>
 
-              <button
-                className={
-                  activeFilter ===
-                  "finished"
-
-                    ? "active"
-                    : ""
-                }
-                onClick={() =>
-                  setActiveFilter(
-                    "finished"
-                  )
-                }
-              >
-
-                Desfechos
-
-              </button>
+              
 
             </div>
 
@@ -204,15 +314,81 @@ export function Donations() {
 
             </div>
 
-            <div className="donations-empty">
+           {activeTab === "monthly" ? (
 
-              <p>
-                Nenhuma doação
-                para esse filtro.
-              </p>
+  <div className="donations-empty">
 
-            </div>
+    <p>
+      Nenhuma doação mensal encontrada.
+    </p>
 
+  </div>
+
+) : loading ? (
+
+  <div className="donations-empty">
+
+    <p>
+      Carregando doações...
+    </p>
+
+  </div>
+
+) : filteredDonations.length === 0 ? (
+
+  <div className="donations-empty">
+
+    <p>
+      Nenhuma doação
+      para esse filtro.
+    </p>
+
+  </div>
+
+) : (
+
+  <div className="donations-list">
+
+    {filteredDonations.map(
+      (donation) => (
+
+        <div
+          key={donation.id}
+          className="donation-card"
+        >
+
+          <div>
+
+            <strong>
+              {donation.campaignTitle}
+            </strong>
+
+          <p>
+  {donation.createdAt?.toDate?.()
+    ?.toLocaleDateString("pt-BR")}
+  {" às "}
+  {donation.createdAt?.toDate?.()
+    ?.toLocaleTimeString("pt-BR", {
+      hour: "2-digit",
+      minute: "2-digit",
+    })}
+</p>
+          </div>
+
+          <span>
+            {formatMoney(
+              donation.amount
+            )}
+          </span>
+
+        </div>
+
+      )
+    )}
+
+  </div>
+
+)}
           </div>
 
         </div>

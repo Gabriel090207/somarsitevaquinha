@@ -5,6 +5,10 @@ import {
   useLocation,
 } from "react-router-dom";
 
+import {
+  ScrollToTop,
+} from "../components/ScrollToTop/ScrollToTop";
+
 import { Header } from "../components/Header/Header";
 
 import { Footer } from "../components/Footer/Footer";
@@ -26,6 +30,16 @@ import { Donations } from "../pages/Donations/Donations";
 import { Wallet } from "../pages/Wallet/Wallet";
 
 import { Campaign } from "../pages/Campaign/Campaign";
+
+import { MonthlyDonationPage } from "../pages/MonthlyDonation/MonthlyDonationPage";
+
+import { Terms } from "../pages/Terms/Terms";
+
+import { Privacy } from "../pages/Privacy/Privacy";
+
+import { Checkout } from "../pages/Checkout/Checkout";
+
+import { PaymentSuccess } from "../pages/PaymentSuccess/PaymentSuccess";
 
 function Layout() {
 
@@ -58,8 +72,13 @@ const hideLayout =
         />
 
         <Route
-  path="/vaquinha/:id"
+  path="/vaquinha/:slug"
   element={<Campaign />}
+/>
+
+<Route
+  path="/checkout/:slug"
+  element={<Checkout />}
 />
 
         <Route
@@ -71,6 +90,17 @@ const hideLayout =
           path="/sobre"
           element={<About />}
         />
+
+
+        <Route
+  path="/termos-de-uso"
+  element={<Terms />}
+/>
+
+<Route
+  path="/politica-de-privacidade"
+  element={<Privacy />}
+/>
 
         <Route
   path="/perfil"
@@ -87,6 +117,17 @@ const hideLayout =
   path="/minha-carteira"
   element={<Wallet />}
 />
+
+<Route
+  path="/doador-mensal"
+  element={<MonthlyDonationPage />}
+/>
+
+<Route
+  path="/payment-success"
+  element={<PaymentSuccess />}
+/>
+
       </Routes>
 
      {!hideLayout && <Footer />}
@@ -101,6 +142,8 @@ export function AppRoutes() {
   return (
 
     <BrowserRouter>
+
+    <ScrollToTop />
 
       <Layout />
 

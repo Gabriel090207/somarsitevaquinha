@@ -4,6 +4,8 @@
   padding: 50px 20px 100px;
 
   overflow: visible;
+  background: var(--white);
+  
 }
 
 
@@ -103,6 +105,8 @@
 }
 
 .campaign-follow-floating {
+
+  
   position: absolute;
 
   top: 22px;
@@ -115,7 +119,7 @@
   border: none;
   border-radius: 999px;
 
-  background: white;
+  
 
   display: flex;
   align-items: center;
@@ -124,7 +128,14 @@
   font-size: 15px;
   font-weight: 700;
 
-  color: var(--secondary);
+  background: rgba(126, 211, 33, 0.18);
+   backdrop-filter: blur(8px);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: var(--primary-dark);
 
   cursor: pointer;
 
@@ -137,7 +148,9 @@
 }
 
 .campaign-follow-floating:hover {
-  transform: translateY(-2px);
+   background: rgba(126, 211, 33, 0.24);
+
+  color: var(--primary);
 }
 
 /* ====================================== */
@@ -377,7 +390,7 @@
   text-transform: initial;
 }
 
-.campaign-donation-card button {
+.campaign-donate-button {
   width: 100%;
   height: 62px;
 
@@ -399,9 +412,15 @@
   cursor: pointer;
 
   transition: 0.25s ease;
+
+  text-decoration: none;
+
+display: flex;
+align-items: center;
+justify-content: center;
 }
 
-.campaign-donation-card button:hover {
+.campaign-donate-button:hover {
   transform: translateY(-2px);
 
   opacity: 0.95;
@@ -909,7 +928,7 @@
   color: var(--text-light);
 }
 
-.campaign-donation-card button {
+.campaign-donate-button {
 
   width: 100%;
 
@@ -986,4 +1005,15 @@
     line-height: 1.7;
   }
 
+}
+
+.campaign-follow-floating.active {
+  background: var(--primary);
+  color: white;
+}
+
+.campaign-follow-button.active {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary);
 }

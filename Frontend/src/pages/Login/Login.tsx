@@ -1109,12 +1109,9 @@ onChange={(e) =>
 
       <div className="login-terms">
 
-        <input type="checkbox" />
+        
 
-        <p>
-          Permanecer conectado neste dispositivo
-        </p>
-
+       
       </div>
 
      <button type="submit">

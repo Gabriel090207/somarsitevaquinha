@@ -1,0 +1,280 @@
+.privacy-page {
+  width: 100%;
+
+  background: var(--white);
+}
+
+/* ========================================= */
+/* HERO */
+/* ========================================= */
+
+.privacy-hero {
+  width: 100%;
+  height: 430px;
+
+  background-size: cover;
+  background-position: center;
+
+  position: relative;
+
+  overflow: hidden;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.privacy-overlay {
+  position: absolute;
+  inset: 0;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(15, 40, 12, 0.88),
+      rgba(38, 74, 18, 0.74)
+    );
+}
+
+/* ========================================= */
+/* HERO CONTENT */
+/* ========================================= */
+
+.privacy-hero-content {
+  position: relative;
+  z-index: 2;
+
+  text-align: center;
+
+  color: var(--white);
+
+  padding: 0 20px;
+}
+
+.privacy-badge {
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  height: 48px;
+
+  padding: 8px 16px;
+
+  border-radius: 999px;
+
+  background:
+    rgba(126, 211, 33, 0.12);
+
+  border:
+    1px solid rgba(126, 211, 33, 0.22);
+
+  backdrop-filter: blur(10px);
+
+  color: #d7ffac;
+
+  font-size: 14px;
+  font-weight: 800;
+
+  margin-bottom: 26px;
+}
+
+.privacy-hero-content h1 {
+  font-size: 78px;
+  line-height: 0.95;
+
+  letter-spacing: -5px;
+
+  font-weight: 900;
+
+  margin-bottom: 22px;
+}
+
+.privacy-hero-content h1 span {
+  color: var(--primary);
+
+  text-shadow:
+    0 0 24px rgba(126, 211, 33, 0.22);
+}
+
+.privacy-hero-content p {
+  font-size: 20px;
+  line-height: 1.7;
+
+  color: rgba(255,255,255,0.82);
+}
+
+/* ========================================= */
+/* CONTAINER */
+/* ========================================= */
+
+.privacy-container {
+  width: 100%;
+  max-width: 1100px;
+
+  margin: 0 auto;
+
+  padding: 70px 24px 110px;
+}
+
+.privacy-updated {
+  margin-bottom: 50px;
+
+  color: var(--text-light);
+
+  font-size: 15px;
+  font-weight: 600;
+}
+
+/* ========================================= */
+/* SECTION */
+/* ========================================= */
+
+.privacy-section {
+  margin-bottom: 56px;
+}
+
+.privacy-section h2 {
+  font-size: 42px;
+  line-height: 1.05;
+
+  letter-spacing: -2px;
+
+  color: var(--secondary);
+
+  margin-bottom: 24px;
+}
+
+.privacy-section p {
+  font-size: 18px;
+  line-height: 1.9;
+
+  color: var(--text-light);
+
+  margin-bottom: 22px;
+}
+
+/* ========================================= */
+/* HIGHLIGHT */
+/* ========================================= */
+
+.privacy-highlight {
+  margin-bottom: 60px;
+
+  padding: 34px;
+
+  border-radius: 28px;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(126, 211, 33, 0.12),
+      rgba(126, 211, 33, 0.04)
+    );
+
+  border:
+    1px solid rgba(126, 211, 33, 0.14);
+}
+
+.privacy-highlight strong {
+  display: block;
+
+  font-size: 28px;
+  font-weight: 800;
+
+  color: var(--secondary);
+
+  margin-bottom: 12px;
+}
+
+.privacy-highlight span {
+  font-size: 17px;
+
+  color: var(--text-light);
+}
+
+.privacy-highlight-text {
+  color: var(--primary);
+
+  font-weight: 700;
+}
+
+/* ========================================= */
+/* RESPONSIVO */
+/* ========================================= */
+
+@media (max-width: 980px) {
+
+  .privacy-hero {
+    height: 310px;
+  }
+
+  .privacy-badge {
+    height: 42px;
+
+    padding: 0 18px;
+
+    font-size: 12px;
+
+    margin-bottom: 20px;
+  }
+
+  .privacy-hero-content h1 {
+    font-size: 46px;
+
+    line-height: 0.98;
+
+    letter-spacing: -2px;
+
+    margin-bottom: 16px;
+  }
+
+  .privacy-hero-content p {
+    font-size: 15px;
+  }
+
+  .privacy-container {
+    padding: 42px 20px 70px;
+  }
+
+  .privacy-updated {
+    margin-bottom: 34px;
+
+    font-size: 13px;
+  }
+
+  .privacy-section {
+    margin-bottom: 40px;
+  }
+
+  .privacy-section h2 {
+    font-size: 30px;
+
+    margin-bottom: 18px;
+  }
+
+  .privacy-section p {
+    font-size: 15px;
+
+    line-height: 1.8;
+
+    margin-bottom: 18px;
+  }
+
+  .privacy-highlight {
+    padding: 26px;
+
+    border-radius: 22px;
+
+    margin-bottom: 44px;
+  }
+
+  .privacy-highlight strong {
+    font-size: 22px;
+  }
+
+  .privacy-highlight span {
+    font-size: 15px;
+  }
+
+}

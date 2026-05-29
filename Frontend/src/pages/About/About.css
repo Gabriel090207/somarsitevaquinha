@@ -1,7 +1,8 @@
 .about-page {
   width: 100%;
 
-  background: #f8faf5;
+   background: var(--white);
+
 }
 
 /* ========================================= */
