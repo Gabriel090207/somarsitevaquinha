@@ -665,6 +665,10 @@ const response =
     payload
   );
   
+  console.log(
+  "CARD RESPONSE",
+  response.data
+);
 
 if (
   response.data.status ===
