@@ -166,17 +166,6 @@ def create_card_payment(
         "installments":
             data.installments,
 
-        "payment_method_id":
-            data.payment_method_id,
-
-
-        "issuer_id":
-            data.issuer_id,
-
-
-      
-
-
         "payer": {
 
             "email":
