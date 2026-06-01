@@ -41,8 +41,8 @@ class CardPayment(BaseModel):
     campaign_title: str
     donor_name: str
     cpf: str
-    expiration_month: int
-    expiration_year: int
+    expiration_month: int | None = None
+    expiration_year: int | None = None
 
 @router.post("/create-pix")
 def create_pix(data: PixPayment):
@@ -60,10 +60,7 @@ def create_pix(data: PixPayment):
     }
 
 
-    import mercadopago
-
-    print("VERSAO MP:")
-    print(mercadopago.__version__)
+    
 
     payment_response = sdk.payment().create(
         payment_data
@@ -196,8 +193,11 @@ def create_card_payment(
 
 
 
+    print("=" * 50)
     print("EXP MONTH:", data.expiration_month)
     print("EXP YEAR:", data.expiration_year)
+    print("TOKEN:", data.token)
+    print("=" * 50)
 
     print("PAYMENT DATA:")
     print(payment_data)
