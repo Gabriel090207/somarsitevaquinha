@@ -611,24 +611,38 @@ const response =
     payload
   );
   
-console.log(
+  console.log(
   "CARD RESPONSE",
   response.data
 );
 
-      setTimeout(() => {
+if (
+  response.data.status ===
+  "approved"
+) {
 
-        navigate(
-          "/payment-success",
-          {
-            state: {
-              amount:
-                donationValue,
-            },
-          }
-        );
+  setTimeout(() => {
 
-      }, 2500);
+    navigate(
+      "/payment-success",
+      {
+        state: {
+          amount: donationValue,
+        },
+      }
+    );
+
+  }, 2500);
+
+} else {
+
+  setProcessing(false);
+
+  showToast(
+    "Pagamento recusado",
+    "error"
+  );
+}
 
     } catch (error) {
 
