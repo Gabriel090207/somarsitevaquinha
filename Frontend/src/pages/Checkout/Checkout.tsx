@@ -155,17 +155,24 @@ const [showSaveCardModal,
   setShowSaveCardModal] =
     useState(false);
 
-/*
+
 const mp =
   new window.MercadoPago(
     import.meta.env
       .VITE_MP_PUBLIC_KEY
   );
-*/
+
 
 const [closingSaveCardModal,
   setClosingSaveCardModal] =
     useState(false);
+
+
+const [saveCardChoice,
+  setSaveCardChoice] =
+    useState<boolean | null>(
+      null
+    );
 
 const formatCurrency = (
   value: number
@@ -516,20 +523,30 @@ const handleCreatePix = async () => {
   }
 };
 
-/*
+
 const handleCardPayment =
 
 
   async () => {
 
-    if (newCard) {
+   if (
+  newCard &&
+  saveCardChoice === null
+) {
 
   setShowSaveCardModal(true);
 
   return;
 }
 
+
     try {
+
+
+      console.log(
+  "Salvar cartão:",
+  saveCardChoice
+);
 
       setProcessing(true);
 
@@ -561,37 +578,47 @@ const handleCardPayment =
             Number(`20${year}`),
         });
 
-      await api.post(
-        "/create-card-payment",
-        {
+        console.log(
+  "TOKEN",
+  tokenResponse
+);
 
-          token:
-            tokenResponse.id,
+      const response =
+  await api.post(
+    "/create-card-payment",
+    {
+      token:
+        tokenResponse.id,
 
-          issuer_id:
-            tokenResponse.issuer_id,
+      issuer_id:
+        tokenResponse.issuer_id,
 
-          payment_method_id:
-            tokenResponse.payment_method_id,
+      payment_method_id:
+        tokenResponse.payment_method_id,
 
-          installments: 1,
+      installments: 1,
 
-          amount:
-            donationValue,
+      amount:
+        donationValue,
 
-          email:
-            cardEmail,
+      email:
+        cardEmail,
 
-          campaign_id:
-            campaign?.id,
+      campaign_id:
+        campaign?.id,
 
-          campaign_title:
-            campaign?.title,
+      campaign_title:
+        campaign?.title,
 
-          donor_name:
-            cardHolder,
-        }
-      );
+      donor_name:
+        cardHolder,
+    }
+  );
+
+console.log(
+  "CARD RESPONSE",
+  response.data
+);
 
       setTimeout(() => {
 
@@ -620,28 +647,24 @@ const handleCardPayment =
     }
   };
 
-  async function continueCardPayment(
-  saveCard: boolean
-) {
-
-  setShowSaveCardModal(false);
-
-  console.log(saveCard);
-
-  // segue pagamento aqui
-}
-*/
 
 async function continueCardPayment(
   saveCard: boolean
 ) {
 
-  console.log(saveCard);
+  setSaveCardChoice(
+    saveCard
+  );
 
   handleCloseSaveCardModal();
 
-}
+  setTimeout(() => {
 
+    handleCardPayment();
+
+  }, 250);
+
+}
 
 function handleCloseSaveCardModal() {
 
