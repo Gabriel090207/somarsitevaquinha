@@ -174,11 +174,7 @@ def create_card_payment(
             data.issuer_id,
 
 
-        "expiration_month":
-            data.expiration_month,
-
-        "expiration_year":
-            data.expiration_year,
+      
 
 
         "payer": {
