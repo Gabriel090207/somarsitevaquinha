@@ -622,6 +622,27 @@ console.log(
   Object.keys(tokenResponse)
 );
 
+
+const firstSix =
+  tokenResponse.first_six_digits;
+
+console.log(
+  "FIRST SIX",
+  firstSix
+);
+
+
+const paymentMethods =
+  await mp.getPaymentMethods({
+    bin:
+      tokenResponse.first_six_digits
+  });
+
+console.log(
+  "PAYMENT METHODS",
+  paymentMethods
+);
+
 const payload = {
 
   token:
