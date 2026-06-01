@@ -615,11 +615,13 @@ const payload = {
   token:
     tokenResponse.id,
 
-  issuer_id:
-    tokenResponse.issuer_id,
+ issuer_id:
+  tokenResponse.bin_attributes
+    ?.issuer?.code,
 
-  payment_method_id:
-    tokenResponse.payment_method_id,
+payment_method_id:
+  tokenResponse.bin_attributes
+    ?.brand?.code,
 
   installments: 1,
 
