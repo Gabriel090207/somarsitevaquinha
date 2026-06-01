@@ -40,6 +40,7 @@ class CardPayment(BaseModel):
     campaign_id: str
     campaign_title: str
     donor_name: str
+    cpf: str
     expiration_month: int
     expiration_year: int
 
@@ -183,7 +184,16 @@ def create_card_payment(
         "payer": {
 
             "email":
-                data.email
+                data.email,
+
+            "identification": {
+
+                "type":
+                    "CPF",
+
+                "number":
+                    data.cpf
+            }
         }
     }
 

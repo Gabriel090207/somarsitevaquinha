@@ -673,6 +673,9 @@ const payload = {
   donor_name:
     cardHolder,
 
+    cpf:
+  cardCpf.replace(/\D/g, ""),
+
      expiration_month:
     Number(month),
 
