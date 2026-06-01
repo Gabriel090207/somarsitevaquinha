@@ -180,6 +180,10 @@ def create_card_payment(
         payment_data
     )
 
+
+    print("MP RESPONSE:")
+    print(payment_response)
+
     payment = payment_response["response"]
 
     if payment["status"] == "approved":
