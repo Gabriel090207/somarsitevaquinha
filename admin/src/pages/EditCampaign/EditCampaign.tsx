@@ -214,12 +214,24 @@ useEffect(() => {
       );
 
       setGoalAmount(
-        campaign.goalAmount || ""
-      );
+  campaign.goalAmount
+    ? formatCurrency(
+        String(
+          campaign.goalAmount
+        )
+      )
+    : ""
+);
 
-      setRaisedAmount(
-        campaign.raisedAmount || ""
-      );
+setRaisedAmount(
+  campaign.raisedAmount
+    ? formatCurrency(
+        String(
+          campaign.raisedAmount
+        )
+      )
+    : ""
+);
 
       setBeneficiaryName(
         campaign.beneficiaryName || ""
@@ -364,6 +376,9 @@ async function handleUpdateCampaign() {
     setLoading(false);
   }
 }
+
+
+
 
   return (
 

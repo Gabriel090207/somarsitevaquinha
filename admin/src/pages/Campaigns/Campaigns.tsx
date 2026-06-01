@@ -12,15 +12,23 @@ import {
   Plus,
   Pencil,
   Trash2,
+  Search,
 } from "lucide-react";
 
 import { Link }
   from "react-router-dom";
 
 import {
+  deleteDoc,
+  doc,
   collection,
   getDocs,
 } from "firebase/firestore";
+
+
+import { useToast }
+  from "../../contexts/ToastContext";
+
 
 import { db }
   from "../../services/firebase";
@@ -51,6 +59,22 @@ export function Campaigns() {
   const [loading, setLoading] =
     useState(true);
 
+    const [search, setSearch] =
+  useState("");
+
+
+    const [showDeleteModal, setShowDeleteModal] =
+  useState(false);
+
+  const [closingModal, setClosingModal] =
+  useState(false);
+
+const [selectedCampaign, setSelectedCampaign] =
+  useState<Campaign | null>(null);
+
+  const { showToast } =
+  useToast();
+
   useEffect(() => {
 
     async function fetchCampaigns() {
@@ -63,12 +87,18 @@ export function Campaigns() {
           );
 
         const campaignsData =
-          querySnapshot.docs.map((doc) => ({
-            id: doc.id,
-            ...doc.data(),
-          })) as Campaign[];
+  querySnapshot.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  })) as Campaign[];
 
-        setCampaigns(campaignsData);
+campaignsData.sort(
+  (a, b) =>
+    b.createdAt?.seconds -
+    a.createdAt?.seconds
+);
+
+setCampaigns(campaignsData);
 
       } catch (error) {
 
@@ -83,6 +113,56 @@ export function Campaigns() {
     fetchCampaigns();
 
   }, []);
+
+
+useEffect(() => {
+
+  if (!showDeleteModal) return;
+
+  const scrollY =
+    window.scrollY;
+
+  document.body.style.position =
+    "fixed";
+
+  document.body.style.top =
+    `-${scrollY}px`;
+
+  document.body.style.left =
+    "0";
+
+  document.body.style.right =
+    "0";
+
+  document.body.style.width =
+    "100%";
+
+  return () => {
+
+    document.body.style.position =
+      "";
+
+    document.body.style.top =
+      "";
+
+    document.body.style.left =
+      "";
+
+    document.body.style.right =
+      "";
+
+    document.body.style.width =
+      "";
+
+    window.scrollTo(
+      0,
+      scrollY
+    );
+
+  };
+
+}, [showDeleteModal]);
+
 
 function formatCurrency(
   value: number | string
@@ -99,6 +179,90 @@ function formatCurrency(
     }
   );
 }
+
+
+function handleOpenDeleteModal(
+  campaign: Campaign
+) {
+
+  setSelectedCampaign(
+    campaign
+  );
+
+  setShowDeleteModal(true);
+}
+
+function handleCloseModal() {
+
+  setClosingModal(true);
+
+  setTimeout(() => {
+
+    setShowDeleteModal(false);
+
+    setClosingModal(false);
+
+    setSelectedCampaign(null);
+
+  }, 250);
+
+}
+
+async function handleDeleteCampaign() {
+
+  if (!selectedCampaign) {
+    return;
+  }
+
+  try {
+
+    await deleteDoc(
+      doc(
+        db,
+        "campaigns",
+        selectedCampaign.id
+      )
+    );
+
+    setCampaigns((prev) =>
+      prev.filter(
+        (campaign) =>
+          campaign.id !==
+          selectedCampaign.id
+      )
+    );
+
+    showToast(
+      "Vaquinha removida com sucesso.",
+      "success"
+    );
+
+  } catch (error) {
+
+    console.log(error);
+
+    showToast(
+      "Erro ao remover vaquinha.",
+      "error"
+    );
+
+  } finally {
+
+  handleCloseModal();
+
+}
+}
+
+
+const filteredCampaigns =
+  campaigns.filter(
+    (campaign) =>
+      campaign.title
+        ?.toLowerCase()
+        .includes(
+          search.toLowerCase()
+        )
+  );
 
   return (
 
@@ -137,6 +301,24 @@ function formatCurrency(
 
         </div>
 
+
+        <div className="campaigns-search">
+
+  <Search size={18} />
+
+  <input
+    type="text"
+    placeholder="Buscar vaquinha..."
+    value={search}
+    onChange={(event) =>
+      setSearch(
+        event.target.value
+      )
+    }
+  />
+
+</div>
+
         {/* LIST */}
 
         <div className="campaigns-list">
@@ -147,7 +329,7 @@ function formatCurrency(
               Carregando vaquinhas...
             </p>
 
-          ) : campaigns.length === 0 ? (
+          ) : filteredCampaigns.length === 0? (
 
             <p>
               Nenhuma vaquinha encontrada.
@@ -155,7 +337,7 @@ function formatCurrency(
 
           ) : (
 
-            campaigns.map((campaign) => (
+            filteredCampaigns.map((campaign) => (
 
               <div
                 className="campaign-item"
@@ -209,11 +391,18 @@ function formatCurrency(
 
 </Link>
 
-                  <button className="delete">
+                  <button
+  className="delete"
+  onClick={() =>
+    handleOpenDeleteModal(
+      campaign
+    )
+  }
+>
 
-                    <Trash2 size={18} />
+  <Trash2 size={18} />
 
-                  </button>
+</button>
 
                 </div>
 
@@ -226,6 +415,64 @@ function formatCurrency(
         </div>
 
       </section>
+
+
+      {showDeleteModal && (
+
+  <div
+  className={`delete-modal-overlay ${
+    closingModal
+      ? "closing"
+      : ""
+  }`}
+>
+
+  <div
+    className={`delete-modal ${
+      closingModal
+        ? "closing"
+        : ""
+    }`}
+  >
+
+      <h3>
+        Excluir vaquinha
+      </h3>
+
+      <p>
+        Tem certeza que deseja
+        excluir esta vaquinha?
+      </p>
+
+      <div className="delete-modal-actions">
+
+        <button
+          className="cancel"
+          onClick={handleCloseModal}
+        >
+
+          Cancelar
+
+        </button>
+
+        <button
+          className="confirm"
+          onClick={
+            handleDeleteCampaign
+          }
+        >
+
+          Excluir
+
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+)}
 
     </main>
 

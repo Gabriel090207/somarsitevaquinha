@@ -61,6 +61,7 @@
   gap: 12px;
 
   margin-bottom: 28px;
+    transition: 0.25s ease;
 }
 
 .users-search svg {
@@ -81,6 +82,22 @@
   font-size: 15px;
 
   color: var(--secondary);
+}
+
+
+.users-search:focus-within {
+  border-color:
+    rgba(126, 211, 33, 0.4);
+
+  background: var(--white);
+
+  box-shadow:
+    0 0 0 4px
+    rgba(126, 211, 33, 0.08);
+}
+
+.users-search:focus-within svg {
+  color: var(--primary);
 }
 
 /* LIST */

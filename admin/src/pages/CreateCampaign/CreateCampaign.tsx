@@ -211,9 +211,15 @@ await addDoc(
 
     story,
 
-    goalAmount,
+    goalAmount:
+  parseCurrency(
+    goalAmount
+  ),
 
-    raisedAmount,
+raisedAmount:
+  parseCurrency(
+    raisedAmount
+  ),
 
     beneficiaryName,
 
@@ -279,6 +285,16 @@ setCoverFile(null);
   setLoading(false);
 }
 
+}
+
+function parseCurrency(
+  value: string
+) {
+
+  return Number(
+    value
+      .replace(/[^\d]/g, "")
+  ) / 100;
 }
 
   return (

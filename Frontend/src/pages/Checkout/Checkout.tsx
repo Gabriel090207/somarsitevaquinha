@@ -163,6 +163,10 @@ const mp =
   );
 */
 
+const [closingSaveCardModal,
+  setClosingSaveCardModal] =
+    useState(false);
+
 const formatCurrency = (
   value: number
 ) => {
@@ -307,6 +311,7 @@ useEffect(() => {
 
 
 
+
 useEffect(() => {
 
   if (!pixData?.id) return;
@@ -380,6 +385,57 @@ clearInterval(interval);
     clearInterval(interval);
 
 }, [pixData]);
+
+
+
+useEffect(() => {
+
+  if (!showSaveCardModal) return;
+
+  const scrollY =
+    window.scrollY;
+
+  document.body.style.position =
+    "fixed";
+
+  document.body.style.top =
+    `-${scrollY}px`;
+
+  document.body.style.left =
+    "0";
+
+  document.body.style.right =
+    "0";
+
+  document.body.style.width =
+    "100%";
+
+  return () => {
+
+    document.body.style.position =
+      "";
+
+    document.body.style.top =
+      "";
+
+    document.body.style.left =
+      "";
+
+    document.body.style.right =
+      "";
+
+    document.body.style.width =
+      "";
+
+    window.scrollTo(
+      0,
+      scrollY
+    );
+
+  };
+
+}, [showSaveCardModal]);
+
 
   const progress = useMemo(() => {
 
@@ -582,7 +638,22 @@ async function continueCardPayment(
 
   console.log(saveCard);
 
-  setShowSaveCardModal(false);
+  handleCloseSaveCardModal();
+
+}
+
+
+function handleCloseSaveCardModal() {
+
+  setClosingSaveCardModal(true);
+
+  setTimeout(() => {
+
+    setShowSaveCardModal(false);
+
+    setClosingSaveCardModal(false);
+
+  }, 250);
 
 }
 
@@ -1332,9 +1403,21 @@ if (paymentMethod === "credit") {
 
 {showSaveCardModal && (
 
-  <div className="save-card-overlay">
+  <div
+  className={`save-card-overlay ${
+    closingSaveCardModal
+      ? "closing"
+      : ""
+  }`}
+>
 
-    <div className="save-card-modal">
+  <div
+    className={`save-card-modal ${
+      closingSaveCardModal
+        ? "closing"
+        : ""
+    }`}
+  >
 
       <h3>
         Salvar cartão?
