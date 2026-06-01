@@ -225,6 +225,8 @@ def create_card_payment(
                 Increment(data.amount)
         })
 
+    print("ROTA PAYMENTS.PY EXECUTADA")
+
     return {
         "status":
             payment["status"]

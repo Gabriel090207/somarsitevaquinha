@@ -55,6 +55,9 @@ def create_card_payment(
 
     payment = payment_response["response"]
 
+
+    print("ROTA CARD.PY EXECUTADA")
+
     return {
         "id": payment.get("id"),
 
