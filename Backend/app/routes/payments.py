@@ -59,6 +59,12 @@ def create_pix(data: PixPayment):
         }
     }
 
+
+    import mercadopago
+
+    print("VERSAO MP:")
+    print(mercadopago.__version__)
+
     payment_response = sdk.payment().create(
         payment_data
     )
