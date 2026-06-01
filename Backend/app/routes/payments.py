@@ -168,8 +168,6 @@ def create_card_payment(
         "payment_method_id":
             data.payment_method_id,
 
-        "issuer_id":
-            data.issuer_id,
 
         "payer": {
 

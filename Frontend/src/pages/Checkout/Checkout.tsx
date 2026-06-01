@@ -615,9 +615,7 @@ const payload = {
   token:
     tokenResponse.id,
 
- issuer_id:
-  tokenResponse.bin_attributes
-    ?.issuer?.code,
+ issuer_id: null,
 
 payment_method_id:
   tokenResponse.bin_attributes
