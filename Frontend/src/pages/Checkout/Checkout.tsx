@@ -224,7 +224,7 @@ function detectCardBrand(
   if (
     /^(5[1-5]|2[2-7])/.test(cleaned)
   ) {
-    return "mastercard";
+    return "master";
   }
 
   if (/^3[47]/.test(cleaned)) {
@@ -670,9 +670,27 @@ if (
   auth.currentUser
 ) {
 
-    console.log("ENTROU NO BLOCO DE SALVAR");
+    
 
-console.log("user =", auth.currentUser);
+
+const cardAlreadyExists =
+  savedCards.some(
+    (card: any) =>
+      card.last4 ===
+        tokenResponse.last_four_digits &&
+      card.brand ===
+        paymentMethods.results[0]?.id
+  );
+
+  if (cardAlreadyExists) {
+
+  showToast(
+    "Este cartão já está salvo.",
+    "error"
+  );
+
+  return;
+}
 
     await addDoc(
 
@@ -1158,8 +1176,11 @@ showToast(
           className="saved-card-item"
         >
 
-          <CreditCard size={20} />
-
+         <img
+  src={`/cards/${card.brand}.png`}
+  alt={card.brand}
+  className="saved-card-brand"
+/>
           <div>
 
             <strong>
