@@ -566,11 +566,11 @@ console.log("YEAR NUMBER", Number(`20${year}`));
           securityCode:
             cardCvv,
 
-          expirationMonth:
-            Number(month),
+          cardExpirationMonth:
+  month,
 
-          expirationYear:
-            Number(`20${year}`),
+cardExpirationYear:
+  `20${year}`,
         });
 
         console.log(
