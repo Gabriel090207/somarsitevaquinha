@@ -581,6 +581,12 @@ console.log(
   )
 );
 
+console.log("TOKEN RESPONSE OBJETO:");
+console.log(tokenResponse);
+
+console.log("TOKEN KEYS:");
+console.log(Object.keys(tokenResponse));
+
 console.log(
   "BIN ATTRIBUTES",
   tokenResponse.bin_attributes
