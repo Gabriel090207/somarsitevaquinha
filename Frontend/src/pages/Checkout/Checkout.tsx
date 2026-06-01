@@ -680,6 +680,10 @@ if (
     auth.currentUser
   ) {
 
+    console.log("ENTROU NO BLOCO DE SALVAR");
+console.log("saveCardChoice =", saveCardChoice);
+console.log("user =", auth.currentUser);
+
     await addDoc(
 
       collection(
@@ -704,6 +708,8 @@ if (
           serverTimestamp(),
       }
     );
+
+    console.log("CARTAO SALVO");
   }
 
   setTimeout(() => {
