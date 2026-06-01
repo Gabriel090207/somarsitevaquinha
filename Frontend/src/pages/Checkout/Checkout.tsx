@@ -529,17 +529,6 @@ const handleCardPayment =
 
   async () => {
 
-   if (
-  newCard &&
-  saveCardChoice === null
-) {
-
-  setShowSaveCardModal(true);
-
-  return;
-}
-
-
     try {
 
 
@@ -582,39 +571,46 @@ const handleCardPayment =
   "TOKEN",
   tokenResponse
 );
+const payload = {
 
-      const response =
+  token:
+    tokenResponse.id,
+
+  issuer_id:
+    tokenResponse.issuer_id,
+
+  payment_method_id:
+    tokenResponse.payment_method_id,
+
+  installments: 1,
+
+  amount:
+    donationValue,
+
+  email:
+    cardEmail,
+
+  campaign_id:
+    campaign?.id,
+
+  campaign_title:
+    campaign?.title,
+
+  donor_name:
+    cardHolder,
+};
+
+console.log(
+  "CARD PAYLOAD",
+  payload
+);
+
+const response =
   await api.post(
     "/create-card-payment",
-    {
-      token:
-        tokenResponse.id,
-
-      issuer_id:
-        tokenResponse.issuer_id,
-
-      payment_method_id:
-        tokenResponse.payment_method_id,
-
-      installments: 1,
-
-      amount:
-        donationValue,
-
-      email:
-        cardEmail,
-
-      campaign_id:
-        campaign?.id,
-
-      campaign_title:
-        campaign?.title,
-
-      donor_name:
-        cardHolder,
-    }
+    payload
   );
-
+  
 console.log(
   "CARD RESPONSE",
   response.data

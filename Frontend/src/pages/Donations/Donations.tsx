@@ -252,22 +252,40 @@ useEffect(() => {
 
 
 const filteredDonations =
-  donations.filter((donation) => {
+  donations
+    .filter((donation) => {
 
-    if (activeFilter === "all") {
-      return true;
-    }
+      if (activeFilter === "all") {
+        return true;
+      }
 
-    if (activeFilter === "following") {
-      return false;
-    }
+      if (activeFilter === "following") {
+        return false;
+      }
 
-    if (activeFilter === "finished") {
-      return false;
-    }
+      if (activeFilter === "finished") {
+        return false;
+      }
 
-    return donation.status === activeFilter;
-  });
+      return (
+        donation.status ===
+        activeFilter
+      );
+
+    })
+    .sort((a, b) => {
+
+      const aTime =
+        a.createdAt?.toDate?.()
+          ?.getTime?.() || 0;
+
+      const bTime =
+        b.createdAt?.toDate?.()
+          ?.getTime?.() || 0;
+
+      return bTime - aTime;
+
+    });
 
 function formatMoney(
   value: number
