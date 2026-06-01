@@ -159,12 +159,6 @@ def create_card_payment(
         "token":
             data.token,
 
-        "expiration_month":
-            data.expiration_month,
-
-        "expiration_year":
-            data.expiration_year,
-
         "description":
             data.campaign_title,
 
@@ -183,6 +177,10 @@ def create_card_payment(
                 data.email
         }
     }
+
+
+    print("PAYMENT DATA:")
+    print(payment_data)
 
     payment_response = sdk.payment().create(
         payment_data
