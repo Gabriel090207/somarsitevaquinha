@@ -155,7 +155,7 @@ def create_card_payment(
     payment_data = {
 
         "transaction_amount":
-            data.amount,
+            float(data.amount),
 
         "token":
             data.token,
@@ -165,6 +165,12 @@ def create_card_payment(
 
         "installments":
             data.installments,
+
+        "payment_method_id":
+            data.payment_method_id,
+
+        "issuer_id":
+            data.issuer_id,
 
         "payer": {
 
@@ -189,6 +195,11 @@ def create_card_payment(
 
     print("PAYMENT DATA:")
     print(payment_data)
+
+    print("=" * 50)
+    print("PAYMENT DATA ENVIADO AO MP")
+    print(payment_data)
+    print("=" * 50)
 
     payment_response = sdk.payment().create(
         payment_data
