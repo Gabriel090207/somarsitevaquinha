@@ -694,19 +694,27 @@ console.log("user =", auth.currentUser);
       ),
 
       {
-        brand:
-          paymentMethods.results[0]
-            ?.id || "card",
+  brand:
+    paymentMethods.results[0]
+      ?.id || "card",
 
-        last4:
-          tokenResponse.last_four_digits,
+  issuer:
+    paymentMethods.results[0]
+      ?.issuer?.name || "",
 
-        holderName:
-          cardHolder,
+  issuerId:
+    paymentMethods.results[0]
+      ?.issuer?.id || null,
 
-        createdAt:
-          serverTimestamp(),
-      }
+  last4:
+    tokenResponse.last_four_digits,
+
+  holderName:
+    cardHolder,
+
+  createdAt:
+    serverTimestamp(),
+}
     );
 
     console.log("CARTAO SALVO");
