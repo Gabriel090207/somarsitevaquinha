@@ -6,6 +6,7 @@ import { Sidebar }
 import {
   Search,
   Wallet,
+  CreditCard,
 } from "lucide-react";
 
 import { SiPix } from "react-icons/si";
@@ -247,13 +248,27 @@ export function Donations() {
 
               {/* METHOD */}
 
-              <div className="donation-method">
+             <div className="donation-method">
 
-                <SiPix size={16} />
+  {
+    donation.paymentMethod === "pix"
 
-                Pix
+      ? (
+        <>
+          <SiPix size={16} />
+          Pix
+        </>
+      )
 
-              </div>
+      : (
+        <>
+          <CreditCard size={16} />
+          Cartão
+        </>
+      )
+  }
+
+</div>
 
               {/* DATE */}
 

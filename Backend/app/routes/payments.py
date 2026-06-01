@@ -250,16 +250,7 @@ def create_card_payment(
                 datetime.utcnow(),
         })
 
-        campaign_ref = db.collection(
-            "campaigns"
-        ).document(data.campaign_id)
-
-        campaign_ref.update({
-
-            "raisedAmount":
-                Increment(data.amount)
-        })
-
+       
     print("ROTA PAYMENTS.PY EXECUTADA")
 
     return {
