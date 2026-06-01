@@ -40,6 +40,8 @@ class CardPayment(BaseModel):
     campaign_id: str
     campaign_title: str
     donor_name: str
+    expiration_month: int
+    expiration_year: int
 
 @router.post("/create-pix")
 def create_pix(data: PixPayment):
@@ -156,6 +158,12 @@ def create_card_payment(
 
         "token":
             data.token,
+
+        "expiration_month":
+            data.expiration_month,
+
+        "expiration_year":
+            data.expiration_year,
 
         "description":
             data.campaign_title,

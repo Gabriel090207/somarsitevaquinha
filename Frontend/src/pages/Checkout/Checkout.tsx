@@ -598,6 +598,13 @@ const payload = {
 
   donor_name:
     cardHolder,
+
+     expiration_month:
+    Number(month),
+
+  expiration_year:
+    Number(`20${year}`),
+    
 };
 
 console.log(
