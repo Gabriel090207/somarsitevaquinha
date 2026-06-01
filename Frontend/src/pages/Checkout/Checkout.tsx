@@ -39,6 +39,11 @@ import {
   db,
 } from "../../services/firebase";
 
+import {
+  addDoc,
+  serverTimestamp,
+} from "firebase/firestore";
+
 import { QRCode } from "react-qr-code";
 
 import { useToast } from "../../contexts/ToastContext";
@@ -90,11 +95,14 @@ const { showToast } = useToast();
     useState("");
 
   
-  const [paymentMethod, setPaymentMethod] =
-    useState("pix");
+const [paymentMethod, setPaymentMethod] =
+  useState("pix");
 
-    const [newCard, setNewCard] =
+const [newCard, setNewCard] =
   useState(true);
+
+const [savedCards, setSavedCards] =
+  useState<any[]>([]);
 
 
 const walletBalance = 0;
@@ -244,6 +252,31 @@ useEffect(() => {
 
       if (!user) return;
 
+      const cardsRef =
+  collection(
+    db,
+    "users",
+    user.uid,
+    "savedCards"
+  );
+
+
+  onSnapshot(
+    cardsRef,
+    (snapshot) => {
+
+      const cards =
+        snapshot.docs.map(
+          (doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          })
+        );
+
+      setSavedCards(cards);
+    }
+  );
+
       const userDoc =
         await getDoc(
           doc(db, "users", user.uid)
@@ -338,10 +371,7 @@ useEffect(() => {
           "approved"
         ) {
 
-          console.log(
-  "PIX APROVADO"
-);
-
+         
 setProcessing(true);
 
 setTimeout(() => {
@@ -542,11 +572,7 @@ const handleCardPayment =
       const [month, year] =
         cardExpiry.split("/");
 
-        console.log("CARD EXPIRY", cardExpiry);
-console.log("MONTH", month);
-console.log("YEAR", year);
-console.log("MONTH NUMBER", Number(month));
-console.log("YEAR NUMBER", Number(`20${year}`));
+      
 
       const tokenResponse =
         await mp.createCardToken({
@@ -573,87 +599,7 @@ cardExpirationYear:
   `20${year}`,
         });
 
-        console.log(
-  "TOKEN",
-  tokenResponse
-);
-
-console.log(
-  "TOKEN COMPLETO",
-  JSON.stringify(
-    tokenResponse,
-    null,
-    2
-  )
-);
-
-console.log(
-  "TOKEN ID",
-  tokenResponse.id
-);
-
-console.log(
-  "TOKEN EXP MONTH",
-  (tokenResponse as any).expiration_month
-);
-
-console.log(
-  "TOKEN EXP YEAR",
-  (tokenResponse as any).expiration_year
-);
-
-console.log(
-  "TOKEN EXP MONTH CAMEL",
-  (tokenResponse as any).expirationMonth
-);
-
-console.log(
-  "TOKEN EXP YEAR CAMEL",
-  (tokenResponse as any).expirationYear
-);
-
-console.log("TOKEN RESPONSE OBJETO:");
-console.log(tokenResponse);
-
-
-console.log(
-  "TOKEN JSON:"
-);
-
-console.log(
-  JSON.stringify(
-    tokenResponse,
-    null,
-    2
-  )
-);
-
-console.log("TOKEN KEYS:");
-console.log(Object.keys(tokenResponse));
-
-console.log(
-  "BIN ATTRIBUTES",
-  tokenResponse.bin_attributes
-);
-
-console.log(
-  "BIN ATTRIBUTES JSON:"
-);
-
-console.log(
-  JSON.stringify(
-    tokenResponse.bin_attributes,
-    null,
-    2
-  )
-);
-
-console.log(
-  "TOKEN KEYS",
-  Object.keys(tokenResponse)
-);
-
-
+     
 const firstSix =
   tokenResponse.first_six_digits;
 
@@ -669,10 +615,6 @@ const paymentMethods =
       tokenResponse.first_six_digits
   });
 
-console.log(
-  "PAYMENT METHODS",
-  paymentMethods
-);
 
 const payload = {
 
@@ -715,10 +657,7 @@ const payload = {
 
 };
 
-console.log(
-  "CARD PAYLOAD",
-  payload
-);
+
 
 const response =
   await api.post(
@@ -726,15 +665,42 @@ const response =
     payload
   );
   
-  console.log(
-  "CARD RESPONSE",
-  response.data
-);
 
 if (
   response.data.status ===
   "approved"
 ) {
+
+  if (
+    saveCardChoice &&
+    auth.currentUser
+  ) {
+
+    await addDoc(
+
+      collection(
+        db,
+        "users",
+        auth.currentUser.uid,
+        "savedCards"
+      ),
+
+      {
+        brand:
+          paymentMethods.results[0]
+            ?.id || "card",
+
+        last4:
+          tokenResponse.last_four_digits,
+
+        holderName:
+          cardHolder,
+
+        createdAt:
+          serverTimestamp(),
+      }
+    );
+  }
 
   setTimeout(() => {
 
@@ -1167,7 +1133,57 @@ showToast(
 
     </div>
 
-    <div className="checkout-card-form">
+
+    {!newCard && (
+
+  <div className="saved-cards-list">
+
+    {savedCards.length === 0 ? (
+
+      <p className="saved-cards-empty">
+        Nenhum cartão salvo ainda.
+      </p>
+
+    ) : (
+
+      savedCards.map((card) => (
+
+        <button
+          key={card.id}
+          className="saved-card-item"
+        >
+
+          <CreditCard size={20} />
+
+          <div>
+
+            <strong>
+              {card.brand}
+              {" "}
+              ••••
+              {" "}
+              {card.last4}
+            </strong>
+
+            <span>
+  Cartão salvo
+</span>
+
+          </div>
+
+        </button>
+
+      ))
+
+    )}
+
+  </div>
+
+)}
+
+    {newCard && (
+
+  <div className="checkout-card-form">
 
       <div className="checkout-input-group">
 
@@ -1353,7 +1369,9 @@ showToast(
 </div>
 
 
-    </div>
+     </div>
+
+)}
 
   </div>
 

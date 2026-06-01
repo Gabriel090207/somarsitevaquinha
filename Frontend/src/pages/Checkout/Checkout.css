@@ -1683,3 +1683,90 @@
 .save-card-overlay {
   overscroll-behavior: contain;
 }
+
+
+/* SAVED CARDS */
+
+.saved-cards-list {
+  display: flex;
+  flex-direction: column;
+
+  gap: 14px;
+  margin-bottom: 40px;
+}
+
+.saved-cards-empty {
+  text-align: center;
+
+  padding: 28px;
+
+  border-radius: 18px;
+
+ 
+
+  color: var(--text-light);
+
+  font-size: 14px;
+}
+
+.saved-card-item {
+  width: 100%;
+
+  border: 1px solid var(--border);
+
+  background: var(--white);
+
+  border-radius: 18px;
+
+  padding: 18px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 16px;
+
+  cursor: pointer;
+
+  transition: 0.2s;
+}
+
+.saved-card-item:hover {
+  border-color:
+    rgba(126, 211, 33, 0.35);
+
+  transform:
+    translateY(-2px);
+
+  box-shadow:
+    0 10px 25px
+    rgba(0, 0, 0, 0.05);
+}
+
+.saved-card-item svg {
+  flex-shrink: 0;
+
+  color: var(--primary);
+}
+
+.saved-card-item div {
+  display: flex;
+  flex-direction: column;
+
+  gap: 4px;
+
+  text-align: left;
+}
+
+.saved-card-item strong {
+  color: var(--secondary);
+
+  font-size: 15px;
+
+  font-weight: 800;
+}
+
+.saved-card-item span {
+  color: var(--text-light);
+
+  font-size: 13px;
+}
