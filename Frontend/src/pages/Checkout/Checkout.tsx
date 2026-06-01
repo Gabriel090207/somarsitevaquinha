@@ -581,6 +581,26 @@ console.log(
   )
 );
 
+console.log(
+  "TOKEN EXP MONTH",
+  (tokenResponse as any).expiration_month
+);
+
+console.log(
+  "TOKEN EXP YEAR",
+  (tokenResponse as any).expiration_year
+);
+
+console.log(
+  "TOKEN EXP MONTH CAMEL",
+  (tokenResponse as any).expirationMonth
+);
+
+console.log(
+  "TOKEN EXP YEAR CAMEL",
+  (tokenResponse as any).expirationYear
+);
+
 console.log("TOKEN RESPONSE OBJETO:");
 console.log(tokenResponse);
 
