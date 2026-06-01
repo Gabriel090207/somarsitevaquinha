@@ -542,6 +542,12 @@ const handleCardPayment =
       const [month, year] =
         cardExpiry.split("/");
 
+        console.log("CARD EXPIRY", cardExpiry);
+console.log("MONTH", month);
+console.log("YEAR", year);
+console.log("MONTH NUMBER", Number(month));
+console.log("YEAR NUMBER", Number(`20${year}`));
+
       const tokenResponse =
         await mp.createCardToken({
 
@@ -579,6 +585,11 @@ console.log(
     null,
     2
   )
+);
+
+console.log(
+  "TOKEN ID",
+  tokenResponse.id
 );
 
 console.log(
