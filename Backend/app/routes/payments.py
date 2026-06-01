@@ -32,7 +32,7 @@ class ConfirmDonation(BaseModel):
 
 class CardPayment(BaseModel):
     token: str
-    issuer_id: str | None = None
+    issuer_id: int | None = None
     payment_method_id: str | None = None
     installments: int
     amount: float
