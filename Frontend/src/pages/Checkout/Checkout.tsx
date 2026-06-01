@@ -606,6 +606,18 @@ console.log(
 );
 
 console.log(
+  "BIN ATTRIBUTES JSON:"
+);
+
+console.log(
+  JSON.stringify(
+    tokenResponse.bin_attributes,
+    null,
+    2
+  )
+);
+
+console.log(
   "TOKEN KEYS",
   Object.keys(tokenResponse)
 );
