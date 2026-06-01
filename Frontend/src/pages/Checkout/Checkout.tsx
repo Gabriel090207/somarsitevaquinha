@@ -584,6 +584,19 @@ console.log(
 console.log("TOKEN RESPONSE OBJETO:");
 console.log(tokenResponse);
 
+
+console.log(
+  "TOKEN JSON:"
+);
+
+console.log(
+  JSON.stringify(
+    tokenResponse,
+    null,
+    2
+  )
+);
+
 console.log("TOKEN KEYS:");
 console.log(Object.keys(tokenResponse));
 
