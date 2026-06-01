@@ -169,6 +169,10 @@ def create_card_payment(
             data.payment_method_id,
 
 
+        "issuer_id":
+            data.issuer_id,
+
+
         "payer": {
 
             "email":

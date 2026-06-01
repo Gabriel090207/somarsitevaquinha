@@ -648,11 +648,13 @@ const payload = {
   token:
     tokenResponse.id,
 
- issuer_id: null,
+  issuer_id:
+    paymentMethods.results[0]
+      ?.issuer?.id,
 
-payment_method_id:
-  tokenResponse.bin_attributes
-    ?.brand?.code,
+  payment_method_id:
+    paymentMethods.results[0]
+      ?.id,
 
   installments: 1,
 
