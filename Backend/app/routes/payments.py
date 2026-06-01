@@ -173,6 +173,13 @@ def create_card_payment(
             data.issuer_id,
 
 
+        "expiration_month":
+            data.expiration_month,
+
+        "expiration_year":
+            data.expiration_year,
+
+
         "payer": {
 
             "email":
@@ -180,6 +187,10 @@ def create_card_payment(
         }
     }
 
+
+
+    print("EXP MONTH:", data.expiration_month)
+    print("EXP YEAR:", data.expiration_year)
 
     print("PAYMENT DATA:")
     print(payment_data)
