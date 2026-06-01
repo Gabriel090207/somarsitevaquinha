@@ -571,6 +571,17 @@ const handleCardPayment =
   "TOKEN",
   tokenResponse
 );
+
+console.log(
+  "BIN ATTRIBUTES",
+  tokenResponse.bin_attributes
+);
+
+console.log(
+  "TOKEN KEYS",
+  Object.keys(tokenResponse)
+);
+
 const payload = {
 
   token:
@@ -604,7 +615,7 @@ const payload = {
 
   expiration_year:
     Number(`20${year}`),
-    
+
 };
 
 console.log(
