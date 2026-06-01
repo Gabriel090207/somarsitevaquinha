@@ -573,6 +573,15 @@ const handleCardPayment =
 );
 
 console.log(
+  "TOKEN COMPLETO",
+  JSON.stringify(
+    tokenResponse,
+    null,
+    2
+  )
+);
+
+console.log(
   "BIN ATTRIBUTES",
   tokenResponse.bin_attributes
 );
