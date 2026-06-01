@@ -176,11 +176,6 @@ const [closingSaveCardModal,
     useState(false);
 
 
-const [saveCardChoice,
-  setSaveCardChoice] =
-    useState<boolean | null>(
-      null
-    );
 
 const formatCurrency = (
   value: number
@@ -555,17 +550,12 @@ const handleCreatePix = async () => {
 
 
 const handleCardPayment =
-
-
-  async () => {
+  async (
+    shouldSaveCard: boolean
+  ) => {
 
     try {
 
-
-      console.log(
-  "Salvar cartão:",
-  saveCardChoice
-);
 
       setProcessing(true);
 
@@ -676,12 +666,12 @@ if (
 ) {
 
   if (
-    saveCardChoice &&
-    auth.currentUser
-  ) {
+  shouldSaveCard &&
+  auth.currentUser
+) {
 
     console.log("ENTROU NO BLOCO DE SALVAR");
-console.log("saveCardChoice =", saveCardChoice);
+
 console.log("user =", auth.currentUser);
 
     await addDoc(
@@ -761,15 +751,12 @@ async function continueCardPayment(
   saveCard: boolean
 ) {
 
-  setSaveCardChoice(
-    saveCard
-  );
-
+ 
   handleCloseSaveCardModal();
 
   setTimeout(() => {
 
-    handleCardPayment();
+   handleCardPayment(saveCard);
 
   }, 250);
 
