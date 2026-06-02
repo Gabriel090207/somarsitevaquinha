@@ -119,7 +119,7 @@ def confirm_donation(data: ConfirmDonation):
         .get()
     )
 
-    if existing_donations:
+    if len(existing_donations) > 0:
 
         return {
             "success": True,
