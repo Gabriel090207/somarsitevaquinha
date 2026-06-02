@@ -540,6 +540,12 @@ const handleCreatePix = async () => {
 
     campaign_id:
       campaign?.id || "",
+
+    campaign_title:
+      campaign?.title || "",
+
+    donor_name:
+      name,
   }
 );
 

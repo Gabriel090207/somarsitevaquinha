@@ -13,10 +13,16 @@ router = APIRouter()
 
 
 class PixPayment(BaseModel):
+
     amount: float
+
     email: str
 
     campaign_id: str
+
+    campaign_title: str
+
+    donor_name: str
 
 
 class ConfirmDonation(BaseModel):
@@ -53,17 +59,37 @@ class CardPayment(BaseModel):
 def create_pix(data: PixPayment):
 
     payment_data = {
-        "transaction_amount": data.amount,
+
+        "transaction_amount":
+            data.amount,
 
         "external_reference":
             data.campaign_id,
 
-        "description": "Doação Somar",
+        "metadata": {
 
-        "payment_method_id": "pix",
+            "campaign_id":
+                data.campaign_id,
+
+            "campaign_title":
+                data.campaign_title,
+
+            "donor_name":
+                data.donor_name,
+
+            "donor_email":
+                data.email,
+        },
+
+        "description":
+            "Doação Somar",
+
+        "payment_method_id":
+            "pix",
 
         "payer": {
-            "email": data.email
+            "email":
+                data.email
         }
     }
 
@@ -289,7 +315,6 @@ def create_card_payment(
             payment["status"]
     }
 
-
 from fastapi import Request
 
 @router.post("/webhook")
@@ -297,25 +322,152 @@ async def mercadopago_webhook(
     request: Request
 ):
 
-    print("=" * 50)
-    print("WEBHOOK RECEBIDO")
+    try:
 
-    payment_id = request.query_params.get(
-        "data.id"
-    )
+        payment_id = request.query_params.get(
+            "data.id"
+        )
 
-    print("PAYMENT ID:")
-    print(payment_id)
+        if not payment_id:
 
-    payment_response = sdk.payment().get(
-        payment_id
-    )
+            return {
+                "success": True
+            }
 
-    print("PAYMENT RESPONSE:")
-    print(payment_response)
+        payment_response = (
+            sdk.payment().get(
+                payment_id
+            )
+        )
 
-    print("=" * 50)
+        payment = (
+            payment_response["response"]
+        )
 
-    return {
-        "success": True
-    }
+        if (
+            payment["status"]
+            != "approved"
+        ):
+
+            return {
+                "success": True
+            }
+
+        existing_donations = (
+            db.collection("donations")
+            .where(
+                "paymentId",
+                "==",
+                int(payment_id)
+            )
+            .limit(1)
+            .get()
+        )
+
+        if len(existing_donations) > 0:
+
+            return {
+                "success": True,
+                "message":
+                    "Doação já registrada"
+            }
+
+        metadata = (
+            payment.get("metadata", {})
+        )
+
+        campaign_id = (
+            metadata.get(
+                "campaign_id"
+            )
+        )
+
+        campaign_title = (
+            metadata.get(
+                "campaign_title"
+            )
+        )
+
+        donor_name = (
+            metadata.get(
+                "donor_name"
+            )
+        )
+
+        donor_email = (
+            metadata.get(
+                "donor_email"
+            )
+        )
+
+        amount = (
+            payment.get(
+                "transaction_amount",
+                0
+            )
+        )
+
+        donation_ref = (
+            db.collection(
+                "donations"
+            ).document()
+        )
+
+        donation_ref.set({
+
+            "paymentId":
+                int(payment_id),
+
+            "campaignId":
+                campaign_id,
+
+            "campaignTitle":
+                campaign_title,
+
+            "amount":
+                amount,
+
+            "donorName":
+                donor_name,
+
+            "donorEmail":
+                donor_email,
+
+            "paymentMethod":
+                "pix",
+
+            "status":
+                "approved",
+
+            "createdAt":
+                datetime.utcnow(),
+        })
+
+        campaign_ref = (
+            db.collection(
+                "campaigns"
+            ).document(
+                campaign_id
+            )
+        )
+
+        campaign_ref.update({
+
+            "raisedAmount":
+                Increment(amount)
+        })
+
+        return {
+            "success": True
+        }
+
+    except Exception as e:
+
+        print(
+            "ERRO WEBHOOK:",
+            str(e)
+        )
+
+        return {
+            "success": False
+        }
