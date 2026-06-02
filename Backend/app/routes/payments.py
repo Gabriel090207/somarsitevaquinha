@@ -295,8 +295,19 @@ async def mercadopago_webhook(
     print("=" * 50)
     print("WEBHOOK RECEBIDO")
 
-    print("QUERY PARAMS:")
-    print(dict(request.query_params))
+    payment_id = request.query_params.get(
+        "data.id"
+    )
+
+    print("PAYMENT ID:")
+    print(payment_id)
+
+    payment_response = sdk.payment().get(
+        payment_id
+    )
+
+    print("PAYMENT RESPONSE:")
+    print(payment_response)
 
     print("=" * 50)
 
