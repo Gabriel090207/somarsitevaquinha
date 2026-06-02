@@ -284,11 +284,19 @@ def create_card_payment(
     }
 
 
+from fastapi import Request
+
 @router.post("/webhook")
-async def mercadopago_webhook():
+async def mercadopago_webhook(
+    request: Request
+):
 
     print("=" * 50)
     print("WEBHOOK RECEBIDO")
+
+    print("QUERY PARAMS:")
+    print(dict(request.query_params))
+
     print("=" * 50)
 
     return {
