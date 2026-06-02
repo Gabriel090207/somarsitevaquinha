@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Body
 from pydantic import BaseModel
 
 from app.config.mp import sdk
@@ -105,19 +105,18 @@ def payment_status(payment_id: str):
         "status": payment["status"]
     }
 
-@router.post("/confirm-donation")
-def confirm_donation(data: ConfirmDonation):
 
-    existing_donations = (
-        db.collection("donations")
-        .where(
-            "paymentId",
-            "==",
-            data.payment_id
-        )
-        .limit(1)
-        .get()
-    )
+@router.post("/confirm-donation")
+def confirm_donation(data = Body(...)):
+
+    print("=" * 50)
+    print("BODY RECEBIDO:")
+    print(data)
+    print("=" * 50)
+
+    return {
+        "success": True
+    }
 
     if len(existing_donations) > 0:
 
