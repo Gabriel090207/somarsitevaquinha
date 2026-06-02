@@ -392,7 +392,7 @@ await api.post(
 
     payment_id:
   pixData.id,
-  
+
     campaign_id: campaign?.id || "",
 
     campaign_title: campaign?.title || "",
@@ -535,7 +535,11 @@ const handleCreatePix = async () => {
   "/create-pix",
   {
     amount: donationValue,
+
     email,
+
+    campaign_id:
+      campaign?.id || "",
   }
 );
 

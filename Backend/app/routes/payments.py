@@ -16,6 +16,8 @@ class PixPayment(BaseModel):
     amount: float
     email: str
 
+    campaign_id: str
+
 
 class ConfirmDonation(BaseModel):
 
@@ -52,6 +54,9 @@ def create_pix(data: PixPayment):
 
     payment_data = {
         "transaction_amount": data.amount,
+
+        "external_reference":
+            data.campaign_id,
 
         "description": "Doação Somar",
 
