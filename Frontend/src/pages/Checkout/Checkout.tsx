@@ -176,6 +176,8 @@ const [closingSaveCardModal,
     useState(false);
 
 
+const [selectedCard, setSelectedCard] =
+  useState<any | null>(null);
 
 const formatCurrency = (
   value: number
@@ -655,10 +657,7 @@ const response =
     payload
   );
   
-  console.log(
-  "CARD RESPONSE",
-  response.data
-);
+  
 
 if (
   response.data.status ===
@@ -686,46 +685,47 @@ const cardAlreadyExists =
 
   showToast(
     "Este cartão já está salvo.",
-    "error"
+    "info"
   );
 
-  return;
+} else {
+
+  await addDoc(
+    collection(
+      db,
+      "users",
+      auth.currentUser.uid,
+      "savedCards"
+    ),
+    {
+      brand:
+        paymentMethods.results[0]?.id,
+
+      issuer:
+        paymentMethods.results[0]
+          ?.issuer?.name,
+
+      issuerId:
+        paymentMethods.results[0]
+          ?.issuer?.id,
+
+      last4:
+        tokenResponse.last_four_digits,
+
+      holderName:
+        cardHolder,
+
+      createdAt:
+        serverTimestamp(),
+    }
+  );
+
+  showToast(
+    "Cartão salvo com sucesso!",
+    "success"
+  );
 }
 
-    await addDoc(
-
-      collection(
-        db,
-        "users",
-        auth.currentUser.uid,
-        "savedCards"
-      ),
-
-      {
-  brand:
-    paymentMethods.results[0]
-      ?.id || "card",
-
-  issuer:
-    paymentMethods.results[0]
-      ?.issuer?.name || "",
-
-  issuerId:
-    paymentMethods.results[0]
-      ?.issuer?.id || null,
-
-  last4:
-    tokenResponse.last_four_digits,
-
-  holderName:
-    cardHolder,
-
-  createdAt:
-    serverTimestamp(),
-}
-    );
-
-    console.log("CARTAO SALVO");
   }
 
   setTimeout(() => {
@@ -1172,9 +1172,27 @@ showToast(
       savedCards.map((card) => (
 
         <button
-          key={card.id}
-          className="saved-card-item"
-        >
+  key={card.id}
+  className={`saved-card-item ${
+    selectedCard?.id === card.id
+      ? "active"
+      : ""
+  }`}
+  onClick={() => {
+
+  if (
+    selectedCard?.id ===
+    card.id
+  ) {
+
+    setSelectedCard(null);
+
+  } else {
+
+    setSelectedCard(card);
+  }
+}}
+>
 
          <img
   src={`/cards/${card.brand}.png`}
@@ -1205,7 +1223,11 @@ showToast(
 
   </div>
 
+  
+
 )}
+
+
 
     {newCard && (
 
