@@ -19,7 +19,7 @@ class PixPayment(BaseModel):
 
 class ConfirmDonation(BaseModel):
 
-    payment_id: str
+    payment_id: int
 
     campaign_id: str
 
@@ -107,16 +107,18 @@ def payment_status(payment_id: str):
 
 
 @router.post("/confirm-donation")
-def confirm_donation(data = Body(...)):
+def confirm_donation(data: ConfirmDonation):
 
-    print("=" * 50)
-    print("BODY RECEBIDO:")
-    print(data)
-    print("=" * 50)
-
-    return {
-        "success": True
-    }
+    existing_donations = (
+        db.collection("donations")
+        .where(
+            "paymentId",
+            "==",
+            data.payment_id
+        )
+        .limit(1)
+        .get()
+    )
 
     if len(existing_donations) > 0:
 
