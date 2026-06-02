@@ -18,6 +18,9 @@ class PixPayment(BaseModel):
 
 
 class ConfirmDonation(BaseModel):
+
+    payment_id: str
+
     campaign_id: str
 
     campaign_title: str
@@ -105,11 +108,33 @@ def payment_status(payment_id: str):
 @router.post("/confirm-donation")
 def confirm_donation(data: ConfirmDonation):
 
+    existing_donations = (
+        db.collection("donations")
+        .where(
+            "paymentId",
+            "==",
+            data.payment_id
+        )
+        .limit(1)
+        .get()
+    )
+
+    if existing_donations:
+
+        return {
+            "success": True,
+            "message":
+                "Doação já registrada"
+        }
+
     donation_ref = db.collection(
         "donations"
     ).document()
 
     donation_ref.set({
+
+        "paymentId":
+            data.payment_id,
 
         "campaignId":
             data.campaign_id,
@@ -256,4 +281,16 @@ def create_card_payment(
     return {
         "status":
             payment["status"]
+    }
+
+
+@router.post("/webhook")
+async def mercadopago_webhook():
+
+    print("=" * 50)
+    print("WEBHOOK RECEBIDO")
+    print("=" * 50)
+
+    return {
+        "success": True
     }

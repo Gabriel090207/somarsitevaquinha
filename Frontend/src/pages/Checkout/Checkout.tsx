@@ -368,6 +368,8 @@ useEffect(() => {
           "approved"
         ) {
 
+clearInterval(interval);
+
          
 setProcessing(true);
 
@@ -387,6 +389,10 @@ setTimeout(() => {
 await api.post(
   "/confirm-donation",
   {
+
+    payment_id:
+  pixData.id,
+  
     campaign_id: campaign?.id || "",
 
     campaign_title: campaign?.title || "",
@@ -401,9 +407,6 @@ await api.post(
   }
 );
 
-clearInterval(interval);
-
-          clearInterval(interval);
         }
 
       } catch (error) {
