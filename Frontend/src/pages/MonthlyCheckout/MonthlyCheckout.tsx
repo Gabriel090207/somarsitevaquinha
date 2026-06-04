@@ -432,8 +432,7 @@ console.log(response.data);
   
 
 if (
-  response.data.status ===
-  "approved"
+  response.data.success
 ) {
 
   if (
