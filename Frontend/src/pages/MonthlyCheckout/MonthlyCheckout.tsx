@@ -398,42 +398,6 @@ const paymentMethods =
   });
 
 
-const payload = {
-
-  token:
-    tokenResponse.id,
-
-  issuer_id:
-    paymentMethods.results[0]
-      ?.issuer?.id,
-
-  payment_method_id:
-    paymentMethods.results[0]
-      ?.id,
-
-  installments: 1,
-
-  amount:
-    donationValue,
-
-  email:
-    cardEmail,
-
-
-
-  donor_name:
-    cardHolder,
-
-    cpf:
-  cardCpf.replace(/\D/g, ""),
-
-     expiration_month:
-    Number(month),
-
-  expiration_year:
-    Number(`20${year}`),
-
-};
 
 
 const subscriptionPayload = {
