@@ -18,9 +18,13 @@ class SubscriptionPayment(BaseModel):
 
     card_holder: str
 
-@router.get("/subscription-test")
-def subscription_test():
+@router.post("/create-subscription")
+def create_subscription(
+    data: SubscriptionPayment
+):
 
     return {
-        "status": "subscriptions funcionando"
+        "success": True,
+        "amount": data.amount,
+        "email": data.email
     }

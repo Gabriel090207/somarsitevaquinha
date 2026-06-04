@@ -436,12 +436,34 @@ const payload = {
 };
 
 
+const subscriptionPayload = {
+
+  token:
+    tokenResponse.id,
+
+  email:
+    cardEmail,
+
+  cpf:
+    cardCpf.replace(/\D/g, ""),
+
+  amount:
+    donationValue,
+
+  card_holder:
+    cardHolder,
+};
+
+
 
 const response =
   await api.post(
-    "/create-card-payment",
-    payload
+    "/create-subscription",
+    subscriptionPayload
   );
+
+
+console.log(response.data);
   
   
 
