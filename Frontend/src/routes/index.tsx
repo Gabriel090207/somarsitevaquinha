@@ -41,6 +41,10 @@ import { Checkout } from "../pages/Checkout/Checkout";
 
 import { PaymentSuccess } from "../pages/PaymentSuccess/PaymentSuccess";
 
+import {
+  MonthlyCheckout
+} from "../pages/MonthlyCheckout/MonthlyCheckout";
+
 function Layout() {
 
   const location = useLocation();
@@ -126,6 +130,11 @@ const hideLayout =
 <Route
   path="/payment-success"
   element={<PaymentSuccess />}
+/>
+
+<Route
+  path="/monthly-checkout"
+  element={<MonthlyCheckout />}
 />
 
       </Routes>

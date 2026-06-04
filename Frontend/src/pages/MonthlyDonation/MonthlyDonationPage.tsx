@@ -14,7 +14,21 @@ import {
   CalendarX,
 } from "lucide-react";
 
+
+import { useNavigate }
+  from "react-router-dom";
+
+import { useState }
+  from "react";
+
 export function MonthlyDonationPage() {
+
+
+const navigate =
+  useNavigate();
+
+const [customAmount, setCustomAmount] =
+  useState("");
 
   return (
 
@@ -97,9 +111,18 @@ export function MonthlyDonationPage() {
             por mês
           </p>
 
-          <button>
-            Doar
-          </button>
+          <button
+  onClick={() =>
+    navigate(
+      `/monthly-checkout?amount=${value.replace(
+        "R$ ",
+        ""
+      )}`
+    )
+  }
+>
+  Doar
+</button>
 
         </div>
 
@@ -119,9 +142,15 @@ export function MonthlyDonationPage() {
           por mês
         </p>
 
-        <button>
-          Doar
-        </button>
+        <button
+  onClick={() =>
+    navigate(
+      "/monthly-checkout?amount=80"
+    )
+  }
+>
+  Doar
+</button>
 
       </div>
 
@@ -135,27 +164,46 @@ export function MonthlyDonationPage() {
           por mês
         </p>
 
-        <button>
-          Doar
-        </button>
-
+       <button
+  onClick={() =>
+    navigate(
+      "/monthly-checkout?amount=120"
+    )
+  }
+>
+  Doar
+</button>
       </div>
 
-      <div className="monthly-value-card">
+     <div className="monthly-value-card">
 
-        <h3 className="custom-value">
-          Valor livre
-        </h3>
+  <h3 className="custom-value">
+    Valor livre
+  </h3>
 
-        <p>
-          Escolha o valor que cabe no seu bolso
-        </p>
+  <input
+    type="number"
+    placeholder="Digite um valor"
+    value={customAmount}
+    onChange={(e) =>
+      setCustomAmount(
+        e.target.value
+      )
+    }
+  />
 
-        <button>
-          Doar
-        </button>
+  <button
+    disabled={!customAmount}
+    onClick={() =>
+      navigate(
+        `/monthly-checkout?amount=${customAmount}`
+      )
+    }
+  >
+    Doar
+  </button>
 
-      </div>
+</div>
 
     </div>
 
