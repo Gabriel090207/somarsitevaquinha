@@ -18,8 +18,7 @@ import {
 import { useNavigate }
   from "react-router-dom";
 
-import { useState }
-  from "react";
+
 
 export function MonthlyDonationPage() {
 
@@ -27,8 +26,7 @@ export function MonthlyDonationPage() {
 const navigate =
   useNavigate();
 
-const [customAmount, setCustomAmount] =
-  useState("");
+
 
   return (
 
@@ -175,20 +173,19 @@ const [customAmount, setCustomAmount] =
 </button>
       </div>
 
-     <div className="monthly-value-card">
+    <div className="monthly-value-card">
 
   <h3 className="custom-value">
     Valor livre
   </h3>
 
-
+  <p>
+    por mês
+  </p>
 
   <button
-    disabled={!customAmount}
     onClick={() =>
-      navigate(
-        `/monthly-checkout?amount=${customAmount}`
-      )
+      navigate("/monthly-checkout")
     }
   >
     Doar
