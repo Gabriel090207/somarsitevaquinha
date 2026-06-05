@@ -181,16 +181,7 @@ const [customAmount, setCustomAmount] =
     Valor livre
   </h3>
 
-  <input
-    type="number"
-    placeholder="Digite um valor"
-    value={customAmount}
-    onChange={(e) =>
-      setCustomAmount(
-        e.target.value
-      )
-    }
-  />
+
 
   <button
     disabled={!customAmount}
