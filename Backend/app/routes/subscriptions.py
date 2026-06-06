@@ -70,6 +70,13 @@ def create_subscription(
 
         print(response)
 
+        if response["status"] != 201:
+
+            return {
+                "success": False,
+                "error": response["response"]
+            }
+
         subscription = response["response"]
         
         db.collection(
