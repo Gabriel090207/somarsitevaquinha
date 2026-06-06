@@ -141,7 +141,7 @@ const [showSaveCardModal,
 const mp =
   new window.MercadoPago(
     import.meta.env
-      .VITE_MP_PUBLIC_KEY
+      .VITE_MP_SUBSCRIPTION_PUBLIC_KEY
   );
 
 
@@ -401,7 +401,7 @@ const paymentMethods =
 
 
 const subscriptionPayload = {
-  
+
   user_id:
     auth.currentUser?.uid || "",
 
