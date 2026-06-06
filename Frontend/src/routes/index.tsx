@@ -45,6 +45,8 @@ import {
   MonthlyCheckout
 } from "../pages/MonthlyCheckout/MonthlyCheckout";
 
+import { MonthlySubscriptionSuccess } from "../pages/MonthlySubscriptionSuccess/MonthlySubscriptionSuccess";
+
 function Layout() {
 
   const location = useLocation();
@@ -132,10 +134,21 @@ const hideLayout =
   element={<PaymentSuccess />}
 />
 
+
+
 <Route
   path="/monthly-checkout"
   element={<MonthlyCheckout />}
 />
+
+
+<Route
+  path="/monthly-subscription-success"
+  element={
+    <MonthlySubscriptionSuccess />
+  }
+/>
+
 
       </Routes>
 

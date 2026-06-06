@@ -11,6 +11,8 @@ router = APIRouter()
 
 class SubscriptionPayment(BaseModel):
 
+    user_id: str
+
     token: str
 
     email: str
@@ -41,6 +43,9 @@ def create_subscription(
             "card_token_id":
                 data.token,
 
+            "back_url":
+                "https://somarprototipo.netlify.app",
+
             "auto_recurring": {
 
                 "frequency": 1,
@@ -64,6 +69,39 @@ def create_subscription(
         )
 
         print(response)
+
+        subscription = response["response"]
+        
+        db.collection(
+            "users"
+        ).document(
+            data.user_id
+        ).collection(
+            "subscriptions"
+        ).document(
+            subscription["id"]
+        ).set({
+
+            "mercado_pago_id":
+                subscription["id"],
+
+            "amount":
+                float(data.amount),
+
+            "email":
+                data.email,
+
+            "status":
+                subscription.get(
+                    "status"
+                ),
+
+            "created_at":
+                datetime.utcnow(),
+
+            "active":
+                True,
+        })
 
         return {
             "success": True,

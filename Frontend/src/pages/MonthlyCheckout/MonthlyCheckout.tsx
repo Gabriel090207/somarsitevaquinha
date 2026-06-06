@@ -401,6 +401,9 @@ const paymentMethods =
 
 
 const subscriptionPayload = {
+  
+  user_id:
+    auth.currentUser?.uid || "",
 
   token:
     tokenResponse.id,
@@ -502,7 +505,7 @@ const cardAlreadyExists =
   setTimeout(() => {
 
     navigate(
-      "/payment-success",
+      "/monthly-subscription-success",
       {
         state: {
           amount: donationValue,
