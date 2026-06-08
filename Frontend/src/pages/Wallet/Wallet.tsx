@@ -1,8 +1,19 @@
 import "./Wallet.css";
 
 import {
+  useEffect,
   useState,
 } from "react";
+
+import {
+  doc,
+  onSnapshot,
+} from "firebase/firestore";
+
+import {
+  auth,
+  db,
+} from "../../services/firebase";
 
 import {
   EyeOff,
@@ -15,6 +26,67 @@ export function Wallet() {
     activeTab,
     setActiveTab,
   ] = useState("monthly");
+
+  const [balance, setBalance] =
+  useState<number | null>(null);
+
+
+
+useEffect(() => {
+
+  const unsubscribeAuth =
+    auth.onAuthStateChanged(
+      (user) => {
+
+        if (!user) {
+
+          setBalance(0);
+
+          return;
+        }
+
+        const walletRef =
+          doc(
+            db,
+            "users",
+            user.uid,
+            "wallet",
+            "main"
+          );
+
+        const unsubscribeWallet =
+          onSnapshot(
+            walletRef,
+            (snapshot) => {
+
+              if (
+                snapshot.exists()
+              ) {
+
+                setBalance(
+                  snapshot.data()
+                    .balance || 0
+                );
+
+              } else {
+
+                setBalance(0);
+
+              }
+
+            }
+          );
+
+        return () =>
+          unsubscribeWallet();
+
+      }
+    );
+
+  return () =>
+    unsubscribeAuth();
+
+}, []);
 
   return (
 
@@ -40,9 +112,19 @@ export function Wallet() {
                     Saldo
                   </span>
 
-                  <h2>
-                    R$ 0,00
-                  </h2>
+                 <h2>
+
+  {balance === null
+    ? "..."
+    : balance.toLocaleString(
+        "pt-BR",
+        {
+          style: "currency",
+          currency: "BRL",
+        }
+      )}
+
+</h2>
 
                 </div>
 

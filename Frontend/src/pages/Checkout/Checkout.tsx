@@ -105,7 +105,10 @@ const [savedCards, setSavedCards] =
   useState<any[]>([]);
 
 
-const walletBalance = 0;
+const [
+  walletBalance,
+  setWalletBalance,
+] = useState(0);
 
 const donationValue =
   Number(
@@ -248,6 +251,33 @@ useEffect(() => {
     async (user) => {
 
       if (!user) return;
+
+      const walletRef =
+  doc(
+    db,
+    "users",
+    user.uid,
+    "wallet",
+    "main"
+  );
+
+onSnapshot(
+  walletRef,
+  (snapshot) => {
+
+    if (
+      snapshot.exists()
+    ) {
+
+      setWalletBalance(
+        snapshot.data()
+          .balance || 0
+      );
+
+    }
+
+  }
+);
 
       const cardsRef =
   collection(
@@ -524,6 +554,58 @@ const goal =
   }
 
 
+async function handleWalletDonation() {
+
+  const user =
+    auth.currentUser;
+
+  if (!user) {
+
+    showToast(
+      "Faça login para usar sua carteira.",
+      "error"
+    );
+
+    return;
+  }
+
+ const walletRef =
+  doc(
+    db,
+    "users",
+    user.uid,
+    "wallet",
+    "main"
+  );
+
+const walletDoc =
+  await getDoc(
+    walletRef
+  );
+
+if (
+  !walletDoc.exists()
+) {
+
+  showToast(
+    "Carteira não encontrada.",
+    "error"
+  );
+
+  return;
+}
+
+const currentBalance =
+  walletDoc.data()
+    .balance || 0;
+
+console.log(
+  "Saldo atual:",
+  currentBalance
+);
+
+
+}
   
 const handleCreatePix = async () => {
 
@@ -1498,6 +1580,14 @@ showToast(
    if (paymentMethod === "pix") {
 
   handleCreatePix();
+
+}
+
+if (
+  paymentMethod === "wallet"
+) {
+
+  handleWalletDonation();
 
 }
 

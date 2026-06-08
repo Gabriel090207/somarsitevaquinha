@@ -1,7 +1,7 @@
 .wallet {
   width: 100%;
 
-  padding: 70px 20px 100px;
+  padding: 70px 20px 200px;
   background: var(--white);
 
 }
@@ -287,3 +287,4 @@
   }
 
 }
+
