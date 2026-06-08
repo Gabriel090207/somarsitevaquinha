@@ -81,9 +81,13 @@ export function Footer() {
                 <FiFacebook size={22} />
               </a>
 
-              <a href="#">
-                <FaWhatsapp size={22} />
-              </a>
+            <a
+  href="https://wa.me/5586921427920"
+  target="_blank"
+  rel="noopener noreferrer"
+>
+  <FaWhatsapp size={22} />
+</a>
 
             </div>
 
