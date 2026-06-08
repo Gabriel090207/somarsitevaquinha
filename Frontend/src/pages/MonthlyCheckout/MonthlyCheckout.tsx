@@ -577,10 +577,12 @@ function handleCloseSaveCardModal() {
 
         <div className="checkout-left">
 
-          <button
-            className="checkout-back"
-            onClick={() => navigate(-1)}
-          >
+         <button
+  className="checkout-back"
+  onClick={() =>
+    navigate("/doador-mensal")
+  }
+>
 
             <ArrowLeft size={18} />
 
