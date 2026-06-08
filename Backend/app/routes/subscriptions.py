@@ -108,6 +108,16 @@ def create_subscription(
             "created_at":
                 datetime.utcnow(),
 
+            "next_payment_date":
+                subscription.get(
+                    "next_payment_date"
+                ),
+
+            "reason":
+                subscription.get(
+                    "reason"
+                ),
+
             "active":
                 True,
         })
