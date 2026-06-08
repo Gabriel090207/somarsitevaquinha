@@ -52,25 +52,10 @@ export function MonthlySubscriptionSuccess() {
           Sua doação mensal foi criada 💚
         </h1>
 
-        <strong>
-
-          {
-            formatMoney(amount)
-          }
-
-        </strong>
-
-        <p>
-
-          Sua assinatura foi criada
-          com sucesso e já está ativa.
-
-        </p>
-
         <p>
 
           Quando cada cobrança mensal
-          for confirmada, o valor de{" "}
+          for confirmada, o valor de
 
           <strong>
             {
@@ -78,20 +63,12 @@ export function MonthlySubscriptionSuccess() {
             }
           </strong>
 
-          {" "}será adicionado à sua
+          será adicionado à sua
           carteira Somar.
 
         </p>
 
-        <p>
-
-          Com esse saldo você poderá
-          escolher livremente quais
-          campanhas deseja apoiar,
-          sem precisar realizar um
-          novo pagamento a cada doação.
-
-        </p>
+      
 
         <p>
 

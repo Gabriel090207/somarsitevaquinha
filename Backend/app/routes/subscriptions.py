@@ -5,6 +5,8 @@ from app.config.mp import subscription_sdk
 from app.config.firebase import db
 from datetime import datetime
 
+from google.cloud.firestore_v1 import Increment
+
 
 router = APIRouter()
 
@@ -108,6 +110,66 @@ def create_subscription(
 
             "active":
                 True,
+        })
+
+
+        wallet_ref = (
+            db.collection("users")
+            .document(data.user_id)
+            .collection("wallet")
+            .document("main")
+        )
+
+        wallet_doc = wallet_ref.get()
+
+        if not wallet_doc.exists:
+
+            wallet_ref.set({
+
+                "balance":
+                    0,
+
+                "created_at":
+                    datetime.utcnow(),
+
+                "updated_at":
+                    datetime.utcnow(),
+            })
+
+        wallet_ref.update({
+
+            "balance":
+                Increment(
+                    float(data.amount)
+                ),
+
+            "updated_at":
+                datetime.utcnow(),
+        })
+
+
+        db.collection(
+            "users"
+        ).document(
+            data.user_id
+        ).collection(
+            "walletTransactions"
+        ).add({
+
+            "type":
+                "subscription_credit",
+
+            "amount":
+                float(data.amount),
+
+            "description":
+                "Primeira cobrança da assinatura",
+
+            "subscription_id":
+                subscription["id"],
+
+            "created_at":
+                datetime.utcnow(),
         })
 
         return {
