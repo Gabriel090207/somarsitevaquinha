@@ -18,6 +18,10 @@ import {
 import { useNavigate }
   from "react-router-dom";
 
+import {
+  auth
+} from "../../services/firebase";
+
 
 
 export function MonthlyDonationPage() {
@@ -27,7 +31,37 @@ const navigate =
   useNavigate();
 
 
+function handleMonthlyDonation(
+  amount?: string
+) {
 
+  if (!auth.currentUser) {
+
+    navigate(
+      "/login",
+      {
+        state: {
+          message:
+            "Faça login para se tornar um doador mensal.",
+
+          redirectTo:
+            amount
+              ? `/monthly-checkout?amount=${amount}`
+              : "/monthly-checkout",
+        },
+      }
+    );
+
+    return;
+  }
+
+  navigate(
+    amount
+      ? `/monthly-checkout?amount=${amount}`
+      : "/monthly-checkout"
+  );
+
+}
   return (
 
     <main className="monthly-page">
@@ -66,9 +100,21 @@ const navigate =
 
 
 
-          <button>
-            Quero ser doador mensal
-          </button>
+          <button
+  onClick={() => {
+
+    document
+      .querySelector(
+        ".monthly-values"
+      )
+      ?.scrollIntoView({
+        behavior: "smooth",
+      });
+
+  }}
+>
+  Quero ser doador mensal
+</button>
 
           <small>
   Você pode cancelar quando quiser.
@@ -111,13 +157,13 @@ const navigate =
 
           <button
   onClick={() =>
-    navigate(
-      `/monthly-checkout?amount=${value.replace(
-        "R$ ",
-        ""
-      )}`
+  handleMonthlyDonation(
+    value.replace(
+      "R$ ",
+      ""
     )
-  }
+  )
+}
 >
   Doar
 </button>
@@ -142,10 +188,8 @@ const navigate =
 
         <button
   onClick={() =>
-    navigate(
-      "/monthly-checkout?amount=80"
-    )
-  }
+  handleMonthlyDonation("80")
+}
 >
   Doar
 </button>
@@ -164,10 +208,8 @@ const navigate =
 
        <button
   onClick={() =>
-    navigate(
-      "/monthly-checkout?amount=120"
-    )
-  }
+  handleMonthlyDonation("120")
+}
 >
   Doar
 </button>
@@ -183,13 +225,13 @@ const navigate =
     por mês
   </p>
 
-  <button
-    onClick={() =>
-      navigate("/monthly-checkout")
-    }
-  >
-    Doar
-  </button>
+ <button
+  onClick={() =>
+    handleMonthlyDonation()
+  }
+>
+  Doar
+</button>
 
 </div>
 

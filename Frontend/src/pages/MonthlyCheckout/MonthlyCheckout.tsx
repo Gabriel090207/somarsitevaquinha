@@ -1146,12 +1146,13 @@ function handleCloseSaveCardModal() {
   }}
 >
 
-  {
-    editingAmount
-      ? "Salvar"
-      : "Alterar valor"
-  }
-
+ {
+  editingAmount
+    ? "Salvar"
+    : donationValue > 0
+      ? "Alterar valor"
+      : "Escolher valor"
+}
 </button>
 
       <div className="checkout-security">

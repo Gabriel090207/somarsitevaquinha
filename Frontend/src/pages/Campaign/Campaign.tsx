@@ -21,6 +21,7 @@ import {
 import {
   Link,
   useParams,
+  useNavigate,
 } from "react-router-dom";
 
 import {
@@ -78,6 +79,9 @@ goalAmount: string | number;
 };
 
 export function Campaign() {
+
+const navigate =
+  useNavigate();
 
 const { slug } =
   useParams();
@@ -857,14 +861,37 @@ async function handleSaveCampaign() {
 
               </div>
 
-              <Link
-  to={`/checkout/${campaign.slug}`}
+              <button
   className="campaign-donate-button"
+  onClick={() => {
+
+    if (!auth.currentUser) {
+
+  navigate(
+  "/login",
+  {
+    state: {
+      message:
+        "Faça login para realizar uma doação.",
+
+      redirectTo:
+        `/checkout/${campaign.slug}`
+    }
+  }
+);
+
+  return;
+}
+
+    window.location.href =
+      `/checkout/${campaign.slug}`;
+
+  }}
 >
 
   Quero Doar
 
-</Link>
+</button>
 
             </div>
 

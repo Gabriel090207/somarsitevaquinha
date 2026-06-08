@@ -1,6 +1,10 @@
 import "./Login.css";
 
-import { useState } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 
 import {
   Eye,
@@ -26,6 +30,7 @@ import {
 
 import {
   useNavigate,
+  useLocation,
 } from "react-router-dom";
 
 function formatCPF(value: string) {
@@ -180,6 +185,16 @@ export function Login() {
 const navigate =
   useNavigate();
 
+
+const location =
+  useLocation();
+
+const redirectTo =
+  location.state?.redirectTo;
+
+const toastShown =
+  useRef(false);
+
 const { showToast } = useToast();
 
 const [email, setEmail] =
@@ -225,6 +240,8 @@ const [companyName, setCompanyName] =
 
 const [acceptTerms, setAcceptTerms] =
   useState(false);
+
+
 
 
 async function handleRegister(
@@ -473,7 +490,9 @@ async function handleLogin(
 
     setPassword("");
 
-    navigate("/");
+    navigate(
+  redirectTo || "/"
+);
 
   } catch (error: any) {
 
@@ -501,7 +520,34 @@ async function handleLogin(
   }
 }
 
-    
+
+useEffect(() => {
+
+  if (
+    toastShown.current
+  ) {
+    return;
+  }
+
+  if (
+    location.state?.message
+  ) {
+
+    toastShown.current =
+      true;
+
+    showToast(
+      location.state.message,
+      "info"
+    );
+
+  }
+
+}, [
+  location.state,
+  showToast,
+]);
+
   return (
 
     <main className="login-page">
