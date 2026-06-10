@@ -26,6 +26,14 @@ class SubscriptionPayment(BaseModel):
     card_holder: str
 
 
+class UpdateSubscriptionStatus(BaseModel):
+
+    user_id: str
+
+    subscription_id: str
+
+    active: bool
+
 
 @router.post("/create-subscription")
 def create_subscription(
@@ -197,6 +205,96 @@ def create_subscription(
 
         return {
             "success": False,
+            "error":
+                str(e)
+        }
+
+
+
+@router.post(
+    "/update-subscription-status"
+)
+def update_subscription_status(
+    data: UpdateSubscriptionStatus
+):
+
+    try:
+
+        status = (
+            "authorized"
+            if data.active
+            else "paused"
+        )
+
+        response = (
+            subscription_sdk
+            .preapproval()
+            .update(
+                data.subscription_id,
+                {
+                    "status":
+                        status
+                }
+            )
+        )
+
+        print("=" * 50)
+        print(
+            "UPDATE ASSINATURA"
+        )
+        print(response)
+        print("=" * 50)
+
+        if response["status"] not in [
+            200,
+            201,
+        ]:
+
+            return {
+
+                "success":
+                    False,
+
+                "error":
+                    response
+            }
+
+
+        db.collection(
+            "users"
+        ).document(
+            data.user_id
+        ).collection(
+            "subscriptions"
+        ).document(
+            data.subscription_id
+        ).update({
+
+            "active":
+                data.active,
+
+            "status":
+                status,
+        })
+
+        return {
+
+            "success":
+                True
+        }
+
+    except Exception as e:
+
+        print(
+            "ERRO UPDATE SUB:",
+            str(e)
+        )
+
+        return {
+
+            "success":
+                False,
+
             "error":
                 str(e)
         }

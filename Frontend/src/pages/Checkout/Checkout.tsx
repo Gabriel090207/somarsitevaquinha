@@ -618,50 +618,66 @@ if (
   return;
 }
 
-await updateDoc(
-  walletRef,
-  {
-    balance:
-      increment(
-        -donationValue
-      ),
-  }
-);
+try {
 
-await api.post(
-  "/wallet-donation",
-  {
-    campaign_id:
-      campaign?.id,
+  setProcessing(true);
 
-    campaign_title:
-      campaign?.title,
-
-    amount:
-      donationValue,
-
-    donor_name:
-      name,
-
-    donor_email:
-      email,
-  }
-);
-
-setProcessing(true);
-
-setTimeout(() => {
-
-  navigate(
-    "/payment-success",
+  await updateDoc(
+    walletRef,
     {
-      state: {
-        amount: donationValue,
-      },
+      balance:
+        increment(
+          -donationValue
+        ),
     }
   );
 
-}, 2500);
+  await api.post(
+    "/wallet-donation",
+    {
+      campaign_id:
+        campaign?.id,
+
+      campaign_title:
+        campaign?.title,
+
+      amount:
+        donationValue,
+
+      donor_name:
+        name,
+
+      donor_email:
+        email,
+    }
+  );
+
+  setTimeout(() => {
+
+    navigate(
+      "/payment-success",
+      {
+        state: {
+          amount:
+            donationValue,
+        },
+      }
+    );
+
+  }, 2500);
+
+} catch (error) {
+
+  console.error(error);
+
+  setProcessing(false);
+
+  showToast(
+    "Erro ao processar a doação.",
+    "error"
+  );
+
+}
 
 }
   

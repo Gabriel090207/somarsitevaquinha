@@ -428,23 +428,29 @@ export function Dashboard() {
   >
 
     {
-      donation.paymentMethod ===
-      "pix"
+  donation.paymentMethod === "pix" ? (
 
-      ? (
-        <>
-          <SiPix size={15} />
-          Pix
-        </>
-      )
+    <>
+      <SiPix size={15} />
+      Pix
+    </>
 
-      : (
-        <>
-          <CreditCard size={15} />
-          Cartão
-        </>
-      )
-    }
+  ) : donation.paymentMethod === "wallet" ? (
+
+    <>
+      <Wallet size={15} />
+      Carteira
+    </>
+
+  ) : (
+
+    <>
+      <CreditCard size={15} />
+      Cartão
+    </>
+
+  )
+}
 
   </span>
 

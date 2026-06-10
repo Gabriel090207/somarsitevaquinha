@@ -8,6 +8,7 @@ import {
 import {
   doc,
   onSnapshot,
+  collection,
 } from "firebase/firestore";
 
 import {
@@ -16,11 +17,22 @@ import {
 } from "../../services/firebase";
 
 import {
+  Eye,
   EyeOff,
   Wallet as WalletIcon,
 } from "lucide-react";
 
+import {
+  useToast,
+} from "../../contexts/ToastContext";
+
+import { api }
+  from "../../services/api";
+
 export function Wallet() {
+
+const { showToast } =
+  useToast();
 
   const [
     activeTab,
@@ -30,7 +42,88 @@ export function Wallet() {
   const [balance, setBalance] =
   useState<number | null>(null);
 
+  const [
+  hideBalance,
+  setHideBalance,
+] = useState(false);
 
+
+const [
+  subscription,
+  setSubscription,
+] = useState<any>(null);
+
+const [
+  showSubscriptionModal,
+  setShowSubscriptionModal,
+] = useState(false);
+
+const [
+  nextSubscriptionState,
+  setNextSubscriptionState,
+] = useState(false);
+
+
+async function handleSubscriptionStatus() {
+
+  const user =
+    auth.currentUser;
+
+  if (
+    !user ||
+    !subscription
+  ) return;
+
+  try {
+
+    const response =
+      await api.post(
+        "/update-subscription-status",
+        {
+
+          user_id:
+            user.uid,
+
+          subscription_id:
+            subscription.id,
+
+          active:
+            nextSubscriptionState,
+        }
+      );
+
+    if (
+      !response.data.success
+    ) {
+
+      showToast(
+        "Erro ao atualizar sua doação mensal.",
+        "error"
+      );
+
+      return;
+    }
+
+    showToast(
+      nextSubscriptionState
+        ? "Doação mensal ativada com sucesso."
+        : "Doação mensal pausada com sucesso."
+    );
+
+    setShowSubscriptionModal(
+      false
+    );
+
+  } catch {
+
+    showToast(
+      "Erro ao atualizar sua doação mensal.",
+      "error"
+    );
+
+  }
+
+}
 
 useEffect(() => {
 
@@ -77,8 +170,49 @@ useEffect(() => {
             }
           );
 
-        return () =>
-          unsubscribeWallet();
+          const subscriptionsRef =
+  collection(
+    db,
+    "users",
+    user.uid,
+    "subscriptions"
+  );
+
+const unsubscribeSubscription =
+  onSnapshot(
+    subscriptionsRef,
+    (snapshot) => {
+
+      if (snapshot.empty) {
+
+        setSubscription(null);
+
+        return;
+      }
+
+      const doc =
+        snapshot.docs[0];
+
+      setSubscription({
+
+        id: doc.id,
+
+        ...doc.data(),
+
+      });
+
+    }
+  );
+
+
+
+        return () => {
+
+  unsubscribeWallet();
+
+  unsubscribeSubscription();
+
+};
 
       }
     );
@@ -87,6 +221,7 @@ useEffect(() => {
     unsubscribeAuth();
 
 }, []);
+
 
   return (
 
@@ -115,24 +250,46 @@ useEffect(() => {
                  <h2>
 
   {balance === null
+
     ? "..."
-    : balance.toLocaleString(
-        "pt-BR",
-        {
-          style: "currency",
-          currency: "BRL",
-        }
-      )}
+
+    : hideBalance
+
+      ? "••••••"
+
+      : balance.toLocaleString(
+          "pt-BR",
+          {
+            style: "currency",
+            currency: "BRL",
+          }
+        )}
 
 </h2>
 
                 </div>
 
-                <button>
+               <button
+  onClick={() =>
+    setHideBalance(
+      !hideBalance
+    )
+  }
+>
 
-                  <EyeOff size={24} />
+  {
+    hideBalance ? (
 
-                </button>
+      <Eye size={24} />
+
+    ) : (
+
+      <EyeOff size={24} />
+
+    )
+  }
+
+</button>
 
               </div>
 
@@ -197,33 +354,88 @@ useEffect(() => {
 
                 <>
 
-                  <div className="wallet-section">
+                <div className="wallet-section">
 
-                    <h3>
-                      Ativa
-                    </h3>
+<h3>
+  {
+    subscription?.active
+      ? "Ativa"
+      : "Inativa"
+  }
+</h3>
 
-                    <p>
-                      Você não possui
-                      uma doação mensal
-                      ativa.
-                    </p>
+  {
 
-                  </div>
+    subscription ? (
 
-                  <div className="wallet-section">
+      <div
+  className={`subscription-card ${
+    subscription?.active
+      ? "active"
+      : "inactive"
+  }`}
+>
 
-                    <h3>
-                      Inativa
-                    </h3>
+        <div>
 
-                    <p>
-                      Você não possui
-                      uma doação mensal
-                      inativa.
-                    </p>
+          <strong>
 
-                  </div>
+            {subscription.amount.toLocaleString(
+              "pt-BR",
+              {
+                style: "currency",
+                currency: "BRL",
+              }
+            )}
+
+            / mês
+
+          </strong>
+
+       
+
+        </div>
+
+        <button
+  className={`subscription-switch ${
+    subscription.active
+      ? "active"
+      : ""
+  }`}
+  onClick={() => {
+
+    setNextSubscriptionState(
+      !subscription.active
+    );
+
+    setShowSubscriptionModal(
+      true
+    );
+
+  }}
+>
+
+  <span />
+
+</button>
+
+      </div>
+
+    ) : (
+
+      <p>
+        Você não possui
+        uma doação mensal.
+      </p>
+
+    )
+
+  }
+
+</div>
+
+
+               
 
                 </>
 
@@ -258,6 +470,69 @@ useEffect(() => {
         </div>
 
       </div>
+
+
+{
+  showSubscriptionModal && (
+
+    <div className="delete-modal-overlay">
+
+      <div className="delete-modal">
+
+        <h3>
+
+          {
+            subscription?.active
+              ? "Pausar doação mensal?"
+              : "Ativar doação mensal?"
+          }
+
+        </h3>
+
+        <p>
+
+          {
+            subscription?.active
+
+              ? "Sua doação mensal será pausada até que você a ative novamente."
+
+              : "Sua doação mensal voltará a ser cobrada normalmente."
+          }
+
+        </p>
+
+        <div className="delete-modal-actions">
+
+          <button
+            className="cancel"
+            onClick={() =>
+              setShowSubscriptionModal(
+                false
+              )
+            }
+          >
+
+            Cancelar
+
+          </button>
+
+         <button
+  className="primary"
+  onClick={
+    handleSubscriptionStatus
+  }
+>
+  Confirmar
+</button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  )
+}
 
     </section>
 

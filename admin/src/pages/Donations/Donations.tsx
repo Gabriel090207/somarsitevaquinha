@@ -250,23 +250,34 @@ export function Donations() {
 
              <div className="donation-method">
 
+ <div className="donation-method">
+
   {
-    donation.paymentMethod === "pix"
+    donation.paymentMethod === "pix" ? (
 
-      ? (
-        <>
-          <SiPix size={16} />
-          Pix
-        </>
-      )
+      <>
+        <SiPix size={16} />
+        Pix
+      </>
 
-      : (
-        <>
-          <CreditCard size={16} />
-          Cartão
-        </>
-      )
+    ) : donation.paymentMethod === "wallet" ? (
+
+      <>
+        <Wallet size={16} />
+        Carteira
+      </>
+
+    ) : (
+
+      <>
+        <CreditCard size={16} />
+        Cartão
+      </>
+
+    )
   }
+
+</div>
 
 </div>
 
