@@ -55,6 +55,19 @@ class CardPayment(BaseModel):
     expiration_month: int | None = None
     expiration_year: int | None = None
 
+class WalletDonation(BaseModel):
+
+    campaign_id: str
+
+    campaign_title: str
+
+    amount: float
+
+    donor_name: str
+
+    donor_email: str
+
+
 @router.post("/create-pix")
 def create_pix(data: PixPayment):
 
@@ -315,6 +328,48 @@ def create_card_payment(
             payment["status"]
     }
 
+
+
+@router.post("/wallet-donation")
+def wallet_donation(
+    data: WalletDonation
+):
+
+    donation_ref = db.collection(
+        "donations"
+    ).document()
+
+    donation_ref.set({
+
+        "campaignId":
+            data.campaign_id,
+
+        "campaignTitle":
+            data.campaign_title,
+
+        "amount":
+            data.amount,
+
+        "donorName":
+            data.donor_name,
+
+        "donorEmail":
+            data.donor_email,
+
+        "paymentMethod":
+            "wallet",
+
+        "status":
+            "approved",
+
+        "createdAt":
+            datetime.utcnow(),
+    })
+
+    return {
+        "success": True
+    }
+    
 from fastapi import Request
 
 @router.post("/webhook")

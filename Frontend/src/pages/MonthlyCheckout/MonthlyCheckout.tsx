@@ -607,11 +607,13 @@ function handleCloseSaveCardModal() {
 
   <div className="checkout-section-header">
 
-    <h2>
-      Contato
-    </h2>
+  <div className="checkout-step-spacer" />
 
-  </div>
+  <h2>
+    Contato
+  </h2>
+
+</div>
 
   <div className="checkout-contact-box">
 
@@ -706,13 +708,24 @@ function handleCloseSaveCardModal() {
 
 <section className="checkout-payment">
 
-  <div className="checkout-section-header">
+ <div className="checkout-section-header">
 
-    <h2>
-      Pagamento
-    </h2>
+  <button
+    className="checkout-step-back"
+    onClick={() => setStep(2)}
+  >
+    <ArrowLeft size={18} />
 
-  </div>
+    <span>
+      Voltar etapa
+    </span>
+  </button>
+
+  <h2>
+    Pagamento
+  </h2>
+
+</div>
 
   <div className="checkout-payment-box">
 
@@ -721,7 +734,7 @@ function handleCloseSaveCardModal() {
 <>
 
 <h3>
-  Formas de pagamento
+  Forma de pagamento
 </h3>
 
 <div className="checkout-methods">

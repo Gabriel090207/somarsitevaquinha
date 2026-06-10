@@ -1973,3 +1973,7 @@
   background:
     rgba(126, 211, 33, 0.08);
 }
+
+.checkout-step-spacer {
+  width: 130px;
+}

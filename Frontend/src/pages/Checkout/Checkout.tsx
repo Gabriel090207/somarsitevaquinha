@@ -23,6 +23,8 @@ import {
   onSnapshot,
   query,
   where,
+  updateDoc,
+  increment,
 } from "firebase/firestore";
 
 import {
@@ -604,6 +606,62 @@ console.log(
   currentBalance
 );
 
+if (
+  currentBalance < donationValue
+) {
+
+  showToast(
+    "Saldo insuficiente.",
+    "error"
+  );
+
+  return;
+}
+
+await updateDoc(
+  walletRef,
+  {
+    balance:
+      increment(
+        -donationValue
+      ),
+  }
+);
+
+await api.post(
+  "/wallet-donation",
+  {
+    campaign_id:
+      campaign?.id,
+
+    campaign_title:
+      campaign?.title,
+
+    amount:
+      donationValue,
+
+    donor_name:
+      name,
+
+    donor_email:
+      email,
+  }
+);
+
+setProcessing(true);
+
+setTimeout(() => {
+
+  navigate(
+    "/payment-success",
+    {
+      state: {
+        amount: donationValue,
+      },
+    }
+  );
+
+}, 2500);
 
 }
   
@@ -986,13 +1044,23 @@ function handleCloseSaveCardModal() {
 
 <section className="checkout-contact">
 
-  <div className="checkout-section-header">
+<div className="checkout-section-header">
 
-    <h2>
-      Contato
-    </h2>
+  <button
+    className="checkout-step-back"
+    onClick={() => setStep(1)}
+  >
+    <ArrowLeft size={18} />
+    <span>
+      Voltar etapa
+    </span>
+  </button>
 
-  </div>
+  <span className="checkout-step-title">
+    Contato
+  </span>
+
+</div>
 
   <div className="checkout-contact-box">
 
@@ -1087,13 +1155,23 @@ function handleCloseSaveCardModal() {
 
 <section className="checkout-payment">
 
-  <div className="checkout-section-header">
+<div className="checkout-section-header">
 
-    <h2>
-      Pagamento
-    </h2>
+  <button
+    className="checkout-step-back"
+    onClick={() => setStep(2)}
+  >
+    <ArrowLeft size={18} />
+    <span>
+      Voltar etapa
+    </span>
+  </button>
 
-  </div>
+  <span className="checkout-step-title">
+    Pagamento
+  </span>
+
+</div>
 
   <div className="checkout-payment-box">
 
@@ -1188,6 +1266,26 @@ function handleCloseSaveCardModal() {
 
     {pixData && (
 
+       <>
+
+    <button
+      className="checkout-step-back"
+      onClick={() => {
+
+        setPixData(null);
+
+        setPaymentMethod("pix");
+
+      }}
+    >
+      <ArrowLeft size={18} />
+
+      <span>
+       Cancelar Pagamento
+      </span>
+
+    </button>
+
   <div className="checkout-pix-box">
 
     <div className="checkout-pix-qrcode">
@@ -1226,6 +1324,7 @@ showToast(
     </div>
 
   </div>
+    </>
 
 )}
 

@@ -5,6 +5,7 @@ import {
   useState,
 } from "react";
 
+
 import {
   Bookmark,
   Calendar,
@@ -14,8 +15,9 @@ import {
   MessageCircle,
   Share2,
   Tag,
-  User,
   Users,
+  Trash2,
+  Heart,
 } from "lucide-react";
 
 import {
@@ -37,6 +39,12 @@ import {
   doc,
   setDoc,
   deleteDoc,
+  addDoc,
+  getDoc,
+  updateDoc,
+arrayUnion,
+arrayRemove,
+increment,
 } from "firebase/firestore";
 
 import {
@@ -77,6 +85,34 @@ goalAmount: string | number;
   beneficiaryName?: string;
 };
 
+type DonorData = {
+  id: string;
+
+  donorName: string;
+
+  amount: number;
+
+  createdAt?: any;
+};
+
+type MessageData = {
+
+  id: string;
+
+  userName: string;
+
+  message: string;
+
+  likes?: number;
+
+  likedBy?: string[];
+
+  createdAt?: any;
+
+  userId: string;
+
+};
+
 export function Campaign() {
 
 const navigate =
@@ -102,6 +138,23 @@ const [loading, setLoading] =
 const [isSaved, setIsSaved] =
   useState(false);
 
+
+const [donors, setDonors] =
+  useState<DonorData[]>([]);
+
+const [showAllDonors, setShowAllDonors] =
+  useState(false);
+
+const [
+  messages,
+  setMessages,
+] = useState<MessageData[]>([]);
+
+const [
+  newMessage,
+  setNewMessage,
+] = useState("");
+
 const { showToast } =
   useToast();
  
@@ -111,6 +164,21 @@ const [
   setSidebarStopped,
 ] = useState(false);
 
+
+const [
+  showDeleteMessageModal,
+  setShowDeleteMessageModal
+] = useState(false);
+
+const [
+  closingDeleteMessageModal,
+  setClosingDeleteMessageModal
+] = useState(false);
+
+const [
+  selectedMessage,
+  setSelectedMessage
+] = useState<any>(null);
 
 function parseMoney(
   value?: string | number
@@ -278,6 +346,128 @@ useEffect(() => {
 
 }, [slug]);
 
+
+useEffect(() => {
+
+  if (!campaign?.id) return;
+
+  const donationsRef =
+    collection(
+      db,
+      "donations"
+    );
+
+  const q =
+  query(
+    donationsRef,
+    where(
+      "campaignId",
+      "==",
+      campaign.id
+    )
+  );
+
+  const unsubscribe =
+    onSnapshot(
+      q,
+      (snapshot) => {
+
+        const data =
+          snapshot.docs.map(
+            (doc) => ({
+              id: doc.id,
+              ...doc.data(),
+            })
+          ) as DonorData[];
+
+          data.sort(
+  (a, b) => {
+
+    const aTime =
+      a.createdAt?.toDate?.()
+        ?.getTime?.() || 0;
+
+    const bTime =
+      b.createdAt?.toDate?.()
+        ?.getTime?.() || 0;
+
+    return bTime - aTime;
+
+  }
+);
+
+        setDonors(data);
+      }
+    );
+
+    
+
+  return () =>
+    unsubscribe();
+
+}, [campaign?.id]);
+
+
+useEffect(() => {
+
+  if (!campaign?.id) return;
+
+  const messagesRef =
+    collection(
+      db,
+      "campaignMessages"
+    );
+
+  const q =
+    query(
+      messagesRef,
+      where(
+        "campaignId",
+        "==",
+        campaign.id
+      )
+    );
+
+  const unsubscribe =
+    onSnapshot(
+      q,
+      (snapshot) => {
+
+        const data =
+          snapshot.docs.map(
+            (doc) => ({
+              id: doc.id,
+              ...doc.data(),
+            })
+          ) as MessageData[];
+
+        data.sort(
+          (a, b) => {
+
+            const aTime =
+              a.createdAt?.toDate?.()
+                ?.getTime?.() || 0;
+
+            const bTime =
+              b.createdAt?.toDate?.()
+                ?.getTime?.() || 0;
+
+            return bTime - aTime;
+
+          }
+        );
+
+        setMessages(data);
+
+      }
+    );
+
+  return () =>
+    unsubscribe();
+
+}, [campaign?.id]);
+
+
 useEffect(() => {
 
   function handleScroll() {
@@ -408,6 +598,71 @@ function formatCreatedDate() {
     );
 }
 
+function formatTimeAgo(
+  timestamp: any
+) {
+
+  if (!timestamp?.toDate) {
+    return "";
+  }
+
+  const date =
+    timestamp.toDate();
+
+  const now =
+    new Date();
+
+  const diff =
+    now.getTime() -
+    date.getTime();
+
+  const minutes =
+    Math.floor(
+      diff / 60000
+    );
+
+  if (minutes < 1) {
+    return "agora";
+  }
+
+  if (minutes < 60) {
+    return `há ${minutes} min`;
+  }
+
+  const hours =
+    Math.floor(
+      minutes / 60
+    );
+
+  if (hours < 24) {
+    return `há ${hours}h`;
+  }
+
+  const days =
+    Math.floor(
+      hours / 24
+    );
+
+  if (days < 30) {
+    return `há ${days} dias`;
+  }
+
+  const months =
+    Math.floor(
+      days / 30
+    );
+
+  if (months < 12) {
+    return `há ${months} meses`;
+  }
+
+  const years =
+    Math.floor(
+      months / 12
+    );
+
+  return `há ${years} anos`;
+}
 
 async function handleSaveCampaign() {
 
@@ -463,6 +718,198 @@ async function handleSaveCampaign() {
 
   }
 }
+
+async function handleSendMessage() {
+
+  const user =
+    auth.currentUser;
+
+  if (!user) {
+
+    showToast(
+      "Faça login para comentar.",
+      "error"
+    );
+
+    return;
+  }
+
+  if (
+    !newMessage.trim()
+  ) {
+
+    showToast(
+      "Digite uma mensagem.",
+      "error"
+    );
+
+    return;
+  }
+
+  const userDoc =
+    await getDoc(
+      doc(
+        db,
+        "users",
+        user.uid
+      )
+    );
+
+  const userName =
+    userDoc.data()?.name ||
+    "Usuário";
+
+ await addDoc(
+  collection(
+    db,
+    "campaignMessages"
+  ),
+  {
+
+    campaignId:
+      campaign?.id,
+
+    userId:
+      user.uid,
+
+    userName:
+      userName,
+
+    message:
+      newMessage.trim(),
+
+    likes: 0,
+
+    likedBy: [],
+
+    createdAt:
+      new Date(),
+
+  }
+);
+
+  setNewMessage("");
+
+  showToast(
+    "Mensagem enviada!",
+    "success"
+  );
+
+}
+
+
+async function handleLikeMessage(
+  message: MessageData
+) {
+
+  const user =
+    auth.currentUser;
+
+  if (!user) {
+
+    showToast(
+      "Faça login para curtir.",
+      "error"
+    );
+
+    return;
+  }
+
+  const messageRef =
+    doc(
+      db,
+      "campaignMessages",
+      message.id
+    );
+
+  const alreadyLiked =
+    message.likedBy?.includes(
+      user.uid
+    );
+
+  if (alreadyLiked) {
+
+    await updateDoc(
+      messageRef,
+      {
+
+        likes:
+          increment(-1),
+
+        likedBy:
+          arrayRemove(
+            user.uid
+          ),
+
+      }
+    );
+
+  } else {
+
+    await updateDoc(
+      messageRef,
+      {
+
+        likes:
+          increment(1),
+
+        likedBy:
+          arrayUnion(
+            user.uid
+          ),
+
+      }
+    );
+
+  }
+
+}
+
+
+function handleCloseDeleteMessageModal() {
+
+  setClosingDeleteMessageModal(
+    true
+  );
+
+  setTimeout(() => {
+
+    setShowDeleteMessageModal(
+      false
+    );
+
+    setClosingDeleteMessageModal(
+      false
+    );
+
+    setSelectedMessage(null);
+
+  }, 250);
+
+}
+
+async function handleDeleteMessage() {
+
+  if (!selectedMessage)
+    return;
+
+  await deleteDoc(
+    doc(
+      db,
+      "campaignMessages",
+      selectedMessage.id
+    )
+  );
+
+  handleCloseDeleteMessageModal();
+
+  showToast(
+    "Comentário excluído com sucesso.",
+    "success"
+  );
+
+}
+
 
   return (
 
@@ -574,8 +1021,8 @@ async function handleSaveCampaign() {
                 Doadores
 
                 <strong>
-                  270
-                </strong>
+  {donors.length}
+</strong>
 
               </button>
 
@@ -594,9 +1041,9 @@ async function handleSaveCampaign() {
 
                 Mensagens
 
-                <strong>
-                  1
-                </strong>
+             <span>
+  {messages.length}
+</span>
 
               </button>
 
@@ -679,51 +1126,86 @@ async function handleSaveCampaign() {
                   <h3>
                     Doadores
 
-                    <span>
-                      270
-                    </span>
+                   <span>
+  {donors.length}
+</span>
 
                   </h3>
 
-                  <div className="donor-item">
+                 {(showAllDonors
+  ? donors
+  : donors.slice(0, 3)
+).map((donor) => (
 
-                    <div>
-                      <User size={22} />
-                    </div>
+    <div
+      key={donor.id}
+      className="donor-item"
+    >
 
-                    <section>
-                      <strong>
-                        Gabriel Borela
-                      </strong>
+     <div className="donor-avatar">
 
-                      <p>
-                        R$ 25,00 · há 15 minutos
-                      </p>
-                    </section>
+  {
+    donor.donorName
+      ?.charAt(0)
+      ?.toUpperCase()
+  }
 
-                  </div>
+</div>
 
-                  <div className="donor-item">
+      <section>
 
-                    <div>
-                      <User size={22} />
-                    </div>
+        <strong>
+          {donor.donorName}
+        </strong>
 
-                    <section>
-                      <strong>
-                        Maria Souza
-                      </strong>
+      <p>
 
-                      <p>
-                        R$ 50,00 · há 2 horas
-                      </p>
-                    </section>
+  {Number(
+    donor.amount || 0
+  ).toLocaleString(
+    "pt-BR",
+    {
+      style: "currency",
+      currency: "BRL",
+    }
+  )}
 
-                  </div>
+  <span className="donor-time">
 
-                  <button className="campaign-see-more">
-                    Ver mais
-                  </button>
+  <span>•</span>
+
+  {formatTimeAgo(
+    donor.createdAt
+  )}
+
+</span>
+
+</p>
+
+      </section>
+
+    </div>
+
+))}
+
+                  {donors.length > 3 && (
+
+  <button
+    className="campaign-see-more"
+    onClick={() =>
+      setShowAllDonors(
+        !showAllDonors
+      )
+    }
+  >
+
+    {showAllDonors
+      ? "Ver menos"
+      : "Ver mais"}
+
+  </button>
+
+)}
 
                 </div>
 
@@ -740,36 +1222,155 @@ async function handleSaveCampaign() {
                   <h3>
                     Mensagens
 
-                    <span>
-                      1
-                    </span>
+                  <span>
+  {messages.length}
+</span>
 
                   </h3>
 
-                  <div className="message-item">
+                  <div className="campaign-message-form">
 
-                    <div>
-                      <User size={22} />
-                    </div>
+  <textarea
+  placeholder="Deixe uma mensagem de apoio..."
+  value={newMessage}
+  onFocus={() => {
 
-                    <section>
+    if (!auth.currentUser) {
 
-                      <strong>
-                        Danielle Leite
-                      </strong>
+      navigate(
+        "/login",
+        {
+          state: {
+            message:
+              "Faça login para comentar.",
 
-                      <small>
-                        há 3 dias
-                      </small>
+            redirectTo:
+              `/vaquinha/${campaign.slug}`,
+          },
+        }
+      );
 
-                      <p>
-                        Que Deus abençoe e que tudo dê certo.
-                        Estou em oração por vocês.
-                      </p>
+    }
 
-                    </section>
+  }}
+  onChange={(e) =>
+    setNewMessage(
+      e.target.value
+    )
+  }
+/>
 
-                  </div>
+  <button
+    onClick={
+      handleSendMessage
+    }
+  >
+
+    Enviar
+
+  </button>
+
+</div>
+
+                  {messages.map((message) => (
+
+  <div
+    key={message.id}
+    className="message-item"
+  >
+
+    <div className="donor-avatar">
+
+      {
+        message.userName
+          ?.charAt(0)
+          ?.toUpperCase()
+      }
+
+    </div>
+
+   <section>
+
+  <div className="message-header">
+
+  <div>
+
+    <strong>
+      {message.userName}
+    </strong>
+
+    <small>
+      {formatTimeAgo(
+        message.createdAt
+      )}
+    </small>
+
+  </div>
+
+  <div className="message-actions">
+
+   <button
+  className={`message-like ${
+    message.likedBy?.includes(
+      auth.currentUser?.uid || ""
+    )
+      ? "active"
+      : ""
+  }`}
+  onClick={() =>
+    handleLikeMessage(
+      message
+    )
+  }
+>
+
+  <Heart size={16} />
+
+  <span>
+    {message.likes || 0}
+  </span>
+
+</button>
+
+{
+  message.userId ===
+  auth.currentUser?.uid && (
+
+    <button
+      className="message-delete"
+      onClick={() => {
+
+        setSelectedMessage(
+          message
+        );
+
+        setShowDeleteMessageModal(
+          true
+        );
+
+      }}
+    >
+
+      <Trash2 size={16} />
+
+    </button>
+
+  )
+}
+
+  </div>
+
+</div>
+
+  <p>
+    {message.message}
+  </p>
+
+</section>
+
+  </div>
+
+))}
 
                 </div>
 
@@ -910,7 +1511,68 @@ async function handleSaveCampaign() {
 
       </section>
 
+
+
+{
+  showDeleteMessageModal && (
+
+    <div
+      className={`delete-modal-overlay ${
+        closingDeleteMessageModal
+          ? "closing"
+          : ""
+      }`}
+    >
+
+      <div
+        className={`delete-modal ${
+          closingDeleteMessageModal
+            ? "closing"
+            : ""
+        }`}
+      >
+
+        <h3>
+          Excluir comentário?
+        </h3>
+
+        <p>
+          Esta ação não poderá ser desfeita.
+        </p>
+
+        <div className="delete-modal-actions">
+
+          <button
+            className="cancel"
+            onClick={
+              handleCloseDeleteMessageModal
+            }
+          >
+            Cancelar
+          </button>
+
+         <button
+  className="confirm"
+  onClick={
+    handleDeleteMessage
+  }
+>
+  Excluir
+</button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  )
+}
+
     </main>
+
+
+
 
   );
 }

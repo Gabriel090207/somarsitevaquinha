@@ -284,16 +284,19 @@ async function handleLogout() {
 
   ) : (
 
-    <NavLink
-      to="/login"
-      className="login-button"
-    >
+   <NavLink
+  to="/login"
+  state={{
+    redirectTo:
+      window.location.pathname +
+      window.location.search,
+  }}
+  className="login-button"
+>
+  Entrar
 
-      Entrar
-
-      <User size={20} />
-
-    </NavLink>
+  <User size={20} />
+</NavLink>
 
   )
 
@@ -472,13 +475,18 @@ async function handleLogout() {
 
   ) : (
 
-    <NavLink
-      to="/login"
-      className="mobile-login-button"
-      onClick={() =>
-        setMenuOpen(false)
-      }
-    >
+ <NavLink
+  to="/login"
+  state={{
+    redirectTo:
+      window.location.pathname +
+      window.location.search,
+  }}
+  className="mobile-login-button"
+  onClick={() =>
+    setMenuOpen(false)
+  }
+>
 
       Entrar
 
