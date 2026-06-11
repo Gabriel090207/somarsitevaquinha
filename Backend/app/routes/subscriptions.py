@@ -99,6 +99,11 @@ def create_subscription(
             subscription["id"]
         ).set({
 
+
+            "user_id":
+                data.user_id,
+
+
             "mercado_pago_id":
                 subscription["id"],
 
@@ -128,6 +133,9 @@ def create_subscription(
 
             "active":
                 True,
+
+            "last_credit_at":
+                None,
         })
 
 
@@ -297,4 +305,39 @@ def update_subscription_status(
 
             "error":
                 str(e)
+        }
+
+
+from fastapi import Request
+
+
+@router.post(
+    "/subscription-webhook"
+)
+async def subscription_webhook(
+    request: Request
+):
+
+    try:
+
+        body = await request.json()
+
+        print("=" * 50)
+        print("WEBHOOK ASSINATURA")
+        print(body)
+        print("=" * 50)
+
+        return {
+            "success": True
+        }
+
+    except Exception as e:
+
+        print(
+            "ERRO WEBHOOK ASSINATURA:",
+            str(e)
+        )
+
+        return {
+            "success": False
         }

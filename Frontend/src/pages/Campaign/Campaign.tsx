@@ -1069,18 +1069,6 @@ async function handleDeleteMessage() {
 
                   </div>
 
-                  <p>
-                    Esta campanha foi criada para ajudar uma família
-                    que enfrenta um momento difícil e precisa de apoio
-                    para continuar um tratamento essencial.
-                  </p>
-
-                  <p>
-                    Os custos mensais são altos e envolvem consultas,
-                    medicamentos, transporte, alimentação e cuidados
-                    contínuos. Cada contribuição ajuda a manter esse
-                    cuidado vivo.
-                  </p>
 
                   <h3>
                     Entenda

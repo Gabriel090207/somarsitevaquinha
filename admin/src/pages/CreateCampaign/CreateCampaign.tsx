@@ -479,23 +479,43 @@ function parseCurrency(
   }
 >
 
-                    <option>
-                      Saúde
-                    </option>
+  <option>
+    Saúde
+  </option>
 
-                    <option>
-                      Emergência
-                    </option>
+  <option>
+    Educação
+  </option>
 
-                    <option>
-                      Animais
-                    </option>
+  <option>
+    Emergenciais
+  </option>
 
-                    <option>
-                      Educação
-                    </option>
+  <option>
+    Empatia
+  </option>
 
-                  </select>
+  <option>
+    Esporte
+  </option>
+
+  <option>
+    Geração de renda
+  </option>
+
+  <option>
+    Moradia
+  </option>
+
+  <option>
+    Projetos sociais
+  </option>
+
+  <option>
+    Recorrente
+  </option>
+
+</select>
 
                 </div>
 

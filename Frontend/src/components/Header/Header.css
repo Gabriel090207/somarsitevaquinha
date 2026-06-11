@@ -99,7 +99,7 @@ z-index: 2;
 }
 
 .header-logo img {
-  width: 190px;
+  width: 140px;
   object-fit: contain;
 }
 
@@ -322,7 +322,7 @@ z-index: 2;
   }
 
   .header-logo img {
-    width: 150px;
+    width: 120px;
   }
 
   /* ESCONDE MENU DESKTOP */
@@ -1004,10 +1004,6 @@ z-index: 2;
   padding-left: 80px;
 }
 
-.header-logo img {
-  width: 190px;
-  object-fit: contain;
-}
 
 .header-nav {
   display: flex;
@@ -1227,9 +1223,6 @@ z-index: 2;
     padding: 0 16px;
   }
 
-  .header-logo img {
-    width: 150px;
-  }
 
   /* ESCONDE MENU DESKTOP */
 
@@ -1522,7 +1515,7 @@ z-index: 2;
 .account-dropdown {
   position: absolute;
 
-  top: 44px;
+  top: 42px;
   right: 0;
 
   width: 270px;

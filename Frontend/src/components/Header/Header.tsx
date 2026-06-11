@@ -1,7 +1,7 @@
 import "./Header.css";
 import { useState } from "react";
 
-import logo from "../../assets/logo/logo.png";
+import logo from "../../assets/logo/somarlogo.png";
 
 import {
   Search,
