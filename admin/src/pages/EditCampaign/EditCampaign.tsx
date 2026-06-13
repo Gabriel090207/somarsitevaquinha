@@ -263,6 +263,16 @@ setRaisedAmount(
 }, [slug]);
 
 
+function parseCurrency(
+  value: string
+) {
+
+  return Number(
+    value.replace(/[^\d]/g, "")
+  ) / 100;
+}
+
+
 async function handleUpdateCampaign() {
 
   try {
@@ -345,9 +355,15 @@ async function handleUpdateCampaign() {
 
         story,
 
-        goalAmount,
+        goalAmount:
+  parseCurrency(
+    goalAmount
+  ),
 
-        raisedAmount,
+raisedAmount:
+  parseCurrency(
+    raisedAmount
+  ),
 
         beneficiaryName,
 

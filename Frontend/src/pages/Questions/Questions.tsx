@@ -7,6 +7,10 @@ import {
   PlayCircle,
 } from "lucide-react";
 
+import {
+  useSearchParams,
+} from "react-router-dom";
+
 const faq = [
   {
     question: "Qual a taxa da Somar?",
@@ -35,7 +39,14 @@ const faq = [
 
 export function Questions() {
 
-  const [tab, setTab] = useState("faq");
+  const [searchParams] =
+  useSearchParams();
+
+const [tab, setTab] =
+  useState(
+    searchParams.get("tab")
+      || "faq"
+  );
 
   const [openFaq, setOpenFaq] = useState<number | null>(0);
 
@@ -101,39 +112,80 @@ export function Questions() {
 
         {/* TAXAS */}
 
-        {tab === "taxas" && (
+      {tab === "taxas" && (
 
-          <div className="questions-content">
+  <div className="questions-content">
 
-            <h2>
-              Transparência total
-            </h2>
+    <h2>
+      Transparência total
+    </h2>
 
-            <p>
-              A Somar acredita em campanhas reais e impacto verdadeiro.
-              Nossa taxa ajuda a manter toda estrutura da plataforma,
-              validação das histórias e segurança das doações.
-            </p>
+    <p>
+      Somos uma plataforma 100% transparente e
+      ficamos felizes pelo seu interesse em
+      entender como tudo funciona por aqui.
+    </p>
 
-            <p>
-              Diferente de plataformas abertas, nossa equipe acompanha
-              cada campanha para garantir confiança e transparência.
-            </p>
+    <p>
+      A Somar é uma empresa com propósito
+      social. Não somos uma ONG. Somos uma
+      equipe formada por pessoas que acreditam
+      no poder da solidariedade para transformar
+      histórias reais. Para continuarmos
+      conectando quem precisa de ajuda a quem
+      deseja ajudar, precisamos manter uma
+      estrutura profissional, segura e
+      sustentável.
+    </p>
 
-            <div className="questions-highlight">
+    <p>
+      Por isso, trabalhamos com uma taxa
+      administrativa de 20% sobre o valor
+      arrecadado. Essa taxa é utilizada para
+      manter toda a operação da plataforma
+      funcionando com qualidade,
+      responsabilidade e transparência.
+    </p>
 
-              <strong>
-                100% das histórias verificadas
-              </strong>
+    <p>
+      Diferente de plataformas abertas, a Somar
+      realiza uma análise cuidadosa das campanhas
+      antes da publicação. Nosso objetivo é
+      garantir mais segurança para os doadores,
+      verificar informações, acompanhar os
+      beneficiários e oferecer uma experiência
+      confiável para todos os envolvidos.
+    </p>
 
-              <span>
-                Segurança para quem doa e para quem recebe.
-              </span>
+    <p>
+      Além disso, investimos continuamente em
+      tecnologia, segurança, atendimento,
+      marketing e melhorias na plataforma para
+      ampliar o alcance das campanhas e aumentar
+      as chances de arrecadação.
+    </p>
 
-            </div>
+    <p>
+      Em muitas plataformas existem cobranças
+      adicionais, taxas operacionais ou custos
+      relacionados aos meios de pagamento que
+      nem sempre são comunicados de forma clara.
+      Na Somar, nossa política é simples: a taxa
+      administrativa é de 20%, sem surpresas ou
+      cobranças ocultas.
+    </p>
 
-          </div>
-        )}
+    <p>
+      Sabemos que existem plataformas com taxas
+      menores, mas acreditamos que confiança,
+      segurança, acompanhamento e transparência
+      fazem toda a diferença para quem doa e
+      para quem recebe ajuda.
+    </p>
+
+  </div>
+
+)}
 
         {/* PIX */}
 

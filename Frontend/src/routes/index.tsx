@@ -37,6 +37,8 @@ import { Terms } from "../pages/Terms/Terms";
 
 import { Privacy } from "../pages/Privacy/Privacy";
 
+import { Contact } from "../pages/Contact/Contact";
+
 import { Checkout } from "../pages/Checkout/Checkout";
 
 import { PaymentSuccess } from "../pages/PaymentSuccess/PaymentSuccess";
@@ -106,6 +108,11 @@ const hideLayout =
 <Route
   path="/politica-de-privacidade"
   element={<Privacy />}
+/>
+
+<Route
+  path="/contato"
+  element={<Contact />}
 />
 
         <Route

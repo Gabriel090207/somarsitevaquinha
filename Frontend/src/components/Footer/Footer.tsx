@@ -107,9 +107,11 @@ export function Footer() {
 
           <div className="footer-links">
 
-            <a href="#">
-              Taxas
-            </a>
+           <Link
+  to="/duvidas?tab=taxas"
+>
+  Taxas
+</Link>
 
             <Link to="/termos-de-uso">
   Termos de uso
@@ -119,13 +121,11 @@ export function Footer() {
   Política de Privacidade
 </Link>
 
-            <a href="#">
-              Cookies
-            </a>
+           
 
-            <a href="#">
-              Contato
-            </a>
+            <Link to="/contato">
+  Contato
+</Link>
 
           </div>
 

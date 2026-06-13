@@ -4,7 +4,6 @@ import { useState } from "react";
 import logo from "../../assets/logo/somarlogo.png";
 
 import {
-  Search,
   User,
   ChevronRight,
   Menu,
@@ -149,9 +148,7 @@ async function handleLogout() {
 
          <div className="mobile-actions">
 
-  <button className="search-button">
-    <Search size={20} />
-  </button>
+
 
   <button
     className="mobile-menu-button"
@@ -164,9 +161,7 @@ async function handleLogout() {
 
           <div className="header-actions">
 
-            <button className="search-button">
-              <Search size={20} />
-            </button>
+          
 
 
           {
