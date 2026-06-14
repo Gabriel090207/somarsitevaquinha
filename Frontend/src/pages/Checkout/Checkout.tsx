@@ -1039,12 +1039,62 @@ console.log(
 
     // TESTE INICIAL
 
-    showToast(
-      "Cartão selecionado com sucesso.",
-      "success"
-    );
+    const paymentMethods =
+  await mp.getPaymentMethods({
+    bin:
+      tokenResponse.first_six_digits
+  });
 
-    setProcessing(false);
+const payload = {
+
+  token:
+    tokenResponse.id,
+
+  issuer_id:
+    paymentMethods.results[0]
+      ?.issuer?.id,
+
+  payment_method_id:
+    paymentMethods.results[0]
+      ?.id,
+
+  installments: 1,
+
+  amount:
+    donationValue,
+
+  email:
+    selectedCard.email,
+
+  campaign_id:
+    campaign?.id,
+
+  campaign_title:
+    campaign?.title,
+
+  donor_name:
+    selectedCard.holderName,
+
+  cpf:
+    selectedCard.cpf,
+
+  expiration_month:
+    selectedCard.expirationMonth,
+
+  expiration_year:
+    selectedCard.expirationYear,
+};
+
+const response =
+  await api.post(
+    "/create-card-payment",
+    payload
+  );
+
+console.log(
+  "RESPOSTA PAGAMENTO:",
+  response.data
+);
 
   } catch {
 
