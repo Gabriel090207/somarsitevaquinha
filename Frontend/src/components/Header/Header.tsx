@@ -16,7 +16,6 @@ import {
   LogOut,
   Wallet,
   Heart,
-  Settings,
   
   
 } from "lucide-react";
