@@ -19,6 +19,9 @@ export function MonthlySubscriptionSuccess() {
   const amount =
     location.state?.amount || 0;
 
+  const updated =
+  location.state?.updated || false;
+
   function formatMoney(
     value: number
   ) {
@@ -44,29 +47,64 @@ export function MonthlySubscriptionSuccess() {
 
         </div>
 
-        <span>
-          Assinatura criada
-        </span>
+      <span>
 
-        <h1>
-          Sua doação mensal foi criada 💚
-        </h1>
+  {
+    updated
+      ? "Assinatura atualizada"
+      : "Assinatura criada"
+  }
+
+</span>
+
+       <h1>
+
+  {
+    updated
+
+      ? "Sua doação mensal foi atualizada 💚"
+
+      : "Sua doação mensal foi criada 💚"
+  }
+
+</h1>
 
         <p>
 
-          Quando cada cobrança mensal
-          for confirmada, o valor de
+  {
 
-          <strong>
-            {
-              formatMoney(amount)
-            }
-          </strong>
+    updated
 
-          será adicionado à sua
-          carteira Somar.
+      ? (
+          <>
+            Sua próxima cobrança
+            será realizada no valor de
 
-        </p>
+            <strong>
+              {formatMoney(amount)}
+            </strong>
+
+            por mês.
+          </>
+        )
+
+      : (
+          <>
+            Quando cada cobrança mensal
+            for confirmada, o valor de
+
+            <strong>
+              {formatMoney(amount)}
+            </strong>
+
+            será adicionado à sua
+            carteira Somar.
+          </>
+        )
+
+  }
+
+</p>
 
       
 

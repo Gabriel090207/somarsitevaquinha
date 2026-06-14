@@ -29,6 +29,11 @@ import {
 import { api }
   from "../../services/api";
 
+
+import {
+  Link
+} from "react-router-dom";
+
 export function Wallet() {
 
 const { showToast } =
@@ -378,23 +383,30 @@ const unsubscribeSubscription =
 
         <div>
 
-          <strong>
+  <strong>
 
-            {subscription.amount.toLocaleString(
-              "pt-BR",
-              {
-                style: "currency",
-                currency: "BRL",
-              }
-            )}
+    {subscription.amount.toLocaleString(
+      "pt-BR",
+      {
+        style: "currency",
+        currency: "BRL",
+      }
+    )}
 
-            / mês
+    / mês
 
-          </strong>
+  </strong>
 
-       
+  <Link
+    to="/editar-doacao-mensal"
+    className="subscription-edit"
+  >
 
-        </div>
+    Alterar valor
+
+  </Link>
+
+</div>
 
         <button
   className={`subscription-switch ${

@@ -49,6 +49,10 @@ import {
 
 import { MonthlySubscriptionSuccess } from "../pages/MonthlySubscriptionSuccess/MonthlySubscriptionSuccess";
 
+import {
+  EditMonthlyDonation
+} from "../pages/EditMonthlyDonation/EditMonthlyDonation";
+
 function Layout() {
 
   const location = useLocation();
@@ -153,6 +157,13 @@ const hideLayout =
   path="/monthly-subscription-success"
   element={
     <MonthlySubscriptionSuccess />
+  }
+/>
+
+<Route
+  path="/editar-doacao-mensal"
+  element={
+    <EditMonthlyDonation />
   }
 />
 

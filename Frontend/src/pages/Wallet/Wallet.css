@@ -402,3 +402,23 @@
 .delete-modal-actions .primary:hover {
   opacity: 0.92;
 }
+
+
+.subscription-edit {
+  display: inline-block;
+
+  margin-top: 10px;
+
+  color: var(--primary);
+
+  font-size: 14px;
+  font-weight: 700;
+
+  text-decoration: none;
+
+  transition: .25s ease;
+}
+
+.subscription-edit:hover {
+  opacity: .75;
+}

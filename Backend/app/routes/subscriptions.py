@@ -34,6 +34,16 @@ class UpdateSubscriptionStatus(BaseModel):
 
     active: bool
 
+class UpdateSubscriptionAmount(
+    BaseModel
+):
+
+    user_id: str
+
+    subscription_id: str
+
+    amount: float
+
 
 @router.post("/create-subscription")
 def create_subscription(
@@ -340,4 +350,93 @@ async def subscription_webhook(
 
         return {
             "success": False
+        }
+
+
+@router.post(
+    "/update-subscription-amount"
+)
+def update_subscription_amount(
+    data: UpdateSubscriptionAmount
+):
+
+    try:
+
+        response = (
+            subscription_sdk
+            .preapproval()
+            .update(
+                data.subscription_id,
+                {
+                    "auto_recurring": {
+
+                        "transaction_amount":
+                            float(
+                                data.amount
+                            ),
+
+                        "currency_id":
+                            "BRL"
+                    }
+                }
+            )
+        )
+
+        print("=" * 50)
+        print(
+            "UPDATE VALOR ASSINATURA"
+        )
+        print(response)
+        print("=" * 50)
+
+        if response["status"] not in [
+            200,
+            201,
+        ]:
+
+            return {
+
+                "success":
+                    False,
+
+                "error":
+                    response
+            }
+
+        db.collection(
+            "users"
+        ).document(
+            data.user_id
+        ).collection(
+            "subscriptions"
+        ).document(
+            data.subscription_id
+        ).update({
+
+            "amount":
+                float(
+                    data.amount
+                )
+        })
+
+        return {
+
+            "success":
+                True
+        }
+
+    except Exception as e:
+
+        print(
+            "ERRO UPDATE VALOR:",
+            str(e)
+        )
+
+        return {
+
+            "success":
+                False,
+
+            "error":
+                str(e)
         }
