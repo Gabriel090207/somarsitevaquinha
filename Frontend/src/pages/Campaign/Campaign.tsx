@@ -909,11 +909,18 @@ async function handleDeleteMessage() {
   );
 
 }
-
 async function handleShareCampaign() {
 
   const url =
     `${window.location.origin}/vaquinha/${campaign?.slug}`;
+
+  const shareText =
+
+`💚 ${campaign?.title}
+
+Ajude esta campanha na Somar.
+
+${url}`;
 
   try {
 
@@ -921,29 +928,15 @@ async function handleShareCampaign() {
 
       await navigator.share({
 
-        title:
-          campaign?.title,
+        title: "",
 
-        text:
-          `💚 ${campaign?.title}
-
-Ajude esta campanha na Somar.`,
-
-        url,
+        text: shareText,
 
       });
 
       return;
 
     }
-
-    const shareText =
-
-`💚 *${campaign?.title}*
-
-Ajude esta campanha na Somar.
-
-${url}`;
 
     await navigator.clipboard.writeText(
       shareText
@@ -961,7 +954,6 @@ ${url}`;
   }
 
 }
-
 
   return (
 
