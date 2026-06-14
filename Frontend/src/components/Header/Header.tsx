@@ -21,7 +21,10 @@ import {
 } from "lucide-react";
 
 
-import { NavLink } from "react-router-dom";
+import {
+  NavLink,
+  useNavigate,
+} from "react-router-dom";
 
 import {
   useAuth,
@@ -41,6 +44,10 @@ import {
 } from "../../contexts/ToastContext";
 
 export function Header() {
+
+
+const navigate =
+  useNavigate();
 
 const {
   user,
@@ -86,13 +93,16 @@ async function handleLogout() {
 
   await signOut(auth);
 
+  setAccountMenuOpen(false);
+
   showToast(
     "Sessão encerrada com sucesso."
   );
 
-  setAccountMenuOpen(false);
+  navigate("/", {
+  replace: true,
+});
 }
-
   
   return (
     <>

@@ -910,6 +910,58 @@ async function handleDeleteMessage() {
 
 }
 
+async function handleShareCampaign() {
+
+  const url =
+    `${window.location.origin}/vaquinha/${campaign?.slug}`;
+
+  try {
+
+    if (navigator.share) {
+
+      await navigator.share({
+
+        title:
+          campaign?.title,
+
+        text:
+          `💚 ${campaign?.title}
+
+Ajude esta campanha na Somar.`,
+
+        url,
+
+      });
+
+      return;
+
+    }
+
+    const shareText =
+
+`💚 *${campaign?.title}*
+
+Ajude esta campanha na Somar.
+
+${url}`;
+
+    await navigator.clipboard.writeText(
+      shareText
+    );
+
+    showToast(
+      "Link copiado com sucesso!",
+      "success"
+    );
+
+  } catch (error) {
+
+    console.log(error);
+
+  }
+
+}
+
 
   return (
 
@@ -1483,13 +1535,16 @@ async function handleDeleteMessage() {
 
             </div>
 
-            <button className="campaign-share-button">
+            <button
+  className="campaign-share-button"
+  onClick={handleShareCampaign}
+>
 
-              <Share2 size={18} />
+  <Share2 size={18} />
 
-              Compartilhar vaquinha
+  Compartilhar vaquinha
 
-            </button>
+</button>
 
            
 

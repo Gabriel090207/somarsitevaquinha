@@ -67,6 +67,17 @@ export function Profile() {
     useState("");
 
 
+  const [
+  responsibleName,
+  setResponsibleName,
+] = useState("");
+
+const [
+  companyRole,
+  setCompanyRole,
+] = useState("");
+
+
 const [saving, setSaving] =
   useState(false);
 
@@ -106,6 +117,16 @@ const [updatingPassword,
 setCnpj(
   userData?.cnpj ?? ""
 );
+
+setResponsibleName(
+  userData?.responsibleName || ""
+);
+
+setCompanyRole(
+  userData?.companyRole || ""
+);
+
+
     }
 
   }, [userData]);
@@ -120,19 +141,23 @@ setCnpj(
 
     await updateDoc(
 
-      doc(
-        db,
-        "users",
-        user.uid
-      ),
+  doc(
+    db,
+    "users",
+    user.uid
+  ),
 
-      {
-        name,
-        phone,
-        cpf,
-        cnpj,
-      }
-    );
+  {
+    name,
+    phone,
+    cpf,
+    cnpj,
+
+    responsibleName,
+
+    companyRole,
+  }
+);
 
     showToast(
       "Perfil atualizado com sucesso!"
@@ -324,27 +349,108 @@ async function handleUpdatePassword() {
             }}
           >
 
-            <div className="profile-input-group">
+            {userData?.type === "company" ? (
 
-              <label>
+  <div className="profile-input-group">
 
-                <User size={18} />
+    <label>
 
-                Nome completo
+      <Building2 size={18} />
 
-              </label>
+      Razão social
 
-              <input
-                type="text"
-                value={name}
-                onChange={(e) =>
-                  setName(
-                    e.target.value
-                  )
-                }
-              />
+    </label>
 
-            </div>
+    <input
+      type="text"
+      value={name}
+      onChange={(e) =>
+        setName(
+          e.target.value
+        )
+      }
+    />
+
+  </div>
+
+) : (
+
+  <div className="profile-input-group">
+
+    <label>
+
+      <User size={18} />
+
+      Nome completo
+
+    </label>
+
+    <input
+      type="text"
+      value={name}
+      onChange={(e) =>
+        setName(
+          e.target.value
+        )
+      }
+    />
+
+  </div>
+
+)}
+
+
+{userData?.type === "company" && (
+
+  <>
+
+    <div className="profile-input-group">
+
+      <label>
+
+        <User size={18} />
+
+        Nome do responsável
+
+      </label>
+
+      <input
+        type="text"
+        value={responsibleName}
+        onChange={(e) =>
+          setResponsibleName(
+            e.target.value
+          )
+        }
+      />
+
+    </div>
+
+    <div className="profile-input-group">
+
+      <label>
+
+        <Building2 size={18} />
+
+        Cargo
+
+      </label>
+
+      <input
+        type="text"
+        value={companyRole}
+        onChange={(e) =>
+          setCompanyRole(
+            e.target.value
+          )
+        }
+      />
+
+    </div>
+
+  </>
+
+)}
 
             <div className="profile-input-group">
 

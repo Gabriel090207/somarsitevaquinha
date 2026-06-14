@@ -50,6 +50,9 @@ import { QRCode } from "react-qr-code";
 
 import { useToast } from "../../contexts/ToastContext";
 
+import {
+  useAuth,
+} from "../../contexts/AuthContext";
 
 declare global {
 
@@ -78,7 +81,8 @@ type CampaignType = {
 
 export function Checkout() {
 
-
+const { userData } =
+  useAuth();
 
 const { showToast } = useToast();
 
@@ -321,10 +325,15 @@ onSnapshot(
         const data =
           userDoc.data();
 
-        setName(
-          data.name || ""
-        );
+       setName(
+  data.name || ""
+);
 
+setCpf(
+  data.type === "company"
+    ? data.cnpj || ""
+    : data.cpf || ""
+);
         setEmail(
           data.email || user.email || ""
         );
@@ -333,9 +342,7 @@ onSnapshot(
           data.phone || ""
         );
 
-        setCpf(
-          data.cpf || ""
-        );
+        
       }
     }
   );
@@ -1288,9 +1295,11 @@ function handleCloseSaveCardModal() {
 
     <div className="checkout-input-group">
 
-      <label>
-        Nome
-      </label>
+     <label>
+  {userData?.type === "company"
+    ? "Razão social"
+    : "Nome"}
+</label>
 
       <input
   type="text"
@@ -1324,9 +1333,11 @@ function handleCloseSaveCardModal() {
 
       <div className="checkout-input-group">
 
-        <label>
-          CPF
-        </label>
+       <label>
+  {userData?.type === "company"
+    ? "CNPJ"
+    : "CPF"}
+</label>
 
        <input
   type="text"

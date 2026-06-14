@@ -46,6 +46,10 @@ import {
 import { useToast } from "../../contexts/ToastContext";
 
 
+import {
+  useAuth,
+} from "../../contexts/AuthContext";
+
 declare global {
 
   interface Window {
@@ -56,7 +60,8 @@ declare global {
 
 export function MonthlyCheckout() {
 
-
+  const { userData } =
+    useAuth();
 
 const { showToast } = useToast();
 
@@ -283,8 +288,10 @@ useEffect(() => {
         );
 
         setCpf(
-          data.cpf || ""
-        );
+  data.type === "company"
+    ? data.cnpj || ""
+    : data.cpf || ""
+);
       }
     }
   );
@@ -768,9 +775,13 @@ function handleCloseSaveCardModal() {
 
     <div className="checkout-input-group">
 
-      <label>
-        Nome
-      </label>
+     <label>
+
+  {userData?.type === "company"
+    ? "Razão social"
+    : "Nome"}
+
+</label>
 
       <input
   type="text"
@@ -804,9 +815,13 @@ function handleCloseSaveCardModal() {
 
       <div className="checkout-input-group">
 
-        <label>
-          CPF
-        </label>
+       <label>
+
+  {userData?.type === "company"
+    ? "CNPJ"
+    : "CPF"}
+
+</label>
 
        <input
   type="text"

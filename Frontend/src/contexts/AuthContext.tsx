@@ -44,6 +44,10 @@ export type UserData = {
   cpf?: string;
 
   cnpj?: string;
+
+  responsibleName?: string;
+
+  companyRole?: string;
 };
 
 type AuthContextData = {
@@ -116,22 +120,28 @@ export function AuthProvider({
 
               setUserData({
 
-                uid: data.uid,
+  uid: data.uid,
 
-                name: data.name,
+  name: data.name,
 
-                email: data.email,
+  email: data.email,
 
-                phone: data.phone,
+  phone: data.phone,
 
-                role: data.role,
+  role: data.role,
 
-                type: data.type,
+  type: data.type,
 
-                cpf: data.cpf,
+  cpf: data.cpf,
 
-                cnpj: data.cnpj,
-              });
+  cnpj: data.cnpj,
+
+  responsibleName:
+    data.responsibleName,
+
+  companyRole:
+    data.companyRole,
+});
 
             }
 

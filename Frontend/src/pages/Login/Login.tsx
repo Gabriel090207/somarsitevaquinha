@@ -238,6 +238,13 @@ const [fullName, setFullName] =
 const [companyName, setCompanyName] =
   useState("");
 
+
+const [responsibleName, setResponsibleName] =
+  useState("");
+
+const [companyRole, setCompanyRole] =
+  useState("");
+
 const [acceptTerms, setAcceptTerms] =
   useState(false);
 
@@ -371,6 +378,17 @@ await setDoc(
     ? companyName
     : fullName,
 
+
+    responsibleName:
+  isCompany
+    ? responsibleName
+    : null,
+
+companyRole:
+  isCompany
+    ? companyRole
+    : null,
+
     email,
 
     role: "user",
@@ -414,6 +432,13 @@ setCnpj("");
 setPhone("");
 
 setAcceptTerms(false);
+
+
+setResponsibleName("");
+
+setCompanyRole("");
+
+setCompanyName("");
 
 setIsCompany(false);
 
@@ -861,10 +886,16 @@ useEffect(() => {
               Nome completo
             </label>
 
-            <input
-              type="text"
-              placeholder="Digite seu nome"
-            />
+           <input
+  type="text"
+  placeholder="Digite seu nome"
+  value={responsibleName}
+  onChange={(e) =>
+    setResponsibleName(
+      e.target.value
+    )
+  }
+/>
 
           </div>
 
@@ -876,10 +907,16 @@ useEffect(() => {
                 Cargo
               </label>
 
-              <input
-                type="text"
-                placeholder="Auxiliar de suporte"
-              />
+             <input
+  type="text"
+  placeholder="Auxiliar de suporte"
+  value={companyRole}
+  onChange={(e) =>
+    setCompanyRole(
+      e.target.value
+    )
+  }
+/>
 
             </div>
 
