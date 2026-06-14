@@ -1792,35 +1792,6 @@
 }
 
 
-.saved-card-cvv {
-  margin-top: 20px;
-  margin-bottom: 28px;
-}
-
-.saved-card-cvv label {
-  display: block;
-  margin-bottom: 8px;
-  font-size: 14px;
-  font-weight: 600;
-  color: #111827;
-  
-}
-
-.saved-card-cvv input {
-  width: 100%;
-  height: 60px;
-  border: 2px solid #e5e7eb;
-  border-radius: 16px;
-  padding: 0 18px;
-  font-size: 18px;
-  outline: none;
-  transition: 0.2s;
-}
-
-.saved-card-cvv input:focus {
-  border-color: #84cc16;
-}
-
 
 .checkout-step-back {
   height: 42px;
@@ -1862,3 +1833,61 @@
   line-height: 1;
 }
 
+
+
+
+
+.saved-card-cvv {
+  margin-top: 12px;
+  margin-bottom: 24px;
+
+  padding: 18px;
+
+  border-radius: 18px;
+
+  background: var(--white);
+
+  border: 1px solid var(--border);
+}
+
+.saved-card-cvv label {
+  display: block;
+
+  color: var(--secondary);
+
+  font-size: 14px;
+  font-weight: 700;
+
+  margin-bottom: 10px;
+}
+
+.saved-card-cvv input {
+  width: 100%;
+
+  height: 58px;
+
+  padding: 0 18px;
+
+  border-radius: 16px;
+
+  border: 1px solid var(--border);
+
+  background: var(--background);
+
+  outline: none;
+
+  font-size: 16px;
+  font-weight: 700;
+
+  color: var(--secondary);
+
+  transition: 0.2s ease;
+}
+
+.saved-card-cvv input:focus {
+  border-color: var(--primary);
+
+  box-shadow:
+    0 0 0 4px
+    rgba(126, 211, 33, 0.08);
+}

@@ -248,13 +248,7 @@ async function handleLogout() {
 
 </NavLink>
 
-        <button>
-
-          <Settings size={20} />
-
-          Configurações
-
-        </button>
+      
 
         <div className="dropdown-divider" />
 
@@ -435,13 +429,7 @@ async function handleLogout() {
 
 </NavLink>
 
-        <button>
-
-          <Settings size={22} />
-
-          Configurações
-
-        </button>
+      
 
       </div>
 

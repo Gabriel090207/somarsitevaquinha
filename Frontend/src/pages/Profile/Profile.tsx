@@ -288,20 +288,7 @@ async function handleUpdatePassword() {
 
   </button>
 
-  <button
-    className={
-      activeTab === "settings"
-        ? "active"
-        : ""
-    }
-    onClick={() =>
-      setActiveTab("settings")
-    }
-  >
-
-    Configurações
-
-  </button>
+  
 
 </nav>
 

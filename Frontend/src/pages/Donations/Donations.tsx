@@ -79,6 +79,12 @@ const [savedCampaignIds, setSavedCampaignIds] =
 const [loading, setLoading] =
   useState(true);
 
+
+const [
+  subscriptions,
+  setSubscriptions
+] = useState<any[]>([]);
+
 useEffect(() => {
 
   const unsubscribeAuth =
@@ -123,8 +129,40 @@ useEffect(() => {
             }
           );
 
-        return () =>
-          unsubscribeDonations();
+
+          const subscriptionsRef =
+  collection(
+    db,
+    "users",
+    user.uid,
+    "subscriptions"
+  );
+
+const unsubscribeSubscriptions =
+  onSnapshot(
+    subscriptionsRef,
+    (snapshot) => {
+
+      const data =
+        snapshot.docs.map(
+          (doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          })
+        );
+
+      setSubscriptions(data);
+
+    }
+  );
+
+        return () => {
+
+  unsubscribeDonations();
+
+  unsubscribeSubscriptions();
+
+};
       }
     );
 
@@ -705,17 +743,96 @@ function calculateRemainingDays(
 
 ) : (
 
-  activeTab === "monthly" ? (
+ activeTab === "monthly" ? (
 
-  <div className="donations-empty">
+  subscriptions.length === 0 ? (
 
-    <p>
-      Nenhuma doação mensal encontrada.
-    </p>
+    <div className="donations-empty">
 
-  </div>
+      <p>
+        Nenhuma doação mensal encontrada.
+      </p>
 
-) : loading ? (
+    </div>
+
+  ) : (
+
+    <div className="donations-list">
+
+      {subscriptions.map(
+        (subscription) => (
+
+          <div key={subscription.id}>
+
+            <div className="next-subscription-card">
+
+              <div>
+
+                <strong>
+                  Próxima cobrança
+                </strong>
+
+                <p>
+                  {subscription.next_payment_date
+                    ? new Date(
+                        subscription.next_payment_date
+                      ).toLocaleDateString(
+                        "pt-BR"
+                      )
+                    : "Data não definida"}
+                </p>
+
+              </div>
+
+              <span>
+                {formatMoney(
+                  subscription.amount
+                )}
+                
+              </span>
+
+            </div>
+
+            <div className="donation-card">
+
+              <div>
+
+                <strong>
+                  Doação Mensal
+                </strong>
+
+                <p>
+                  {subscription.created_at?.toDate?.()
+                    ?.toLocaleDateString("pt-BR")}
+                  {" às "}
+                  {subscription.created_at?.toDate?.()
+                    ?.toLocaleTimeString("pt-BR", {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
+                </p>
+
+              </div>
+
+              <span>
+                {formatMoney(
+                  subscription.amount
+                )}
+              </span>
+
+            </div>
+
+          </div>
+
+        )
+      )}
+
+    </div>
+
+  )
+
+)
+: loading ? (
 
   <div className="donations-empty">
 

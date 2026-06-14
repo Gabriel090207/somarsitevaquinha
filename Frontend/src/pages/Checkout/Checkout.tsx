@@ -184,6 +184,11 @@ const [closingSaveCardModal,
 const [selectedCard, setSelectedCard] =
   useState<any | null>(null);
 
+const [
+  savedCardCvv,
+  setSavedCardCvv
+] = useState("");
+
 const formatCurrency = (
   value: number
 ) => {
@@ -884,6 +889,21 @@ const cardAlreadyExists =
       holderName:
         cardHolder,
 
+      first6:
+  tokenResponse.first_six_digits,
+
+expirationMonth:
+  Number(month),
+
+expirationYear:
+  Number(`20${year}`),
+
+cpf:
+  cardCpf.replace(/\D/g, ""),
+
+email:
+  cardEmail,
+
       createdAt:
         serverTimestamp(),
     }
@@ -933,6 +953,67 @@ const cardAlreadyExists =
     }
   };
 
+
+
+async function handleSavedCardPayment() {
+
+  if (!selectedCard) {
+
+    showToast(
+      "Selecione um cartão.",
+      "error"
+    );
+
+    return;
+  }
+
+  if (
+    savedCardCvv.length < 3
+  ) {
+
+    showToast(
+      "Informe o CVC.",
+      "error"
+    );
+
+    return;
+  }
+
+  try {
+
+    setProcessing(true);
+
+    console.log(
+      "Cartão salvo:",
+      selectedCard
+    );
+
+    console.log(
+      "CVC:",
+      savedCardCvv
+    );
+
+    // TESTE INICIAL
+
+    showToast(
+      "Cartão selecionado com sucesso.",
+      "success"
+    );
+
+    setProcessing(false);
+
+  } catch {
+
+    setProcessing(false);
+
+    showToast(
+      "Erro ao processar cartão.",
+      "error"
+    );
+
+  }
+
+}
 
 async function continueCardPayment(
   saveCard: boolean
@@ -1381,55 +1462,101 @@ showToast(
 
     ) : (
 
+
       savedCards.map((card) => (
 
-        <button
-  key={card.id}
-  className={`saved-card-item ${
-    selectedCard?.id === card.id
-      ? "active"
-      : ""
-  }`}
-  onClick={() => {
+  <div
+    key={card.id}
+  >
 
-  if (
-    selectedCard?.id ===
-    card.id
-  ) {
+    <button
+      className={`saved-card-item ${
+        selectedCard?.id === card.id
+          ? "active"
+          : ""
+      }`}
+      onClick={() => {
 
-    setSelectedCard(null);
+        if (
+          selectedCard?.id ===
+          card.id
+        ) {
 
-  } else {
+          setSelectedCard(null);
 
-    setSelectedCard(card);
-  }
-}}
->
+          setSavedCardCvv("");
 
-         <img
-  src={`/cards/${card.brand}.png`}
-  alt={card.brand}
-  className="saved-card-brand"
-/>
-          <div>
+        } else {
 
-            <strong>
-              {card.brand}
-              {" "}
-              ••••
-              {" "}
-              {card.last4}
-            </strong>
+          setSelectedCard(card);
 
-            <span>
-  Cartão salvo
-</span>
+          setSavedCardCvv("");
 
-          </div>
+        }
 
-        </button>
+      }}
+    >
 
-      ))
+      <img
+        src={`/cards/${card.brand}.png`}
+        alt={card.brand}
+        className="saved-card-brand"
+      />
+
+      <div>
+
+        <strong>
+
+          {card.brand}
+          {" "}
+          ••••
+          {" "}
+          {card.last4}
+
+        </strong>
+
+        <span>
+          Cartão salvo
+        </span>
+
+      </div>
+
+    </button>
+
+    {
+
+      selectedCard?.id ===
+      card.id && (
+
+        <div className="saved-card-cvv">
+
+          <label>
+            Código de segurança
+          </label>
+
+          <input
+            type="password"
+            placeholder="CVC"
+            maxLength={4}
+            value={savedCardCvv}
+            onChange={(event) =>
+              setSavedCardCvv(
+                event.target.value
+                  .replace(/\D/g, "")
+                  .slice(0, 4)
+              )
+            }
+          />
+
+        </div>
+
+      )
+
+    }
+
+  </div>
+
+))
 
     )}
 
@@ -1709,6 +1836,14 @@ if (
 }
 
 if (paymentMethod === "credit") {
+
+  if (!newCard) {
+
+    handleSavedCardPayment();
+
+    return;
+
+  }
 
   setShowSaveCardModal(true);
 

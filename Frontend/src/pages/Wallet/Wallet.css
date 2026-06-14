@@ -422,3 +422,126 @@
 .subscription-edit:hover {
   opacity: .75;
 }
+
+
+.wallet-cards-list {
+  display: flex;
+  flex-direction: column;
+
+  gap: 18px;
+}
+
+.wallet-card-item {
+  width: 100%;
+
+  padding: 24px 28px;
+
+  border-radius: 24px;
+
+  border: 1px solid var(--border);
+
+  background: var(--white);
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.wallet-card-left {
+  display: flex;
+  align-items: center;
+
+  gap: 18px;
+}
+
+.wallet-card-brand {
+  width: 60px;
+  height: 38px;
+
+  object-fit: contain;
+
+  flex-shrink: 0;
+}
+
+.wallet-card-info {
+  display: flex;
+  flex-direction: column;
+
+  gap: 4px;
+}
+
+.wallet-card-info strong {
+  color: var(--secondary);
+
+  font-size: 16px;
+  font-weight: 800;
+
+  text-transform: capitalize;
+}
+
+.wallet-card-info span {
+  color: var(--text-light);
+
+  font-size: 14px;
+}
+
+.wallet-card-delete {
+  border: none;
+
+  background: transparent;
+
+  color: var(--primary);
+
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  transition: 0.2s;
+}
+
+.wallet-card-delete:hover {
+  opacity: 0.7;
+}
+
+@media (max-width: 640px) {
+
+  .wallet-card-item {
+
+    padding: 18px;
+  }
+
+  .wallet-card-left {
+
+    gap: 12px;
+  }
+
+  .wallet-card-brand {
+
+    width: 52px;
+    height: 32px;
+  }
+
+  .wallet-card-info strong {
+
+    font-size: 14px;
+  }
+
+  .wallet-card-info span {
+
+    font-size: 13px;
+  }
+
+}
+
+
+.walletdelete {
+  background: #ef4444;
+
+  color: white;
+}
+
+.walletdelete:hover {
+  opacity: 0.92;
+}

@@ -39,7 +39,7 @@ export function MonthlySubscriptionSuccess() {
 
     <section className="payment-success-page">
 
-      <div className="payment-success-card">
+      <div className="payment-success-card-mensal">
 
         <div className="payment-success-icon">
 
@@ -117,15 +117,25 @@ export function MonthlySubscriptionSuccess() {
 
         </p>
 
-        <button
-          onClick={() => navigate("/")}
-        >
+       <button
+  onClick={() =>
+    navigate(
+      updated
+        ? "/minha-carteira"
+        : "/"
+    )
+  }
+>
 
-          <ArrowLeft size={20} />
+  <ArrowLeft size={20} />
 
-          Voltar para início
+  {
+    updated
+      ? "Voltar para carteira"
+      : "Voltar para início"
+  }
 
-        </button>
+</button>
 
       </div>
 

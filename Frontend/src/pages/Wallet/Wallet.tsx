@@ -9,6 +9,7 @@ import {
   doc,
   onSnapshot,
   collection,
+  deleteDoc,
 } from "firebase/firestore";
 
 import {
@@ -20,6 +21,7 @@ import {
   Eye,
   EyeOff,
   Wallet as WalletIcon,
+  Trash2,
 } from "lucide-react";
 
 import {
@@ -68,6 +70,92 @@ const [
   setNextSubscriptionState,
 ] = useState(false);
 
+const [
+  savedCards,
+  setSavedCards
+] = useState<any[]>([]);
+
+const [
+  selectedCard,
+  setSelectedCard
+] = useState<any>(null);
+
+const [
+  showDeleteCardModal,
+  setShowDeleteCardModal
+] = useState(false);
+
+
+const [
+  closingDeleteCardModal,
+  setClosingDeleteCardModal
+] = useState(false);
+
+async function handleDeleteCard() {
+
+  const user =
+    auth.currentUser;
+
+  if (
+    !user ||
+    !selectedCard
+  ) return;
+
+  try {
+
+    await deleteDoc(
+
+      doc(
+        db,
+        "users",
+        user.uid,
+        "savedCards",
+        selectedCard.id
+      )
+
+    );
+
+    showToast(
+      "Cartão removido com sucesso.",
+      "success"
+    );
+
+   handleCloseDeleteCardModal();
+
+  } catch {
+
+    showToast(
+      "Erro ao remover cartão.",
+      "error"
+    );
+
+  }
+
+}
+
+function handleCloseDeleteCardModal() {
+
+  setClosingDeleteCardModal(
+    true
+  );
+
+  setTimeout(() => {
+
+    setShowDeleteCardModal(
+      false
+    );
+
+    setClosingDeleteCardModal(
+      false
+    );
+
+    setSelectedCard(
+      null
+    );
+
+  }, 250);
+
+}
 
 async function handleSubscriptionStatus() {
 
@@ -210,8 +298,37 @@ const unsubscribeSubscription =
   );
 
 
+  const cardsRef =
+  collection(
+    db,
+    "users",
+    user.uid,
+    "savedCards"
+  );
+
+const unsubscribeCards =
+  onSnapshot(
+    cardsRef,
+    (snapshot) => {
+
+      const cards =
+        snapshot.docs.map(
+          (doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          })
+        );
+
+      setSavedCards(cards);
+
+    }
+  );
+
+
 
         return () => {
+
+unsubscribeCards();
 
   unsubscribeWallet();
 
@@ -330,19 +447,19 @@ const unsubscribeSubscription =
               <button
                 className={
                   activeTab ===
-                  "customization"
+                  "cards"
 
                     ? "active"
                     : ""
                 }
                 onClick={() =>
                   setActiveTab(
-                    "customization"
+                    "cards"
                   )
                 }
               >
 
-                Personalização
+               Meus cartões
 
               </button>
 
@@ -458,20 +575,93 @@ const unsubscribeSubscription =
             {
 
               activeTab ===
-              "customization" && (
+              "cards" && (
 
-                <div className="wallet-section">
+               <div className="wallet-section">
 
-                  <h3>
-                    Personalização
-                  </h3>
+  <h3>
+    Meus cartões
+  </h3>
 
-                  <p>
-                    Nenhuma opção
-                    disponível no momento.
-                  </p>
+  {
 
-                </div>
+  savedCards.length === 0 ? (
+
+  <p>
+    Nenhum cartão salvo.
+  </p>
+
+) : (
+
+  <div className="wallet-cards-list">
+
+    {savedCards.map((card) => (
+
+      <div
+        key={card.id}
+        className="wallet-card-item"
+      >
+
+        <div className="wallet-card-left">
+
+          <img
+            src={`/cards/${card.brand}.png`}
+            alt={card.brand}
+            className="wallet-card-brand"
+          />
+
+          <div className="wallet-card-info">
+
+            <strong>
+
+              {card.brand}
+
+              {" "}
+
+              ••••
+
+              {" "}
+
+              {card.last4}
+
+            </strong>
+
+            <span>
+              Cartão salvo
+            </span>
+
+          </div>
+
+        </div>
+
+        <button
+          className="wallet-card-delete"
+          onClick={() => {
+
+            setSelectedCard(card);
+
+            setShowDeleteCardModal(
+              true
+            );
+
+          }}
+        >
+
+          <Trash2 size={22} />
+
+        </button>
+
+      </div>
+
+    ))}
+
+  </div>
+
+)
+
+  }
+
+</div>
 
               )
 
@@ -482,6 +672,70 @@ const unsubscribeSubscription =
         </div>
 
       </div>
+
+
+{
+  showDeleteCardModal && (
+
+   <div
+  className={`delete-modal-overlay ${
+    closingDeleteCardModal
+      ? "closing"
+      : ""
+  }`}
+>
+
+      <div
+  className={`delete-modal ${
+    closingDeleteCardModal
+      ? "closing"
+      : ""
+  }`}
+>
+
+        <h3>
+          Remover cartão?
+        </h3>
+
+        <p>
+
+          Este cartão será removido
+          dos seus cartões salvos.
+
+        </p>
+
+        <div className="delete-modal-actions">
+
+          <button
+            className="cancel"
+            onClick={
+  handleCloseDeleteCardModal
+}
+          >
+
+            Cancelar
+
+          </button>
+
+          <button
+            className="walletdelete"
+            onClick={
+              handleDeleteCard
+            }
+          >
+
+            Remover
+
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  )
+}
 
 
 {

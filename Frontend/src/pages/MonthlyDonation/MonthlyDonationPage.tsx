@@ -19,10 +19,18 @@ import { useNavigate }
   from "react-router-dom";
 
 import {
-  auth
+  auth,
+  db,
 } from "../../services/firebase";
 
+import {
+  collection,
+  getDocs,
+} from "firebase/firestore";
 
+import {
+  useToast,
+} from "../../contexts/ToastContext";
 
 export function MonthlyDonationPage() {
 
@@ -30,12 +38,17 @@ export function MonthlyDonationPage() {
 const navigate =
   useNavigate();
 
+const { showToast } =
+  useToast();
 
-function handleMonthlyDonation(
+async function handleMonthlyDonation(
   amount?: string
 ) {
 
-  if (!auth.currentUser) {
+  const user =
+    auth.currentUser;
+
+  if (!user) {
 
     navigate(
       "/login",
@@ -55,6 +68,29 @@ function handleMonthlyDonation(
     return;
   }
 
+  const subscriptionsRef =
+    collection(
+      db,
+      "users",
+      user.uid,
+      "subscriptions"
+    );
+
+  const snapshot =
+    await getDocs(
+      subscriptionsRef
+    );
+
+  if (!snapshot.empty) {
+
+    showToast(
+      "Você já possui uma doação mensal. Para alterar o valor, acesse sua carteira.",
+      "info"
+    );
+
+    return;
+  }
+
   navigate(
     amount
       ? `/monthly-checkout?amount=${amount}`
@@ -62,6 +98,7 @@ function handleMonthlyDonation(
   );
 
 }
+
   return (
 
     <main className="monthly-page">

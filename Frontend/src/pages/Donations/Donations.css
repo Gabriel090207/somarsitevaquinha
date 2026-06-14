@@ -336,3 +336,55 @@
   }
 
 }
+
+
+.next-subscription-card {
+  width: 100%;
+
+  padding: 22px 24px;
+
+  border-radius: 22px;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(126, 211, 33, 0.14),
+      rgba(126, 211, 33, 0.06)
+    );
+
+  border:
+    1px solid rgba(126, 211, 33, 0.2);
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 18px;
+
+  margin-bottom: 14px;
+}
+
+.next-subscription-card strong {
+  color: var(--secondary);
+
+  font-size: 17px;
+  font-weight: 900;
+}
+
+.next-subscription-card p {
+  margin-top: 6px;
+
+  color: var(--text-light);
+
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.next-subscription-card span {
+  color: var(--primary);
+
+  font-size: 20px;
+  font-weight: 900;
+
+  white-space: nowrap;
+}

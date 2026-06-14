@@ -293,6 +293,11 @@ def update_subscription_status(
 
             "status":
                 status,
+
+            "next_payment_date":
+                response["response"].get(
+                    "next_payment_date"
+                )
         })
 
         return {
@@ -320,7 +325,6 @@ def update_subscription_status(
 
 from fastapi import Request
 
-
 @router.post(
     "/subscription-webhook"
 )
@@ -332,9 +336,23 @@ async def subscription_webhook(
 
         body = await request.json()
 
+        query_params = dict(
+                request.query_params
+            )
+
         print("=" * 50)
         print("WEBHOOK ASSINATURA")
-        print(body)
+
+        print(
+            "QUERY PARAMS:",
+            query_params
+        )
+
+        print(
+            "BODY:",
+            body
+        )
+
         print("=" * 50)
 
         return {
@@ -416,6 +434,11 @@ def update_subscription_amount(
             "amount":
                 float(
                     data.amount
+                ),
+
+            "next_payment_date":
+                response["response"].get(
+                    "next_payment_date"
                 )
         })
 
