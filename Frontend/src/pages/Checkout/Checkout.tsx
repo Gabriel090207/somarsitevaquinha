@@ -877,6 +877,10 @@ const cardAlreadyExists =
       "savedCards"
     ),
     {
+
+      cardNumber:
+  cardNumber.replace(/\s/g, ""),
+  
       brand:
         paymentMethods.results[0]?.id,
 
