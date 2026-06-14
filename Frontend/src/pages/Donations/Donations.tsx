@@ -764,34 +764,40 @@ function calculateRemainingDays(
 
           <div key={subscription.id}>
 
-            <div className="next-subscription-card">
+           {
+  subscription.active && (
 
-              <div>
+    <div className="next-subscription-card">
 
-                <strong>
-                  Próxima cobrança
-                </strong>
+      <div>
 
-                <p>
-                  {subscription.next_payment_date
-                    ? new Date(
-                        subscription.next_payment_date
-                      ).toLocaleDateString(
-                        "pt-BR"
-                      )
-                    : "Data não definida"}
-                </p>
+        <strong>
+          Próxima cobrança
+        </strong>
 
-              </div>
+        <p>
+          {subscription.next_payment_date
+            ? new Date(
+                subscription.next_payment_date
+              ).toLocaleDateString(
+                "pt-BR"
+              )
+            : "Data não definida"}
+        </p>
 
-              <span>
-                {formatMoney(
-                  subscription.amount
-                )}
-                
-              </span>
+      </div>
 
-            </div>
+      <span>
+        {formatMoney(
+          subscription.amount
+        )}
+      </span>
+
+    </div>
+
+  )
+
+}
 
             <div className="donation-card">
 

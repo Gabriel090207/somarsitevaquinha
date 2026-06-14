@@ -295,6 +295,10 @@ def create_card_payment(
 
         donation_ref.set({
 
+
+             "paymentId":
+                payment["id"],
+
             "campaignId":
                 data.campaign_id,
 
@@ -399,6 +403,11 @@ async def mercadopago_webhook(
             payment_response["response"]
         )
 
+        print("=" * 50)
+        print("WEBHOOK PAYMENT:")
+        print(payment)
+        print("=" * 50)
+
         if (
             payment["status"]
             != "approved"
@@ -489,7 +498,10 @@ async def mercadopago_webhook(
                 donor_email,
 
             "paymentMethod":
-                "pix",
+                payment.get(
+                    "payment_method_id",
+                    "unknown"
+                ),
 
             "status":
                 "approved",

@@ -1530,23 +1530,24 @@ showToast(
 
         <div className="saved-card-cvv">
 
-          <label>
-            Código de segurança
-          </label>
+         <label>
+  Código de segurança
+</label>
 
-          <input
-            type="password"
-            placeholder="CVC"
-            maxLength={4}
-            value={savedCardCvv}
-            onChange={(event) =>
-              setSavedCardCvv(
-                event.target.value
-                  .replace(/\D/g, "")
-                  .slice(0, 4)
-              )
-            }
-          />
+<input
+  type="text"
+  inputMode="numeric"
+  placeholder="CVC"
+  maxLength={4}
+  value={savedCardCvv}
+  onChange={(event) =>
+    setSavedCardCvv(
+      event.target.value
+        .replace(/\D/g, "")
+        .slice(0, 4)
+    )
+  }
+/>
 
         </div>
 
