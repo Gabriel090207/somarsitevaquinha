@@ -880,7 +880,7 @@ const cardAlreadyExists =
 
       cardNumber:
   cardNumber.replace(/\s/g, ""),
-  
+
       brand:
         paymentMethods.results[0]?.id,
 
@@ -1001,6 +1001,41 @@ async function handleSavedCardPayment() {
       "CVC:",
       savedCardCvv
     );
+
+
+    const tokenResponse =
+  await mp.createCardToken({
+
+    cardNumber:
+      selectedCard.cardNumber,
+
+    cardholderName:
+      selectedCard.holderName,
+
+    identificationType:
+      "CPF",
+
+    identificationNumber:
+      selectedCard.cpf,
+
+    securityCode:
+      savedCardCvv,
+
+    cardExpirationMonth:
+      String(
+        selectedCard.expirationMonth
+      ),
+
+    cardExpirationYear:
+      String(
+        selectedCard.expirationYear
+      ),
+  });
+
+console.log(
+  "TOKEN CARTÃO SALVO:",
+  tokenResponse
+);
 
     // TESTE INICIAL
 
