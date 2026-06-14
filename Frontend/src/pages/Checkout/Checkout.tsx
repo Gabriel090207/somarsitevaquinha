@@ -1096,6 +1096,29 @@ console.log(
   response.data
 );
 
+if (
+  response.data.status ===
+  "approved"
+) {
+
+  navigate(
+    "/payment-success",
+    {
+      state: {
+        amount: donationValue,
+      },
+    }
+  );
+
+} else {
+
+  showToast(
+    "Pagamento recusado.",
+    "error"
+  );
+
+}
+
   } catch {
 
     setProcessing(false);
