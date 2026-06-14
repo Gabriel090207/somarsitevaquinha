@@ -245,6 +245,21 @@ def create_card_payment(
         "issuer_id":
             data.issuer_id,
 
+        "metadata": {
+
+            "campaign_id":
+                data.campaign_id,
+
+            "campaign_title":
+                data.campaign_title,
+
+            "donor_name":
+                data.donor_name,
+
+            "donor_email":
+                data.email,
+        },
+
         "payer": {
 
             "email":
@@ -415,6 +430,17 @@ async def mercadopago_webhook(
 
             return {
                 "success": True
+            }
+
+        if (
+            payment.get("payment_type_id")
+            == "credit_card"
+        ):
+
+            return {
+                "success": True,
+                "message":
+                    "Pagamento com cartão já registrado pela rota de cartão"
             }
 
         existing_donations = (
