@@ -1101,16 +1101,24 @@ if (
   "approved"
 ) {
 
-  navigate(
-    "/payment-success",
-    {
-      state: {
-        amount: donationValue,
-      },
-    }
-  );
+  setProcessing(true);
+
+  setTimeout(() => {
+
+    navigate(
+      "/payment-success",
+      {
+        state: {
+          amount: donationValue,
+        },
+      }
+    );
+
+  }, 2500);
 
 } else {
+
+  setProcessing(false);
 
   showToast(
     "Pagamento recusado.",
