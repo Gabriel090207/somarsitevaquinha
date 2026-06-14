@@ -182,10 +182,18 @@ export function Donations() {
 
         {/* LIST */}
 
-        <div className="donations-list">
+       <div className="donations-list">
 
-          {filteredDonations.map(
-            (donation) => (
+  {filteredDonations.length === 0 ? (
+
+    <p>
+      Nenhuma doação encontrada.
+    </p>
+
+  ) : (
+
+    filteredDonations.map(
+      (donation) => (
 
             <div
               key={donation.id}
@@ -295,9 +303,11 @@ export function Donations() {
 
             </div>
 
-          ))}
+              ))
 
-        </div>
+  )}
+
+</div>
 
       </section>
 

@@ -154,6 +154,10 @@ const [selectedCard, setSelectedCard] =
   useState<any | null>(null);
 
 
+const [savedCardCvv,
+  setSavedCardCvv] =
+    useState("");
+
 const [editingAmount,
   setEditingAmount] =
     useState(false);
@@ -218,6 +222,9 @@ function detectCardBrand(
 
   return "";
 }
+
+
+
 
 useEffect(() => {
 
@@ -465,34 +472,49 @@ const cardAlreadyExists =
 } else {
 
   await addDoc(
-    collection(
-      db,
-      "users",
-      auth.currentUser.uid,
-      "savedCards"
-    ),
-    {
-      brand:
-        paymentMethods.results[0]?.id,
+  collection(
+    db,
+    "users",
+    auth.currentUser.uid,
+    "savedCards"
+  ),
+  {
+    brand:
+      paymentMethods.results[0]?.id,
 
-      issuer:
-        paymentMethods.results[0]
-          ?.issuer?.name,
+    issuer:
+      paymentMethods.results[0]
+        ?.issuer?.name,
 
-      issuerId:
-        paymentMethods.results[0]
-          ?.issuer?.id,
+    issuerId:
+      paymentMethods.results[0]
+        ?.issuer?.id,
 
-      last4:
-        tokenResponse.last_four_digits,
+    last4:
+      tokenResponse.last_four_digits,
 
-      holderName:
-        cardHolder,
+    holderName:
+      cardHolder,
 
-      createdAt:
-        serverTimestamp(),
-    }
-  );
+    cardNumber:
+      cardNumber.replace(/\s/g, ""),
+
+    cpf:
+      cardCpf.replace(/\D/g, ""),
+
+    email:
+      cardEmail,
+
+    expirationMonth:
+      Number(month),
+
+    expirationYear:
+      Number(`20${year}`),
+
+    createdAt:
+      serverTimestamp(),
+  }
+);
 
   showToast(
     "Cartão salvo com sucesso!",
@@ -551,6 +573,133 @@ async function continueCardPayment(
    handleCardPayment(saveCard);
 
   }, 250);
+
+}
+
+async function handleSavedCardPayment() {
+
+  if (!selectedCard) {
+
+    showToast(
+      "Selecione um cartão.",
+      "error"
+    );
+
+    return;
+  }
+
+  if (
+    savedCardCvv.length < 3
+  ) {
+
+    showToast(
+      "Informe o CVC.",
+      "error"
+    );
+
+    return;
+  }
+
+  try {
+
+    setProcessing(true);
+
+    const tokenResponse =
+      await mp.createCardToken({
+
+        cardNumber:
+          selectedCard.cardNumber,
+
+        cardholderName:
+          selectedCard.holderName,
+
+        identificationType:
+          "CPF",
+
+        identificationNumber:
+          selectedCard.cpf,
+
+        securityCode:
+          savedCardCvv,
+
+        cardExpirationMonth:
+          String(
+            selectedCard.expirationMonth
+          ),
+
+        cardExpirationYear:
+          String(
+            selectedCard.expirationYear
+          ),
+      });
+
+    const subscriptionPayload = {
+
+      user_id:
+        auth.currentUser?.uid || "",
+
+      token:
+        tokenResponse.id,
+
+      email:
+        selectedCard.email,
+
+      cpf:
+        selectedCard.cpf,
+
+      amount:
+        donationValue,
+
+      card_holder:
+        selectedCard.holderName,
+    };
+
+    const response =
+      await api.post(
+        "/create-subscription",
+        subscriptionPayload
+      );
+
+    if (
+      response.data.success
+    ) {
+
+      setTimeout(() => {
+
+        navigate(
+          "/monthly-subscription-success",
+          {
+            state: {
+              amount: donationValue,
+            },
+          }
+        );
+
+      }, 2500);
+
+    } else {
+
+      setProcessing(false);
+
+      showToast(
+        "Pagamento recusado.",
+        "error"
+      );
+
+    }
+
+  } catch (error) {
+
+    console.log(error);
+
+    setProcessing(false);
+
+    showToast(
+      "Erro ao processar pagamento.",
+      "error"
+    );
+
+  }
 
 }
 
@@ -809,55 +958,94 @@ function handleCloseSaveCardModal() {
 
       savedCards.map((card) => (
 
-        <button
-  key={card.id}
-  className={`saved-card-item ${
-    selectedCard?.id === card.id
-      ? "active"
-      : ""
-  }`}
-  onClick={() => {
+  <div
+    key={card.id}
+  >
 
-  if (
-    selectedCard?.id ===
-    card.id
-  ) {
+    <button
+      className={`saved-card-item ${
+        selectedCard?.id === card.id
+          ? "active"
+          : ""
+      }`}
+      onClick={() => {
 
-    setSelectedCard(null);
+        if (
+          selectedCard?.id === card.id
+        ) {
 
-  } else {
+          setSelectedCard(null);
 
-    setSelectedCard(card);
-  }
-}}
->
+          setSavedCardCvv("");
 
-         <img
-  src={`/cards/${card.brand}.png`}
-  alt={card.brand}
-  className="saved-card-brand"
-/>
-          <div>
+        } else {
 
-            <strong>
-              {card.brand}
-              {" "}
-              ••••
-              {" "}
-              {card.last4}
-            </strong>
+          setSelectedCard(card);
 
-            <span>
-  Cartão salvo
-</span>
+          setSavedCardCvv("");
 
-          </div>
+        }
 
-        </button>
+      }}
+    >
 
-      ))
+      <img
+        src={`/cards/${card.brand}.png`}
+        alt={card.brand}
+        className="saved-card-brand"
+      />
 
-    )}
+      <div>
+
+        <strong>
+          {card.brand}
+          {" "}
+          ••••
+          {" "}
+          {card.last4}
+        </strong>
+
+        <span>
+          Cartão salvo
+        </span>
+
+      </div>
+
+    </button>
+
+    {
+      selectedCard?.id === card.id && (
+
+        <div className="checkout-input-group">
+
+          <label>
+            Código de segurança
+          </label>
+
+          <input
+            type="text"
+            placeholder="CVC"
+            maxLength={3}
+            value={savedCardCvv}
+            onChange={(event) =>
+              setSavedCardCvv(
+                event.target.value
+                  .replace(/\D/g, "")
+                  .slice(0, 3)
+              )
+            }
+          />
+
+        </div>
+
+      )
+    }
+
+  </div>
+
+))
+
+)}
 
   </div>
 
@@ -1066,9 +1254,18 @@ function handleCloseSaveCardModal() {
 
 <button
   className="checkout-donate-btn"
-  onClick={() =>
-    setShowSaveCardModal(true)
-  }
+  onClick={() => {
+
+    if (!newCard) {
+
+      handleSavedCardPayment();
+
+      return;
+    }
+
+    setShowSaveCardModal(true);
+
+  }}
 >
   Doar {formatCurrency(donationValue)}
 </button>

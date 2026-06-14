@@ -8,16 +8,20 @@
   background: var(--background);
 }
 
+/* CONTENT */
+
 .subscribers-content {
   flex: 1;
 
-  margin-left: 290px;
-
   padding: 34px;
+
+  margin-left: 290px;
 }
 
+/* HEADER */
+
 .subscribers-header {
-  margin-bottom: 30px;
+  margin-bottom: 34px;
 }
 
 .subscribers-header span {
@@ -25,6 +29,10 @@
 
   font-size: 14px;
   font-weight: 700;
+
+  display: block;
+
+  margin-bottom: 10px;
 }
 
 .subscribers-header h1 {
@@ -33,6 +41,68 @@
   font-size: 42px;
   font-weight: 900;
 }
+
+/* SEARCH */
+
+.subscribers-search {
+  width: 100%;
+
+  height: 58px;
+
+  padding: 0 18px;
+
+  border-radius: 18px;
+
+  background: var(--white);
+
+  border: 1px solid var(--border);
+
+  display: flex;
+  align-items: center;
+
+  gap: 12px;
+
+  margin-bottom: 28px;
+
+  transition: 0.25s ease;
+}
+
+.subscribers-search svg {
+  color: var(--text-light);
+}
+
+.subscribers-search input {
+  flex: 1;
+
+  height: 100%;
+
+  border: none;
+
+  background: transparent;
+
+  outline: none;
+
+  font-size: 15px;
+
+  color: var(--secondary);
+}
+
+.subscribers-search:focus-within {
+  border-color:
+    rgba(126, 211, 33, 0.4);
+
+  background: var(--white);
+
+  box-shadow:
+    0 0 0 4px
+    rgba(126, 211, 33, 0.08);
+}
+
+.subscribers-search:focus-within svg {
+  color: var(--primary);
+}
+
+/* EMPTY */
 
 .subscribers-empty {
   padding: 80px 20px;
@@ -44,6 +114,161 @@
   background: var(--white);
 
   border: 1px solid var(--border);
+
+  color: var(--text-light);
+}
+
+/* LIST */
+
+.subscribers-list {
+  display: flex;
+  flex-direction: column;
+
+  gap: 18px;
+}
+
+/* ITEM */
+
+.subscriber-item {
+  width: 100%;
+
+  min-height: 100px;
+
+  padding: 20px 24px;
+
+  border-radius: 28px;
+
+  background: var(--white);
+
+  border: 1px solid var(--border);
+
+  display: grid;
+
+  grid-template-columns:
+    1.8fr
+    170px
+    120px
+    140px;
+
+  align-items: center;
+
+  gap: 74px;
+}
+
+/* USER */
+
+.subscriber-user {
+  display: flex;
+  align-items: center;
+
+  gap: 16px;
+}
+
+.subscriber-avatar {
+  width: 58px;
+  height: 58px;
+
+  border-radius: 18px;
+
+  background: var(--primary);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: white;
+
+  font-size: 20px;
+  font-weight: 900;
+}
+
+.subscriber-user strong {
+  display: block;
+
+  color: var(--secondary);
+
+  font-size: 18px;
+  font-weight: 900;
+
+  margin-bottom: 4px;
+}
+
+.subscriber-user p {
+  color: var(--text-light);
+
+  font-size: 14px;
+}
+
+/* STATUS */
+
+.subscriber-status {
+  height: 40px;
+
+  padding: 0 16px;
+
+  border-radius: 999px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.subscriber-status.authorized {
+  background:
+    rgba(126, 211, 33, 0.12);
+
+  color: var(--primary);
+}
+
+.subscriber-status.paused,
+.subscriber-status.cancelled {
+  background:
+    rgba(239, 68, 68, 0.12);
+
+  color: #EF4444;
+}
+
+/* VALUE */
+
+.subscriber-amount strong {
+  color: var(--primary);
+
+  font-size: 22px;
+  font-weight: 900;
+}
+
+/* NEXT PAYMENT */
+
+.subscriber-next strong {
+  display: block;
+
+  color: var(--secondary);
+
+  font-size: 14px;
+  font-weight: 800;
+
+  margin-bottom: 4px;
+}
+
+.subscriber-next span {
+  color: var(--text-light);
+
+  font-size: 14px;
+}
+
+/* RESPONSIVO */
+
+@media (max-width: 1300px) {
+
+  .subscriber-item {
+    grid-template-columns: 1fr;
+
+    gap: 18px;
+  }
+
 }
 
 @media (max-width: 980px) {
@@ -52,7 +277,61 @@
     margin-left: 0;
 
     padding:
-      98px 20px 20px;
+      98px 20px 24px;
+  }
+
+  .subscribers-header h1 {
+    font-size: 34px;
+  }
+
+}
+
+@media (max-width: 640px) {
+
+  .subscribers-content {
+    padding:
+      92px 14px 20px;
+  }
+
+  .subscribers-header {
+    margin-bottom: 24px;
+  }
+
+  .subscribers-header span {
+    font-size: 12px;
+
+    margin-bottom: 8px;
+  }
+
+  .subscribers-header h1 {
+    font-size: 30px;
+  }
+
+  .subscriber-item {
+    padding: 18px;
+
+    border-radius: 20px;
+  }
+
+  .subscriber-avatar {
+    width: 50px;
+    height: 50px;
+
+    border-radius: 16px;
+
+    font-size: 18px;
+  }
+
+  .subscriber-user strong {
+    font-size: 16px;
+  }
+
+  .subscriber-user p {
+    font-size: 13px;
+  }
+
+  .subscriber-amount strong {
+    font-size: 20px;
   }
 
 }

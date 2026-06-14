@@ -144,6 +144,9 @@ const [closingSaveCardModal,
 const [selectedCard, setSelectedCard] =
   useState<any | null>(null);
 
+const [savedCardCvv,
+  setSavedCardCvv] =
+    useState("");
 
 const [editingAmount,
   setEditingAmount] =
@@ -572,6 +575,97 @@ async function continueCardPayment(
 
 }
 
+
+async function handleSavedCardPayment() {
+
+  if (!selectedCard) {
+
+    showToast(
+      "Selecione um cartão.",
+      "error"
+    );
+
+    return;
+  }
+
+  if (
+    savedCardCvv.length < 3
+  ) {
+
+    showToast(
+      "Informe o CVC.",
+      "error"
+    );
+
+    return;
+  }
+
+  try {
+
+    setProcessing(true);
+
+    const response =
+      await api.post(
+        "/update-subscription-amount",
+        {
+
+          user_id:
+            auth.currentUser?.uid,
+
+          subscription_id:
+            subscription.id,
+
+          amount:
+            donationValue,
+
+        }
+      );
+
+    if (
+      response.data.success
+    ) {
+
+      setTimeout(() => {
+
+        navigate(
+          "/monthly-subscription-success",
+          {
+            state: {
+              amount:
+                donationValue,
+
+              updated:
+                true,
+            },
+          }
+        );
+
+      }, 2500);
+
+    } else {
+
+      setProcessing(false);
+
+      showToast(
+        "Não foi possível atualizar.",
+        "error"
+      );
+
+    }
+
+  } catch {
+
+    setProcessing(false);
+
+    showToast(
+      "Erro ao atualizar.",
+      "error"
+    );
+
+  }
+
+}
+
 function handleCloseSaveCardModal() {
 
   setClosingSaveCardModal(true);
@@ -715,8 +809,8 @@ function handleCloseSaveCardModal() {
 
       savedCards.map((card) => (
 
-        <button
-  key={card.id}
+  <div key={card.id}>
+    <button
   className={`saved-card-item ${
     selectedCard?.id === card.id
       ? "active"
@@ -761,9 +855,40 @@ function handleCloseSaveCardModal() {
 
         </button>
 
-      ))
 
-    )}
+        {
+  selectedCard?.id === card.id && (
+
+    <div className="checkout-input-group">
+
+      <label>
+        Código de segurança
+      </label>
+
+      <input
+        type="text"
+        placeholder="CVC"
+        maxLength={3}
+        value={savedCardCvv}
+        onChange={(event) =>
+          setSavedCardCvv(
+            event.target.value
+              .replace(/\D/g, "")
+              .slice(0, 3)
+          )
+        }
+      />
+
+    </div>
+
+  )
+}
+
+    </div>
+
+))
+
+)}
 
   </div>
 
@@ -972,9 +1097,18 @@ function handleCloseSaveCardModal() {
 
 <button
   className="checkout-donate-btn"
-  onClick={() =>
-    setShowSaveCardModal(true)
-  }
+  onClick={() => {
+
+    if (!newCard) {
+
+      handleSavedCardPayment();
+
+      return;
+    }
+
+    setShowSaveCardModal(true);
+
+  }}
 >
   Atualizar para {formatCurrency(donationValue)}
 </button>

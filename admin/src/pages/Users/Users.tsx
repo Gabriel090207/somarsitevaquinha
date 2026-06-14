@@ -10,18 +10,24 @@ import { Sidebar }
 
 import {
   Search,
-  MoreVertical,
+  Trash2,
 } from "lucide-react";
 
 import {
   collection,
- onSnapshot,
+  onSnapshot,
   query,
   where,
+  deleteDoc,
+  doc,
 } from "firebase/firestore";
 
 import { db }
   from "../../services/firebase";
+
+
+import { useToast }
+  from "../../contexts/ToastContext";
 
 type User = {
   id: string;
@@ -35,6 +41,10 @@ type User = {
 
 export function Users() {
 
+
+  const { showToast } =
+  useToast();
+
   const [users, setUsers] =
     useState<User[]>([]);
 
@@ -43,6 +53,92 @@ export function Users() {
 
   const [loading, setLoading] =
     useState(true);
+
+
+const [showDeleteModal, setShowDeleteModal] =
+  useState(false);
+
+const [closingModal, setClosingModal] =
+  useState(false);
+
+const [selectedUser, setSelectedUser] =
+  useState<User | null>(null);
+
+
+function handleOpenDeleteModal(
+  user: User
+) {
+
+  setSelectedUser(
+    user
+  );
+
+  setShowDeleteModal(true);
+
+}
+
+function handleCloseModal() {
+
+  setClosingModal(true);
+
+  setTimeout(() => {
+
+    setShowDeleteModal(false);
+
+    setClosingModal(false);
+
+    setSelectedUser(null);
+
+  }, 250);
+
+}
+
+async function handleDeleteUser() {
+
+  if (!selectedUser) {
+    return;
+  }
+
+  try {
+
+  await deleteDoc(
+    doc(
+      db,
+      "users",
+      selectedUser.id
+    )
+  );
+
+  setUsers((prev) =>
+    prev.filter(
+      (user) =>
+        user.id !==
+        selectedUser.id
+    )
+  );
+
+  showToast(
+    "Usuário removido com sucesso.",
+    "success"
+  );
+
+} catch (error) {
+
+  console.log(error);
+
+  showToast(
+    "Erro ao remover usuário.",
+    "error"
+  );
+
+} finally {
+
+  handleCloseModal();
+
+}
+
+}
+
 
  useEffect(() => {
 
@@ -178,11 +274,18 @@ export function Users() {
 
                 </div>
 
-                <button className="user-menu">
+                <button
+  className="user-delete"
+  onClick={() =>
+    handleOpenDeleteModal(
+      user
+    )
+  }
+>
 
-                  <MoreVertical size={18} />
+  <Trash2 size={18} />
 
-                </button>
+</button>
 
               </div>
 
@@ -193,6 +296,66 @@ export function Users() {
         </div>
 
       </section>
+
+
+      {showDeleteModal && (
+
+  <div
+    className={`delete-modal-overlay ${
+      closingModal
+        ? "closing"
+        : ""
+    }`}
+  >
+
+    <div
+      className={`delete-modal ${
+        closingModal
+          ? "closing"
+          : ""
+      }`}
+    >
+
+      <h3>
+        Excluir usuário
+      </h3>
+
+      <p>
+
+        Tem certeza que deseja
+        excluir este usuário?
+
+      </p>
+
+      <div className="delete-modal-actions">
+
+        <button
+          className="cancel"
+          onClick={handleCloseModal}
+        >
+
+          Cancelar
+
+        </button>
+
+        <button
+          className="confirm"
+          onClick={
+            handleDeleteUser
+          }
+        >
+
+          Excluir
+
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+)}
 
     </main>
 
