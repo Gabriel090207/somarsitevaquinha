@@ -538,7 +538,7 @@ const cardAlreadyExists =
   setProcessing(false);
 
   showToast(
-  "Não foi possível atualizar sua doação mensal.",
+  "Não é possível alterar o valor de uma doação mensal pausada.",
   "error"
 );
 }
