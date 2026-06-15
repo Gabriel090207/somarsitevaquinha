@@ -16,8 +16,8 @@ export function PaymentSuccess() {
 
   const location = useLocation();
 
-  const amount =
-    location.state?.amount || 0;
+const amount =
+  Number(location.state?.amount) || 0;
 
   function formatMoney(
     value: number

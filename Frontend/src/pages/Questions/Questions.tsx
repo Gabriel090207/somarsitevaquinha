@@ -43,11 +43,18 @@ export function Questions() {
   useSearchParams();
 
 const [tab, setTab] =
-  useState(
-    searchParams.get("tab")
-      || "faq"
+  useState<
+    "faq" |
+    "taxas" |
+    "pix"
+  >(
+    (
+      searchParams.get("tab") as
+        | "faq"
+        | "taxas"
+        | "pix"
+    ) || "faq"
   );
-
   const [openFaq, setOpenFaq] = useState<number | null>(0);
 
   return (

@@ -278,27 +278,14 @@ def create_card_payment(
 
 
 
-    print("=" * 50)
-    print("EXP MONTH:", data.expiration_month)
-    print("EXP YEAR:", data.expiration_year)
-    print("TOKEN:", data.token)
-    print("=" * 50)
+  
 
-    print("PAYMENT DATA:")
-    print(payment_data)
 
-    print("=" * 50)
-    print("PAYMENT DATA ENVIADO AO MP")
-    print(payment_data)
-    print("=" * 50)
 
     payment_response = sdk.payment().create(
         payment_data
     )
 
-
-    print("MP RESPONSE:")
-    print(payment_response)
 
     payment = payment_response["response"]
 
@@ -340,7 +327,7 @@ def create_card_payment(
         })
 
        
-    print("ROTA PAYMENTS.PY EXECUTADA")
+    
 
     return {
         "status":
@@ -418,10 +405,7 @@ async def mercadopago_webhook(
             payment_response["response"]
         )
 
-        print("=" * 50)
-        print("WEBHOOK PAYMENT:")
-        print(payment)
-        print("=" * 50)
+       
 
         if (
             payment["status"]
@@ -554,12 +538,7 @@ async def mercadopago_webhook(
             "success": True
         }
 
-    except Exception as e:
-
-        print(
-            "ERRO WEBHOOK:",
-            str(e)
-        )
+    except Exception:
 
         return {
             "success": False

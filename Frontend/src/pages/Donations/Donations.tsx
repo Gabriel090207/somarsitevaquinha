@@ -48,7 +48,9 @@ type DonationType = {
 
   status: string;
 
-  createdAt: any;
+ createdAt?: {
+  toDate: () => Date;
+};
 };
 
 export function Donations() {
@@ -202,10 +204,7 @@ useEffect(() => {
       doc.data().campaignId
   );
 
-console.log(
-  "IDS SALVOS:",
-  savedIds
-);
+
 
 setSavedCampaignIds(
   savedIds
@@ -392,8 +391,10 @@ function truncateStory(text: string) {
 
 function calculateRemainingDays(
   duration: string,
-  createdAt: any
-) {
+  createdAt?: {
+    toDate: () => Date;
+  }
+){
 
   if (!duration) {
     return "Sem prazo";

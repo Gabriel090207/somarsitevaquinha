@@ -42,9 +42,12 @@ import {
 export function Profile() {
 
 
-    const [activeTab,
+   const [activeTab,
   setActiveTab] =
-    useState("profile");
+    useState<
+      "profile" |
+      "security"
+    >("profile");
 
   const {
     user,
@@ -713,14 +716,25 @@ async function handleUpdatePassword() {
           if (!user?.email)
             return;
 
-          await sendPasswordResetEmail(
-            auth,
-            user.email
-          );
+         try {
 
-          showToast(
-            "Email de recuperação enviado!"
-          );
+  await sendPasswordResetEmail(
+    auth,
+    user.email
+  );
+
+  showToast(
+    "Email de recuperação enviado!"
+  );
+
+} catch {
+
+  showToast(
+    "Não foi possível enviar o email.",
+    "error"
+  );
+
+}
         }}
       >
 

@@ -71,7 +71,10 @@ goalAmount: string | number;
 
   story: string;
 
-  createdAt: any;
+ createdAt?: {
+  toDate: () => Date;
+  seconds?: number;
+};
 
   status: string;
 };
@@ -185,7 +188,9 @@ function truncateStory(
 
 function calculateRemainingDays(
   duration: string,
-  createdAt: any
+  createdAt?: {
+    toDate: () => Date;
+  }
 ) {
 
   if (!duration) {
@@ -305,10 +310,6 @@ useEffect(() => {
                   (doc) => doc.id
                 );
 
-              console.log(
-                "SALVOS:",
-                savedIds
-              );
 
               setSavedCampaigns(
                 savedIds
@@ -960,10 +961,10 @@ if (
 
                 <div className="campaign-image">
 
-                  <img
-                    src={campaign.imageUrl}
-                    alt=""
-                  />
+                 <img
+  src={campaign.imageUrl}
+  alt={campaign.title}
+/>
 
                   <button
   className={`save-button ${

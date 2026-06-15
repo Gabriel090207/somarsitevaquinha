@@ -23,7 +23,7 @@ export function Footer() {
 
             <img
               src={logo}
-              alt="Somar"
+              alt="Logo da Somar"
             />
 
         

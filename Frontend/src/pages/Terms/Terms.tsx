@@ -346,21 +346,8 @@ export function Terms() {
 
         </div>
 
-        {/* SECTION */}
-
-        <div className="terms-section">
-
-          <h2>
-            8. Privacidade e proteção de dados
-          </h2>
-
-          <p>
-            A Somar respeita a privacidade dos usuários e
-            realiza o tratamento de dados pessoais conforme
-            a legislação brasileira aplicável e a LGPD.
-          </p>
-
-        </div>
+  
+        
 
         {/* SECTION */}
 

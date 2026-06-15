@@ -105,10 +105,10 @@ async function handleMonthlyDonation(
 
       <section className="monthly-hero">
 
-        <img
-          src={monthlyHero}
-          alt=""
-        />
+       <img
+  src={monthlyHero}
+  alt="Doação mensal Somar"
+/>
 
         <div className="monthly-overlay" />
 
@@ -180,9 +180,12 @@ async function handleMonthlyDonation(
 
     <div className="monthly-values-grid">
 
-      {["R$ 30", "R$ 50"].map((value) => (
+     {["R$ 30", "R$ 50"].map((value) => (
 
-        <div className="monthly-value-card">
+  <div
+    key={value}
+    className="monthly-value-card"
+  >
 
           <h3>
             {value}
@@ -287,10 +290,10 @@ async function handleMonthlyDonation(
 
     <div className="monthly-story-image">
 
-      <img
-        src={monthlyHero}
-        alt=""
-      />
+    <img
+  src={monthlyHero}
+  alt="Doação mensal Somar"
+/>
 
     </div>
 

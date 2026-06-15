@@ -1,9 +1,6 @@
 import "./About.css";
 
-import aboutHero from "../../assets/images/questions-bg.png";
-import aboutWork from "../../assets/images/questions-bg.png";
-import aboutTeam from "../../assets/images/questions-bg.png";
-import aboutImpact from "../../assets/images/questions-bg.png";
+import aboutImage from "../../assets/images/questions-bg.png";
 
 import {
   ShieldCheck,
@@ -21,7 +18,7 @@ export function About() {
       <section
         className="about-hero"
         style={{
-          backgroundImage: `url(${aboutHero})`,
+          backgroundImage: `url(${aboutImage})`,
         }}
       >
 
@@ -84,7 +81,7 @@ export function About() {
       <section
         className="about-work"
         style={{
-          backgroundImage: `url(${aboutWork})`,
+          backgroundImage: `url(${aboutImage})`,
         }}
       >
 
@@ -166,7 +163,7 @@ export function About() {
 
       </section>
 
-      {/* GRID */}
+     
 
      {/* GRID */}
 
@@ -177,7 +174,7 @@ export function About() {
   <div className="about-grid-image">
 
     <img
-      src={aboutTeam}
+      src={aboutImage}
       alt=""
     />
 
@@ -230,7 +227,7 @@ export function About() {
   <div className="about-grid-image mobile-second-image">
 
     <img
-      src={aboutImpact}
+      src={aboutImage}
       alt=""
     />
 

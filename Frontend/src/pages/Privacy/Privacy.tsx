@@ -186,10 +186,10 @@ export function Privacy() {
   proteção de dados, entre em contato pelo e-mail:{" "}
 
   <a
-    href="mailto:Somardoacoes@gmail.com"
+    href="mailto:somardoacoes@gmail.com"
     className="privacy-highlight-text"
   >
-    Somardoacoes@gmail.com
+    somardoacoes@gmail.com
   </a>
 
 </p>

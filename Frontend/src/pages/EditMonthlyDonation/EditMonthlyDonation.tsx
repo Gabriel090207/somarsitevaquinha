@@ -408,13 +408,7 @@ cardExpirationYear:
         });
 
      
-const firstSix =
-  tokenResponse.first_six_digits;
 
-console.log(
-  "FIRST SIX",
-  firstSix
-);
 
 
 const paymentMethods =
@@ -445,7 +439,7 @@ const response =
   );
 
 
-console.log(response.data);
+
   
   
 
@@ -546,11 +540,9 @@ const cardAlreadyExists =
 );
 }
 
-    } catch (error) {
+   } catch {
 
-      console.log(error);
-
-      setProcessing(false);
+  setProcessing(false);
 
      showToast(
   "Não foi possível atualizar sua doação mensal.",

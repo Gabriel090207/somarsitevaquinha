@@ -41,10 +41,13 @@ export function Wallet() {
 const { showToast } =
   useToast();
 
-  const [
-    activeTab,
-    setActiveTab,
-  ] = useState("monthly");
+const [
+  activeTab,
+  setActiveTab,
+] = useState<
+  "monthly" |
+  "cards"
+>("monthly");
 
   const [balance, setBalance] =
   useState<number | null>(null);

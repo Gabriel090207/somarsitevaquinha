@@ -80,7 +80,9 @@ goalAmount: string | number;
 
   topics?: string[];
 
-  createdAt?: any;
+  createdAt?: {
+  toDate: () => Date;
+};
 
   beneficiaryName?: string;
 };
@@ -92,7 +94,9 @@ type DonorData = {
 
   amount: number;
 
-  createdAt?: any;
+ createdAt?: {
+  toDate: () => Date;
+};
 };
 
 type MessageData = {
@@ -107,7 +111,9 @@ type MessageData = {
 
   likedBy?: string[];
 
-  createdAt?: any;
+  createdAt?: {
+  toDate: () => Date;
+};
 
   userId: string;
 
@@ -124,7 +130,12 @@ const { slug } =
 const [
   activeTab,
   setActiveTab,
-] = useState("history");
+] = useState<
+  "history" |
+  "updates" |
+  "donors" |
+  "messages"
+>("history");
 
 const [campaign, setCampaign] =
   useState<CampaignData | null>(
@@ -178,7 +189,7 @@ const [
 const [
   selectedMessage,
   setSelectedMessage
-] = useState<any>(null);
+] = useState<MessageData | null>(null);
 
 function parseMoney(
   value?: string | number
@@ -226,11 +237,15 @@ const goal =
   );
 
 const percentage =
-  goal
-    ? Math.round(
-        (collected / goal) * 100
+  goal > 0
+    ? Math.min(
+        Math.round(
+          (collected / goal) * 100
+        ),
+        100
       )
     : 0;
+
 
 function calculateRemainingDays() {
 
@@ -318,11 +333,7 @@ useEffect(() => {
       q,
       (snapshot) => {
 
-        console.log(slug);
-
-        console.log(
-  snapshot.docs.map((doc) => doc.data())
-);
+      
 
         if (
           !snapshot.empty
@@ -599,7 +610,9 @@ function formatCreatedDate() {
 }
 
 function formatTimeAgo(
-  timestamp: any
+  timestamp?: {
+    toDate: () => Date;
+  }
 ) {
 
   if (!timestamp?.toDate) {
@@ -947,11 +960,14 @@ ${url}`;
       "success"
     );
 
-  } catch (error) {
+  } catch {
 
-    console.log(error);
+  showToast(
+    "Não foi possível compartilhar a campanha.",
+    "error"
+  );
 
-  }
+}
 
 }
 
@@ -1002,10 +1018,10 @@ ${url}`;
 
 </button>
 
-              <img
-                src={campaign.imageUrl}
-                alt="Campanha"
-              />
+             <img
+  src={campaign.imageUrl}
+  alt={campaign.title}
+/>
 
             </div>
 

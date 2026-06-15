@@ -453,10 +453,14 @@ await api.post(
 
         }
 
-      } catch (error) {
+      } catch {
 
-        console.log(error);
-      }
+  showToast(
+    "Erro ao consultar pagamento.",
+    "error"
+  );
+
+}
 
     },
     5000
@@ -613,10 +617,7 @@ const currentBalance =
   walletDoc.data()
     .balance || 0;
 
-console.log(
-  "Saldo atual:",
-  currentBalance
-);
+
 
 if (
   currentBalance < donationValue
@@ -678,9 +679,7 @@ try {
 
   }, 2500);
 
-} catch (error) {
-
-  console.error(error);
+} catch {
 
   setProcessing(false);
 
@@ -688,6 +687,8 @@ try {
     "Erro ao processar a doação.",
     "error"
   );
+
+
 
 }
 
@@ -717,15 +718,18 @@ const handleCreatePix = async () => {
   }
 );
 
-    console.log(response.data); 
+   
 
     setPixData(response.data);
 
-  } catch (error) {
+  } catch {
 
-    console.log(error);
+  showToast(
+    "Erro ao gerar Pix.",
+    "error"
+  );
 
-  } finally {
+} finally {
 
     setPixLoading(false);
   }
@@ -771,15 +775,6 @@ const handleCardPayment =
 cardExpirationYear:
   `20${year}`,
         });
-
-     
-const firstSix =
-  tokenResponse.first_six_digits;
-
-console.log(
-  "FIRST SIX",
-  firstSix
-);
 
 
 const paymentMethods =
@@ -831,10 +826,7 @@ const payload = {
 };
 
 
-console.log(
-  "TOKEN RESPONSE COMPLETA",
-  tokenResponse
-);
+
 
 
 const response =
@@ -956,9 +948,12 @@ email:
   );
 }
 
-    } catch (error) {
+  } catch {
 
-      console.log(error);
+    showToast(
+  "Erro ao processar pagamento.",
+  "error"
+);
 
       setProcessing(false);
 
@@ -999,15 +994,7 @@ async function handleSavedCardPayment() {
 
     setProcessing(true);
 
-    console.log(
-      "Cartão salvo:",
-      selectedCard
-    );
-
-    console.log(
-      "CVC:",
-      savedCardCvv
-    );
+    
 
 
     const tokenResponse =
@@ -1039,10 +1026,6 @@ async function handleSavedCardPayment() {
       ),
   });
 
-console.log(
-  "TOKEN CARTÃO SALVO:",
-  tokenResponse
-);
 
     // TESTE INICIAL
 
@@ -1098,10 +1081,7 @@ const response =
     payload
   );
 
-console.log(
-  "RESPOSTA PAGAMENTO:",
-  response.data
-);
+
 
 if (
   response.data.status ===

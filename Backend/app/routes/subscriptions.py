@@ -88,7 +88,7 @@ def create_subscription(
             subscription_data
         )
 
-        print(response)
+    
 
         if response["status"] != 201:
 
@@ -256,12 +256,7 @@ def update_subscription_status(
             )
         )
 
-        print("=" * 50)
-        print(
-            "UPDATE ASSINATURA"
-        )
-        print(response)
-        print("=" * 50)
+       
 
         if response["status"] not in [
             200,
@@ -340,20 +335,7 @@ async def subscription_webhook(
                 request.query_params
             )
 
-        print("=" * 50)
-        print("WEBHOOK ASSINATURA")
-
-        print(
-            "QUERY PARAMS:",
-            query_params
-        )
-
-        print(
-            "BODY:",
-            body
-        )
-
-        print("=" * 50)
+       
 
         return {
             "success": True
@@ -400,12 +382,7 @@ def update_subscription_amount(
             )
         )
 
-        print("=" * 50)
-        print(
-            "UPDATE VALOR ASSINATURA"
-        )
-        print(response)
-        print("=" * 50)
+       
 
         if response["status"] not in [
             200,

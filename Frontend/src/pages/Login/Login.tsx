@@ -444,13 +444,15 @@ setIsCompany(false);
 
 setIsRegister(false);
 
-  } catch (error: any) {
+} catch (error: unknown) {
 
-    if (
-      error.code ===
+  if (
+    typeof error === "object" &&
+    error &&
+    "code" in error &&
+    error.code ===
       "auth/email-already-in-use"
-    ) {
-
+  ) {
       showToast(
         "Este e-mail já está em uso.",
         "error"
@@ -458,7 +460,6 @@ setIsRegister(false);
 
     } else {
 
-      console.log(error);
 
 showToast(
   "Erro ao criar conta.",
@@ -519,12 +520,15 @@ async function handleLogin(
   redirectTo || "/"
 );
 
-  } catch (error: any) {
+} catch (error: unknown) {
 
-    if (
-      error.code ===
+  if (
+    typeof error === "object" &&
+    error &&
+    "code" in error &&
+    error.code ===
       "auth/invalid-credential"
-    ) {
+  ) {
 
       showToast(
         "E-mail ou senha inválidos.",

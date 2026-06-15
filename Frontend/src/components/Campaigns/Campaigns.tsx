@@ -73,7 +73,9 @@ type Campaign = {
 
   status: string;
 
-  createdAt?: any;
+ createdAt?: {
+  toDate: () => Date;
+};
 };
 
 export function Campaigns() {
@@ -88,7 +90,7 @@ const navigate = useNavigate();
 const [slide, setSlide] = useState(0);
 
 const [activeFilter, setActiveFilter] =
-  useState("Todos");
+  useState<string>("Todos");
 
 
 const maxSlide =
@@ -545,10 +547,10 @@ async function handleSaveCampaign(
 
               <div className="campaign-image">
 
-                <img
-                  src={campaign.imageUrl}
-                  alt=""
-                />
+               <img
+  src={campaign.imageUrl}
+  alt={campaign.title}
+/>
 
                 <button
   className={`save-button ${

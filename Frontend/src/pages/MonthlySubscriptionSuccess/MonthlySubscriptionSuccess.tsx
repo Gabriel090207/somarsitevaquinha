@@ -16,11 +16,11 @@ export function MonthlySubscriptionSuccess() {
 
   const location = useLocation();
 
-  const amount =
-    location.state?.amount || 0;
+ const amount =
+  Number(location.state?.amount) || 0;
 
-  const updated =
-  location.state?.updated || false;
+const updated =
+  Boolean(location.state?.updated);
 
   function formatMoney(
     value: number
