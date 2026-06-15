@@ -79,8 +79,34 @@ async def create_admin(
 
     except Exception as error:
 
-        print("ERRO CREATE ADMIN:")
-        print(error)
+        raise HTTPException(
+            status_code=400,
+            detail=str(error)
+        )
+
+
+@router.delete(
+    "/delete-admin/{uid}"
+)
+async def delete_admin(
+    uid: str
+):
+
+    try:
+
+        auth.delete_user(uid)
+
+        db.collection(
+            "users"
+        ).document(uid).delete()
+
+        return {
+            "success": True,
+            "message":
+                "Administrador removido."
+        }
+
+    except Exception as error:
 
         raise HTTPException(
             status_code=400,

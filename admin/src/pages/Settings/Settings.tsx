@@ -25,7 +25,6 @@ import {
   onSnapshot,
   doc,
   updateDoc,
-  deleteDoc,
   setDoc,
 } from "firebase/firestore";
 
@@ -51,6 +50,50 @@ export function Settings() {
 
   const { showToast } =
     useToast();
+
+
+    function formatCpf(value: string) {
+
+  return value
+    .replace(/\D/g, "")
+    .slice(0, 11)
+    .replace(
+      /(\d{3})(\d)/,
+      "$1.$2"
+    )
+    .replace(
+      /(\d{3})(\d)/,
+      "$1.$2"
+    )
+    .replace(
+      /(\d{3})(\d{1,2})$/,
+      "$1-$2"
+    );
+}
+
+function formatPhone(
+  value: string
+) {
+
+  const numbers =
+    value
+      .replace(/\D/g, "")
+      .slice(0, 11);
+
+  if (numbers.length <= 2) {
+    return numbers;
+  }
+
+  if (numbers.length <= 6) {
+    return `(${numbers.slice(0, 2)}) ${numbers.slice(2)}`;
+  }
+
+  if (numbers.length <= 10) {
+    return `(${numbers.slice(0, 2)}) ${numbers.slice(2, 6)}-${numbers.slice(6)}`;
+  }
+
+  return `(${numbers.slice(0, 2)}) ${numbers.slice(2, 7)}-${numbers.slice(7)}`;
+}
 
   const [activeTab, setActiveTab] =
     useState("admins");
@@ -297,9 +340,9 @@ export function Settings() {
 
     try {
 
-      await deleteDoc(
-        doc(db, "users", selectedAdmin.id)
-      );
+      await api.delete(
+  `/delete-admin/${selectedAdmin.id}`
+);
 
       showToast(
         "Administrador removido com sucesso.",
@@ -682,10 +725,12 @@ export function Settings() {
                       type="text"
                       value={adminCpf}
                       onChange={(event) =>
-                        setAdminCpf(
-                          event.target.value
-                        )
-                      }
+  setAdminCpf(
+    formatCpf(
+      event.target.value
+    )
+  )
+}
                     />
 
                   </div>
@@ -700,10 +745,12 @@ export function Settings() {
                       type="text"
                       value={adminPhone}
                       onChange={(event) =>
-                        setAdminPhone(
-                          event.target.value
-                        )
-                      }
+  setAdminPhone(
+    formatPhone(
+      event.target.value
+    )
+  )
+}
                     />
 
                   </div>
