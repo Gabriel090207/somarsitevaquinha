@@ -79,6 +79,9 @@ async def create_admin(
 
     except Exception as error:
 
+        print("ERRO CREATE ADMIN:")
+        print(error)
+
         raise HTTPException(
             status_code=400,
             detail=str(error)
