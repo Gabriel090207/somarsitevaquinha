@@ -3,10 +3,9 @@ from pydantic import BaseModel
 
 from firebase_admin import auth, firestore
 
-from app.firebase.firebase import db
+from app.config.firebase import db
 
 router = APIRouter()
-
 
 class CreateAdminRequest(BaseModel):
     name: str

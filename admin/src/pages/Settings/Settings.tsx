@@ -83,15 +83,13 @@ export function Settings() {
     website: "",
   });
 
-  const [social, setSocial] =
-    useState({
-      instagram: "",
-      facebook: "",
-      youtube: "",
-      tiktok: "",
-      linkedin: "",
-      website: "",
-    });
+ const [social, setSocial] =
+  useState({
+    instagram: "",
+    facebook: "",
+    whatsapp: "",
+    youtube: "",
+  });
 
   const [selectedAdmin, setSelectedAdmin] =
     useState<AdminUser | null>(null);
@@ -160,13 +158,11 @@ export function Settings() {
           if (snapshot.exists()) {
 
             setSocial({
-              instagram: snapshot.data().instagram || "",
-              facebook: snapshot.data().facebook || "",
-              youtube: snapshot.data().youtube || "",
-              tiktok: snapshot.data().tiktok || "",
-              linkedin: snapshot.data().linkedin || "",
-              website: snapshot.data().website || "",
-            });
+  instagram: snapshot.data().instagram || "",
+  facebook: snapshot.data().facebook || "",
+  whatsapp: snapshot.data().whatsapp || "",
+  youtube: snapshot.data().youtube || "",
+});
 
           }
 
@@ -895,34 +891,89 @@ export function Settings() {
 
               <div className="settings-form">
 
-                {Object.entries(social).map(
-                  ([key, value]) => (
+              <div className="settings-row">
 
-                    <div
-                      key={key}
-                      className="settings-field"
-                    >
+  <div className="settings-field">
 
-                      <label>
-                        {key}
-                      </label>
+    <label>
+      Instagram
+    </label>
 
-                      <input
-                        type="text"
-                        value={value}
-                        onChange={(event) =>
-                          setSocial({
-                            ...social,
-                            [key]:
-                              event.target.value,
-                          })
-                        }
-                      />
+    <input
+      type="text"
+      value={social.instagram}
+      onChange={(event) =>
+        setSocial({
+          ...social,
+          instagram: event.target.value,
+        })
+      }
+    />
 
-                    </div>
+  </div>
 
-                  )
-                )}
+  <div className="settings-field">
+
+    <label>
+      Facebook
+    </label>
+
+    <input
+      type="text"
+      value={social.facebook}
+      onChange={(event) =>
+        setSocial({
+          ...social,
+          facebook: event.target.value,
+        })
+      }
+    />
+
+  </div>
+
+</div>
+
+<div className="settings-row">
+
+  <div className="settings-field">
+
+    <label>
+      WhatsApp
+    </label>
+
+    <input
+      type="text"
+      value={social.whatsapp}
+      onChange={(event) =>
+        setSocial({
+          ...social,
+          whatsapp: event.target.value,
+        })
+      }
+    />
+
+  </div>
+
+  <div className="settings-field">
+
+    <label>
+      YouTube
+    </label>
+
+    <input
+      type="text"
+      value={social.youtube}
+      onChange={(event) =>
+        setSocial({
+          ...social,
+          youtube: event.target.value,
+        })
+      }
+    />
+
+  </div>
+
+</div>
 
                 <button
                   className="settings-save"
