@@ -614,3 +614,43 @@
   }
 
 }
+
+.password-field {
+  position: relative;
+
+  width: 100%;
+}
+
+.password-field input {
+  padding-right: 54px;
+}
+
+.password-toggle {
+  position: absolute;
+
+  top: 50%;
+  right: 16px;
+
+  transform: translateY(-50%);
+
+  width: 24px;
+  height: 24px;
+
+  border: none;
+
+  background: transparent;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+}
+
+.password-toggle svg {
+  color: var(--text-light);
+}
+
+.password-toggle:hover svg {
+  color: var(--secondary);
+}

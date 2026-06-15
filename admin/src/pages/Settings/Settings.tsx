@@ -16,6 +16,8 @@ import {
   Pencil,
   Trash2,
   Save,
+  Eye,
+  EyeOff,
 } from "lucide-react";
 
 import {
@@ -47,6 +49,10 @@ type AdminUser = {
 };
 
 export function Settings() {
+
+
+  const [showPassword, setShowPassword] =
+  useState(false);
 
   const { showToast } =
     useToast();
@@ -783,15 +789,45 @@ function formatPhone(
                       Senha
                     </label>
 
-                    <input
-                      type="password"
-                      value={adminPassword}
-                      onChange={(event) =>
-                        setAdminPassword(
-                          event.target.value
-                        )
-                      }
-                    />
+                    <div className="password-field">
+
+  <input
+    type={
+      showPassword
+        ? "text"
+        : "password"
+    }
+    value={adminPassword}
+    onChange={(event) =>
+      setAdminPassword(
+        event.target.value
+      )
+    }
+  />
+
+  <button
+    type="button"
+    className="password-toggle"
+    onClick={() =>
+      setShowPassword(
+        !showPassword
+      )
+    }
+  >
+
+    {showPassword ? (
+
+      <EyeOff size={18} />
+
+    ) : (
+
+      <Eye size={18} />
+
+    )}
+
+  </button>
+
+</div>
 
                   </div>
 
