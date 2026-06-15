@@ -6,6 +6,7 @@ import {
   useState,
 } from "react";
 
+
 import {
   LayoutDashboard,
   HandHeart,
@@ -16,6 +17,7 @@ import {
   Menu,
   X,
   Repeat,
+  ChartSpline,
 } from "lucide-react";
 
 import {
@@ -278,6 +280,25 @@ const { showToast } =
   <Repeat size={20} />
 
   Assinantes
+
+</Link>
+
+
+<Link
+  to="/receitas"
+  className={
+    location.pathname === "/receitas"
+      ? "active"
+      : ""
+  }
+  onClick={() =>
+    setMenuOpen(false)
+  }
+>
+
+  <ChartSpline size={20} />
+
+  Receitas
 
 </Link>
 

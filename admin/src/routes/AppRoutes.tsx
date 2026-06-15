@@ -33,6 +33,10 @@ import { PrivateRoute }
 import { Subscribers }
   from "../pages/Subscribers/Subscribers";
 
+
+import { Revenues }
+  from "../pages/Revenues/Revenues";
+
 export function AppRoutes() {
 
   return (
@@ -127,6 +131,17 @@ export function AppRoutes() {
     </PrivateRoute>
   }
 />
+
+
+<Route
+  path="/receitas"
+  element={
+    <PrivateRoute>
+      <Revenues />
+    </PrivateRoute>
+  }
+/>
+
     </Routes>
 
   );

@@ -77,13 +77,11 @@ export function Settings() {
     useState("");
 
   const [platform, setPlatform] =
-    useState({
-      name: "",
-      email: "",
-      phone: "",
-      whatsapp: "",
-      address: "",
-    });
+  useState({
+    name: "",
+    email: "",
+    website: "",
+  });
 
   const [social, setSocial] =
     useState({
@@ -138,12 +136,10 @@ export function Settings() {
           if (snapshot.exists()) {
 
             setPlatform({
-              name: snapshot.data().name || "",
-              email: snapshot.data().email || "",
-              phone: snapshot.data().phone || "",
-              whatsapp: snapshot.data().whatsapp || "",
-              address: snapshot.data().address || "",
-            });
+  name: snapshot.data().name || "",
+  email: snapshot.data().email || "",
+  website: snapshot.data().website || "",
+});
 
           }
 
@@ -799,34 +795,66 @@ export function Settings() {
 
               <div className="settings-form">
 
-                {Object.entries(platform).map(
-                  ([key, value]) => (
+               <div className="settings-row">
 
-                    <div
-                      key={key}
-                      className="settings-field"
-                    >
+  <div className="settings-field">
 
-                      <label>
-                        {key}
-                      </label>
+    <label>
+      Nome da Plataforma
+    </label>
 
-                      <input
-                        type="text"
-                        value={value}
-                        onChange={(event) =>
-                          setPlatform({
-                            ...platform,
-                            [key]:
-                              event.target.value,
-                          })
-                        }
-                      />
+    <input
+      type="text"
+      value={platform.name}
+      onChange={(event) =>
+        setPlatform({
+          ...platform,
+          name: event.target.value,
+        })
+      }
+    />
 
-                    </div>
+  </div>
 
-                  )
-                )}
+  <div className="settings-field">
+
+    <label>
+      E-mail
+    </label>
+
+    <input
+      type="email"
+      value={platform.email}
+      onChange={(event) =>
+        setPlatform({
+          ...platform,
+          email: event.target.value,
+        })
+      }
+    />
+
+  </div>
+
+</div>
+
+<div className="settings-field">
+
+  <label>
+    Website
+  </label>
+
+  <input
+    type="text"
+    value={platform.website}
+    onChange={(event) =>
+      setPlatform({
+        ...platform,
+        website: event.target.value,
+      })
+    }
+  />
+
+</div>
 
                 <button
                   className="settings-save"

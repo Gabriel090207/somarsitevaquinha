@@ -7,7 +7,7 @@
 
   background: var(--background);
 }
-
+ 
 .settings-content {
   flex: 1;
 
@@ -329,6 +329,7 @@
   box-shadow:
     0 0 0 4px
     rgba(126, 211, 33, 0.08);
+    background-color: #fff;
 }
 
 .settings-save {
@@ -357,6 +358,8 @@
   cursor: pointer;
 
   transition: 0.2s;
+
+  margin-left: auto;
 }
 
 .settings-save:hover {
