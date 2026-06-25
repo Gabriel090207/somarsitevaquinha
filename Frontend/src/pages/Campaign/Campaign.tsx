@@ -18,6 +18,7 @@ import {
   Users,
   Trash2,
   Heart,
+  Copy,
 } from "lucide-react";
 
 import {
@@ -85,6 +86,9 @@ goalAmount: string | number;
 };
 
   beneficiaryName?: string;
+
+  pixKey?: string;
+  pixIdentifier?: string;
 };
 
 type DonorData = {
@@ -1508,6 +1512,42 @@ ${url}`;
                 </span>
 
               </div>
+
+              {campaign.pixKey && (
+
+  <div className="campaign-pix-preview">
+
+  <span>
+    Você pode ajudar via PIX:
+  </span>
+
+  <strong>
+    {campaign.pixKey}
+  </strong>
+
+  <button
+    type="button"
+    onClick={() => {
+
+      navigator.clipboard.writeText(
+        campaign.pixKey || ""
+      );
+
+      showToast(
+        "Chave PIX copiada!",
+        "success"
+      );
+
+    }}
+  >
+
+    <Copy size={18} />
+
+  </button>
+
+</div>
+
+)}
 
               <button
   className="campaign-donate-button"

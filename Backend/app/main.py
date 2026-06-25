@@ -6,6 +6,7 @@ from app.config.mp import sdk
 from app.routes.payments import router as payments_router
 from app.routes.subscriptions import router as subscriptions_router
 from app.routes.admins import router as admins_router
+from app.routes.asaas import router as asaas_router
 
 app = FastAPI()
 
@@ -20,6 +21,7 @@ app.add_middleware(
 app.include_router(payments_router)
 app.include_router(subscriptions_router)
 app.include_router(admins_router)
+app.include_router(asaas_router)
 
 @app.get("/")
 def home():

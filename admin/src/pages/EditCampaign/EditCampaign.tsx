@@ -107,8 +107,17 @@ const [city, setCity] =
 const [status, setStatus] =
   useState("Publicada");
 
+
+const [pixKey, setPixKey] =
+  useState("");
+
+const [, setPixIdentifier] =
+  useState("");
+
 const [campaignId, setCampaignId] =
   useState("");
+
+  
 
 
 function formatCurrency(
@@ -125,6 +134,19 @@ function formatCurrency(
       currency: "BRL",
     }
   ).format(Number(numbers) / 100);
+}
+
+
+function formatCurrencyFromDatabase(
+  value: number
+) {
+  return new Intl.NumberFormat(
+    "pt-BR",
+    {
+      style: "currency",
+      currency: "BRL",
+    }
+  ).format(value);
 }
 
 function handleCoverChange(
@@ -214,21 +236,17 @@ useEffect(() => {
       );
 
       setGoalAmount(
-  campaign.goalAmount
-    ? formatCurrency(
-        String(
-          campaign.goalAmount
-        )
+  campaign.goalAmount != null
+    ? formatCurrencyFromDatabase(
+        campaign.goalAmount
       )
     : ""
 );
 
 setRaisedAmount(
-  campaign.raisedAmount
-    ? formatCurrency(
-        String(
-          campaign.raisedAmount
-        )
+  campaign.raisedAmount != null
+    ? formatCurrencyFromDatabase(
+        campaign.raisedAmount
       )
     : ""
 );
@@ -240,6 +258,15 @@ setRaisedAmount(
       setCity(
         campaign.city || ""
       );
+
+      setPixKey(
+  campaign.pixKey || ""
+);
+
+
+setPixIdentifier(
+  campaign.pixIdentifier || ""
+);
 
       setStatus(
         campaign.status || "Publicada"
@@ -368,6 +395,10 @@ raisedAmount:
         beneficiaryName,
 
         city,
+
+        pixKey,
+
+        
 
         status,
 
@@ -842,6 +873,30 @@ raisedAmount:
 />
 
                 </div>
+
+
+                <div className="form-field">
+
+  <label>
+    Chave PIX da campanha
+  </label>
+
+  <div className="input-icon">
+
+    <Wallet size={18} />
+
+    <input
+      type="text"
+      placeholder="pix@campanha.com"
+      value={pixKey}
+      onChange={(event) =>
+        setPixKey(event.target.value)
+      }
+    />
+
+  </div>
+
+</div>
 
               </div>
 

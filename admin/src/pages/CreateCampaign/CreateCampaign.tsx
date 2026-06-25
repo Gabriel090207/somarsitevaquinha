@@ -94,6 +94,9 @@ const [beneficiaryName, setBeneficiaryName] =
 const [city, setCity] =
   useState("");
 
+const [pixKey, setPixKey] =
+  useState("");
+
 const [status, setStatus] =
   useState("Publicada");
 
@@ -182,6 +185,9 @@ const imageUrl =
 
 
 
+const pixIdentifier =
+  crypto.randomUUID();
+
 const slug =
   title
     .toLowerCase()
@@ -225,6 +231,11 @@ raisedAmount:
 
     city,
 
+    pixKey,
+
+
+    pixIdentifier,
+
     status,
 
     imageUrl,
@@ -260,6 +271,9 @@ setRaisedAmount("");
 setBeneficiaryName("");
 
 setCity("");
+
+
+setPixKey("");
 
 setStatus("Publicada");
 
@@ -744,6 +758,33 @@ function parseCurrency(
 
                 </div>
 
+
+                
+
+
+                <div className="form-field">
+
+  <label>
+    Chave PIX da campanha
+  </label>
+
+  <div className="input-icon">
+
+    <Wallet size={18} />
+
+    <input
+      type="text"
+      placeholder="pix@campanha.com"
+      value={pixKey}
+      onChange={(event) =>
+        setPixKey(event.target.value)
+      }
+    />
+
+  </div>
+
+</div>
+
               </div>
 
             </div>
@@ -807,6 +848,7 @@ function parseCurrency(
 />
 
                 </div>
+
 
               </div>
 

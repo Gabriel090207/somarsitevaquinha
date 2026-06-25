@@ -1468,3 +1468,71 @@ justify-content: center;
   }
 
 }
+
+
+
+.campaign-pix-preview {
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+
+  margin-bottom: 28px;
+
+  flex-wrap: wrap;
+}
+
+.campaign-pix-preview span {
+  font-size: 12px;
+  font-weight: 800;
+
+  color: var(--text-light);
+}
+
+.campaign-pix-preview strong {
+  font-size: 18px;
+  font-weight: 800;
+
+  color: var(--primary-dark);
+}
+
+.campaign-pix-preview button {
+  width: 40px;
+  height: 40px;
+
+  border: none;
+  border-radius: 12px;
+
+  background:
+    rgba(126, 211, 33, 0.08);
+
+  color: var(--primary-dark);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+
+  transition: .25s ease;
+
+  flex-shrink: 0;
+}
+
+
+@media (max-width: 980px) {
+
+  .campaign-pix-preview {
+    flex-wrap: wrap;
+
+    align-items: flex-start;
+
+    gap: 10px;
+  }
+
+  .campaign-pix-preview span {
+    width: 100%;
+  }
+
+}
