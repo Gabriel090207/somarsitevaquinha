@@ -566,6 +566,11 @@
   gap: 10px;
 }
 
+.crowdfunding-select {
+  min-width: 0;
+  width: 100%;
+}
+
 
   .filter-button,
   .dropdown-button {

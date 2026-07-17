@@ -1,8 +1,9 @@
 from fastapi import APIRouter
+from fastapi import Request
+from fastapi import Body
 
 import requests
 
-from fastapi import Body
 
 from app.config.asaas import (
     ASAAS_API_KEY
@@ -49,52 +50,131 @@ def list_subaccounts():
     return response.json()
 
 
+
 @router.post("/create-subaccount")
 def create_subaccount(
+
     name: str = Body(...),
     email: str = Body(...),
-    cpf_cnpj: str = Body(...)
+    cpf_cnpj: str = Body(...),
+
+    birth_date: str = Body(...),
+
+    company_type: str = Body(...),
+
+    income_value: float = Body(...),
+
+    phone: str = Body(...),
+
+    mobile_phone: str = Body(...),
+
+    postal_code: str = Body(...),
+
+    address: str = Body(...),
+
+    address_number: str = Body(...),
+
+    complement: str = Body(""),
+
+    province: str = Body(...)
+
 ):
 
+    payload = {
+        "name": name,
+        "email": email,
+        "cpfCnpj": cpf_cnpj,
+        "birthDate": birth_date,
+        "companyType": company_type,
+        "incomeValue": income_value,
+        "phone": phone,
+        "mobilePhone": mobile_phone,
+        "postalCode": postal_code,
+        "address": address,
+        "addressNumber": address_number,
+        "complement": complement,
+        "province": province,
+    }
+
+    print("===== PAYLOAD =====")
+    print(payload)
+
     response = requests.post(
         "https://api.asaas.com/v3/accounts",
         headers={
             "access_token": ASAAS_API_KEY,
             "Content-Type": "application/json"
         },
-        json={
-            "name": name,
-            "email": email,
-            "cpfCnpj": cpf_cnpj
-        }
+        json=payload
     )
 
-    return response.json()
+    print("===== STATUS =====")
+    print(response.status_code)
+
+    print("===== RESPOSTA ASAAS =====")
+    print(response.text)
 
 
-@router.post("/create-test-subaccount")
-def create_test_subaccount():
+    data = response.json()
 
-    response = requests.post(
-        "https://api.asaas.com/v3/accounts",
-        headers={
-            "access_token": ASAAS_API_KEY,
-            "Content-Type": "application/json"
-        },
-        json={
-            "name": "Teste Campanha",
-            "email": "teste-campanha@exemplo.com",
-            "cpfCnpj": "66625514000140",
-            "birthDate": "1994-05-16",
-            "companyType": "MEI",
-            "incomeValue": 5000,
-            "phone": "1132300606",
-            "mobilePhone": "11991112233",
-            "address": "Rua Teste",
-            "addressNumber": "123",
-            "province": "Centro",
-            "postalCode": "89223005"
-        }
-    )
+    subaccount_api_key = data.get("apiKey")
 
-    return response.json()
+    if subaccount_api_key:
+
+        requests.post(
+
+            "https://api.asaas.com/v3/webhooks",
+
+            headers={
+                "access_token": subaccount_api_key,
+                "Content-Type": "application/json"
+            },
+
+            json={
+
+                "name": "Webhook Somar",
+
+                "url": "https://somar-backend.onrender.com/asaas/webhook",
+
+                "enabled": True,
+
+                "interrupted": False,
+
+                "sendType": "SEQUENTIALLY",
+
+                "email": email,
+
+                "events": [
+                    "PAYMENT_RECEIVED"
+                ]
+
+            }
+
+        )
+
+    return data
+
+   
+
+
+
+
+
+
+@router.post("/webhook")
+async def asaas_webhook(request: Request):
+
+    body = await request.json()
+
+    print("====================================")
+    print("WEBHOOK ASAAS RECEBIDO")
+    print(body)
+    print("====================================")
+
+    return {
+        "success": True
+    }
+
+
+
+
