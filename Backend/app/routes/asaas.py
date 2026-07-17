@@ -177,4 +177,22 @@ async def asaas_webhook(request: Request):
 
 
 
+@router.post("/generate-api-key/{account_id}")
+def generate_api_key(account_id: str):
 
+    response = requests.post(
+        f"https://api.asaas.com/v3/accounts/{account_id}/accessTokens",
+        headers={
+            "access_token": ASAAS_API_KEY,
+            "Content-Type": "application/json"
+        },
+        json={
+            "name": "Sistema Somar"
+        }
+    )
+
+    print("===== GERAR API KEY =====")
+    print(response.status_code)
+    print(response.text)
+
+    return response.json()
