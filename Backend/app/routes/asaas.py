@@ -80,39 +80,48 @@ def create_subaccount(
 
 ):
 
-    payload = {
-        "name": name,
-        "email": email,
-        "cpfCnpj": cpf_cnpj,
-        "birthDate": birth_date,
-        "companyType": company_type,
-        "incomeValue": income_value,
-        "phone": phone,
-        "mobilePhone": mobile_phone,
-        "postalCode": postal_code,
-        "address": address,
-        "addressNumber": address_number,
-        "complement": complement,
-        "province": province,
-    }
-
-    print("===== PAYLOAD =====")
-    print(payload)
-
     response = requests.post(
+
         "https://api.asaas.com/v3/accounts",
+
         headers={
             "access_token": ASAAS_API_KEY,
             "Content-Type": "application/json"
         },
-        json=payload
+
+        json={
+
+            "name": name,
+
+            "email": email,
+
+            "cpfCnpj": cpf_cnpj,
+
+            "birthDate": birth_date,
+
+            "companyType": company_type,
+
+            "incomeValue": income_value,
+
+            "phone": phone,
+
+            "mobilePhone": mobile_phone,
+
+            "postalCode": postal_code,
+
+            "address": address,
+
+            "addressNumber": address_number,
+
+            "complement": complement,
+
+            "province": province
+
+        }
+
+    
+
     )
-
-    print("===== STATUS =====")
-    print(response.status_code)
-
-    print("===== RESPOSTA ASAAS =====")
-    print(response.text)
 
 
     data = response.json()
@@ -154,11 +163,6 @@ def create_subaccount(
 
     return data
 
-   
-
-
-
-
 
 
 @router.post("/webhook")
@@ -177,22 +181,50 @@ async def asaas_webhook(request: Request):
 
 
 
-@router.post("/generate-api-key/{account_id}")
-def generate_api_key(account_id: str):
+
+
+
+@router.post("/create-access-token")
+def create_access_token(
+
+    subaccount_id: str = Body(...),
+    name: str = Body(...),
+    expiration_date: str | None = Body(None)
+
+):
+
+    payload = {
+        "name": name
+    }
+
+    if expiration_date:
+        payload["expirationDate"] = expiration_date
 
     response = requests.post(
-        f"https://api.asaas.com/v3/accounts/{account_id}/accessTokens",
+
+        f"https://api.asaas.com/v3/accounts/{subaccount_id}/accessTokens",
+
         headers={
             "access_token": ASAAS_API_KEY,
             "Content-Type": "application/json"
         },
-        json={
-            "name": "Sistema Somar"
-        }
+
+        json=payload
+
     )
 
-    print("===== GERAR API KEY =====")
     print(response.status_code)
     print(response.text)
 
     return response.json()
+
+
+
+@router.get("/my-ip")
+def my_ip():
+
+    response = requests.get("https://api.ipify.org")
+
+    return {
+        "ip": response.text
+    }

@@ -3,21 +3,22 @@ import "./Sidebar.css";
 import logo from "../../assets/images/logo.png";
 
 import {
+  useEffect,
   useState,
 } from "react";
-
 
 import {
   LayoutDashboard,
   HandHeart,
   Users,
   Wallet,
-  Settings,
   LogOut,
   Menu,
   X,
   Repeat,
   ChartSpline,
+  Building2,
+
 } from "lucide-react";
 
 import {
@@ -42,11 +43,31 @@ import { useToast }
 
 export function Sidebar() {
 
+  
+
   const location =
     useLocation();
 
   const [menuOpen, setMenuOpen] =
     useState(false);
+
+useEffect(() => {
+  if (menuOpen) {
+    document.body.style.overflow = "hidden";
+    document.body.style.position = "fixed";
+    document.body.style.width = "100%";
+  } else {
+    document.body.style.overflow = "";
+    document.body.style.position = "";
+    document.body.style.width = "";
+  }
+
+  return () => {
+    document.body.style.overflow = "";
+    document.body.style.position = "";
+    document.body.style.width = "";
+  };
+}, [menuOpen]);
 
     const navigate =
   useNavigate();
@@ -229,6 +250,27 @@ const { showToast } =
 
             </Link>
 
+
+            <Link
+  to="/subcontas"
+  className={
+    location.pathname === "/subcontas"
+      ? "active"
+      : ""
+  }
+  onClick={() =>
+    setMenuOpen(false)
+  }
+>
+
+  <Building2 size={20} />
+
+  Subcontas
+
+</Link>
+
+           
+
             <Link
               to="/usuarios"
               className={
@@ -302,23 +344,7 @@ const { showToast } =
 
 </Link>
 
-            <Link
-              to="/configuracoes"
-              className={
-                location.pathname === "/configuracoes"
-                  ? "active"
-                  : ""
-              }
-              onClick={() =>
-                setMenuOpen(false)
-              }
-            >
-
-              <Settings size={20} />
-
-              Configurações
-
-            </Link>
+           
 
           </nav>
 

@@ -1,0 +1,394 @@
+.subaccounts-page {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  background: var(--background);
+}
+
+.subaccounts-content {
+  flex: 1;
+  padding: 34px;
+  margin-left: 290px;
+}
+
+/* HEADER */
+
+.subaccounts-header {
+  margin-bottom: 28px;
+}
+
+.subaccounts-header span {
+  color: var(--primary);
+
+  font-size: 14px;
+  font-weight: 700;
+
+  display: block;
+
+  margin-bottom: 10px;
+}
+
+.subaccounts-header h1 {
+  color: var(--secondary);
+
+  font-size: 42px;
+  font-weight: 900;
+}
+
+/* SEARCH */
+
+.subaccounts-search {
+  width: 100%;
+  height: 58px;
+
+  padding: 0 18px;
+
+  border-radius: 18px;
+
+  background: var(--white);
+
+  border: 1px solid var(--border);
+
+  display: flex;
+  align-items: center;
+
+  gap: 12px;
+
+  margin-bottom: 28px;
+
+  transition: 0.25s ease;
+}
+
+.subaccounts-search svg {
+  color: var(--text-light);
+}
+
+.subaccounts-search input {
+  flex: 1;
+
+  height: 100%;
+
+  border: none;
+
+  background: transparent;
+
+  outline: none;
+
+  font-size: 15px;
+
+  color: var(--secondary);
+}
+
+.subaccounts-search:focus-within {
+  border-color: rgba(126, 211, 33, 0.4);
+
+  box-shadow:
+    0 0 0 4px
+    rgba(126, 211, 33, 0.08);
+}
+
+.subaccounts-search:focus-within svg {
+  color: var(--primary);
+}
+
+/* LIST */
+
+.subaccounts-list {
+  display: flex;
+  flex-direction: column;
+
+  gap: 18px;
+}
+
+/* CARD */
+
+.subaccount-item {
+  width: 100%;
+  min-height: 110px;
+
+  padding: 20px 22px;
+
+  border-radius: 26px;
+
+  background: var(--white);
+
+  border: 1px solid var(--border);
+
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+
+  gap: 20px;
+}
+
+/* LEFT */
+
+.subaccount-left {
+  display: flex;
+  align-items: flex-start;
+
+  gap: 18px;
+}
+
+.subaccount-avatar {
+  width: 58px;
+  height: 58px;
+
+  border-radius: 18px;
+
+  background: var(--primary);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: white;
+
+  font-size: 20px;
+  font-weight: 900;
+
+  flex-shrink: 0;
+}
+
+.subaccount-info strong {
+  display: block;
+
+  color: var(--secondary);
+
+  font-size: 16px;
+  font-weight: 800;
+
+  margin-bottom: 6px;
+}
+
+.subaccount-info p {
+  color: var(--text-light);
+
+  font-size: 14px;
+
+  margin-bottom: 6px;
+}
+
+.subaccount-extra {
+  display: flex;
+  flex-direction: column;
+
+  gap: 4px;
+
+  margin-top: 10px;
+}
+
+.subaccount-extra span {
+  color: var(--text-light);
+
+  font-size: 13px;
+}
+
+.subaccount-extra b {
+  color: var(--secondary);
+
+  font-weight: 700;
+}
+
+
+/* ACTIONS */
+
+.subaccount-actions{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.configure-subaccount{
+  height:46px;
+  padding:0 18px;
+
+  border:none;
+  border-radius:16px;
+
+  background:var(--primary);
+  color:#fff;
+
+  font-size:14px;
+  font-weight:700;
+
+  cursor:pointer;
+
+  transition:.2s;
+}
+
+.configure-subaccount:hover{
+  filter:brightness(.95);
+}
+
+
+/* DELETE */
+
+.subaccount-delete{
+  width:46px;
+  height:46px;
+
+  border:none;
+  border-radius:16px;
+
+  background:rgba(239,68,68,.08);
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  cursor:pointer;
+
+  transition:.2s;
+}
+
+.subaccount-delete svg {
+  color: #EF4444;
+}
+
+.subaccount-delete:hover {
+  background: rgba(239, 68, 68, 0.14);
+}
+
+/* RESPONSIVO */
+@media (max-width:980px){
+
+  .subaccounts-content{
+    margin-left:0;
+    padding:98px 20px 24px;
+  }
+
+  .subaccounts-header h1{
+    font-size:34px;
+  }
+
+  .subaccounts-search{
+    height:54px;
+    border-radius:16px;
+    margin-bottom:22px;
+  }
+
+  .subaccount-item{
+    grid-template-columns:1fr;
+    gap:18px;
+
+    padding:18px;
+
+    border-radius:22px;
+  }
+
+  .subaccount-actions{
+    width:100%;
+
+    display:flex;
+    justify-content:flex-end;
+    align-items:center;
+
+    gap:12px;
+  }
+
+  .subaccount-avatar{
+    width:52px;
+    height:52px;
+
+    border-radius:16px;
+
+    font-size:18px;
+  }
+
+}
+
+@media (max-width:640px){
+
+  .subaccounts-content{
+    padding:92px 14px 20px;
+  }
+
+  .subaccounts-header h1{
+    font-size:30px;
+  }
+
+  .subaccounts-search{
+    height:50px;
+
+    border-radius:14px;
+  }
+
+  .subaccount-item{
+  padding:16px;
+
+  grid-template-columns:1fr;
+
+  gap:18px;
+
+  border-radius:18px;
+}
+
+.subaccount-actions{
+  width:100%;
+
+  justify-content:flex-end;
+}
+
+  .subaccount-avatar{
+    width:46px;
+    height:46px;
+
+    border-radius:14px;
+
+    font-size:16px;
+  }
+
+  .subaccount-info strong{
+    font-size:14px;
+  }
+
+  .subaccount-info p,
+  .subaccount-extra span{
+    font-size:12px;
+  }
+
+  .subaccount-delete{
+    width:40px;
+    height:40px;
+
+    border-radius:12px;
+  }
+
+}
+
+.account-id{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+}
+
+.copy-account-id{
+  width:26px;
+  height:26px;
+
+  border:none;
+  border-radius:8px;
+
+  background:rgba(126,211,33,.08);
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  cursor:pointer;
+
+  transition:.2s;
+}
+
+.copy-account-id svg{
+  color:var(--primary);
+}
+
+.copy-account-id:hover{
+  background:rgba(126,211,33,.16);
+}
+
+
+
+

@@ -37,6 +37,12 @@ import { Subscribers }
 import { Revenues }
   from "../pages/Revenues/Revenues";
 
+
+import { Subaccounts }
+  from "../pages/Subaccounts/Subaccounts";
+
+import { ConfigureIntegration } from "../pages/ConfigureIntegration/ConfigureIntegration";
+
 export function AppRoutes() {
 
   return (
@@ -140,6 +146,22 @@ export function AppRoutes() {
       <Revenues />
     </PrivateRoute>
   }
+/>
+
+
+<Route
+  path="/subcontas"
+  element={
+    <PrivateRoute>
+      <Subaccounts />
+    </PrivateRoute>
+  }
+/>
+
+
+<Route
+  path="/configurar-integracao"
+  element={<ConfigureIntegration />}
 />
 
     </Routes>
